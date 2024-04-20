@@ -16,8 +16,17 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('welcome');
+        try {
+            $data = ['title' => 'Home'];
+            return view('Back.Home.index', $data);
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::error("Error loading the home index view: " . $e->getMessage());
+            // Optionally, redirect to a custom error page
+            return redirect()->route('error.page')->with('error', 'Error loading the page');
+        }
     }
+
 
     /**
      * Show the form for creating a new resource.
