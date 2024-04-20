@@ -6,6 +6,8 @@
       <sourceFolder url="file://$MODULE_DIR$/demo/database/factories" isTestSource="false" packagePrefix="Database\Factories\" />
       <sourceFolder url="file://$MODULE_DIR$/demo/database/seeders" isTestSource="false" packagePrefix="Database\Seeders\" />
       <sourceFolder url="file://$MODULE_DIR$/demo/tests" isTestSource="true" packagePrefix="Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/brick/math" />
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/dflydev/dot-access-data" />
@@ -22,6 +24,8 @@
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/guzzlehttp/promises" />
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/guzzlehttp/psr7" />
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/hamcrest/hamcrest-php" />
+      <excludeFolder url="file://$MODULE_DIR$/demo/vendor/inertiajs/inertia-laravel" />
+      <excludeFolder url="file://$MODULE_DIR$/demo/vendor/laravel/breeze" />
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/laravel/framework" />
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/laravel/pint" />
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/laravel/sail" />
@@ -41,6 +45,9 @@
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/nikic/php-parser" />
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/nunomaduro/collision" />
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/nunomaduro/termwind" />
+      <excludeFolder url="file://$MODULE_DIR$/demo/vendor/pestphp/pest" />
+      <excludeFolder url="file://$MODULE_DIR$/demo/vendor/pestphp/pest-plugin" />
+      <excludeFolder url="file://$MODULE_DIR$/demo/vendor/pestphp/pest-plugin-laravel" />
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/phar-io/manifest" />
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/phar-io/version" />
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/phpoption/phpoption" />
@@ -109,6 +116,7 @@
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/symfony/uid" />
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/symfony/var-dumper" />
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/theseer/tokenizer" />
+      <excludeFolder url="file://$MODULE_DIR$/demo/vendor/tightenco/ziggy" />
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/tijsverkoyen/css-to-inline-styles" />
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/vlucas/phpdotenv" />
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/voku/portable-ascii" />
