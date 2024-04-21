@@ -130,6 +130,7 @@
       <path value="$PROJECT_DIR$/demo/vendor/pestphp/pest" />
       <path value="$PROJECT_DIR$/demo/vendor/pestphp/pest-plugin" />
       <path value="$PROJECT_DIR$/demo/vendor/pestphp/pest-plugin-laravel" />
+      <path value="$PROJECT_DIR$/demo/vendor/yajra/laravel-datatables-oracle" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.0">

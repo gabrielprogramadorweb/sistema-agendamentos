@@ -34,7 +34,7 @@ Route::prefix('super')->middleware('auth')->group(function () {
     });
 });
 
-Route::get('/dashboard', function () {
+Route::get('/super', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 

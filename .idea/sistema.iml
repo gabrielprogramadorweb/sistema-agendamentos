@@ -121,6 +121,7 @@
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/vlucas/phpdotenv" />
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/voku/portable-ascii" />
       <excludeFolder url="file://$MODULE_DIR$/demo/vendor/webmozart/assert" />
+      <excludeFolder url="file://$MODULE_DIR$/demo/vendor/yajra/laravel-datatables-oracle" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

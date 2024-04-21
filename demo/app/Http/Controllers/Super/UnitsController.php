@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreHomeRequest;
 use App\Http\Requests\UpdateHomeRequest;
 use App\Models\UnitModel;
+use App\Services\UnitService;
 use Illuminate\Http\Request;
 
 class UnitsController extends Controller
@@ -15,18 +16,20 @@ class UnitsController extends Controller
      *
      * @return \Illuminate\View\View
      */
+    protected $unitService;
+
+    public function __construct(UnitService $unitService)
+    {
+        $this->unitService = $unitService;
+    }
+
     public function index()
     {
-        try {
-            $units = UnitModel::all(); // Busca todas as unidades
-            $data = ['title' => 'Unidades', 'units' => $units];
-            return view('Back.Units.index', $data);
-        } catch (\Exception $e) {
-            // Log the error
-            \Log::error("Error fetching units: " . $e->getMessage());
-            // Optionally, redirect to a custom error page
-            return redirect()->route('error.page')->with('error', 'Error loading the page');
-        }
+        $table = $this->unitService->getAllUnitsFormatted();
+        return view('Back.Units.index', [
+            'table' => $table,
+            'title' => 'Unidades'
+        ]);
     }
 
 

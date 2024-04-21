@@ -415,6 +415,13 @@
 <script src="{{ asset('back/css/sb-admin-2.css') }}"></script>
 @yield('js')
 
+@push('scripts')
+    <script src="{{ asset('back/vendor/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('back/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('back/js/demo/datatables-demo.js') }}"></script>
+@endpush
+
+
 </body>
 
 </html>
