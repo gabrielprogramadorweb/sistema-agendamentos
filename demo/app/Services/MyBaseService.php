@@ -6,6 +6,8 @@ abstract class MyBaseService
     /**
      * Método genérico para capturar exceções e tratar erros de forma padronizada.
      */
+    // Elemento HTML a ser exibido caso não haver dados
+    public const TEXT_FOR_NO_DATA = '<div class="text-info">Não há dados para serem exibidos</div>';
     protected function handleExceptions(callable $fn)
     {
         try {

@@ -31,6 +31,8 @@ Route::prefix('super')->middleware('auth')->group(function () {
     Route::get('/', [HomeController::class, 'index']);
     Route::prefix('units')->middleware('auth')->group(function () {
         Route::get('/', [UnitsController::class, 'index'])->name('units');
+        Route::get('/units/new', 'App\Http\Controllers\Super\UnitsController@create')->name('units.new');
+
     });
 });
 

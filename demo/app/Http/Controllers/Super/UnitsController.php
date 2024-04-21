@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Super;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreHomeRequest;
 use App\Http\Requests\UpdateHomeRequest;
-use App\Models\UnitModel;
 use App\Services\UnitService;
 use Illuminate\Http\Request;
 
@@ -32,7 +31,6 @@ class UnitsController extends Controller
         ]);
     }
 
-
     /**
      * Show the form for creating a new resource.
      *
@@ -40,7 +38,8 @@ class UnitsController extends Controller
      */
     public function create()
     {
-        //
+        return view('Back.Units.create');
+
     }
 
     /**
@@ -51,7 +50,7 @@ class UnitsController extends Controller
      */
     public function store(StoreHomeRequest $request)
     {
-        //
+
     }
 
     /**
