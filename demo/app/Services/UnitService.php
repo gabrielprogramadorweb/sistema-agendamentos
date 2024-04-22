@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\UnitModel;
@@ -10,7 +11,6 @@ class UnitService extends MyBaseService
         return $this->handleExceptions(function() use ($perPage, $search) {
             $query = UnitModel::query();
 
-            // Aplica filtro de busca, se fornecido
             if ($search) {
                 $query->where(function($q) use ($search) {
                     $q->where('name', 'like', "%$search%")
@@ -19,19 +19,17 @@ class UnitService extends MyBaseService
                 });
             }
 
-            // Pagina os resultados
             $units = $query->paginate($perPage);
 
             $table = new \stdClass();
-            $table->headers = ['Ações','Nome', 'E-mail', 'Telefone', 'Início', 'Fim', 'Criado'];
+            $table->headers = ['Ações', 'Nome', 'E-mail', 'Telefone', 'Início', 'Fim', 'Criado'];
             $table->rows = [];
-            $table->isEmpty = true; // Inicializa como verdadeiro para indicar que está vazia
+            $table->isEmpty = true;
 
-            // Preenche as linhas somente se houver unidades
             if (!$units->isEmpty()) {
                 $table->rows = $units->map(function ($unit) {
                     return [
-                        'actions' => $this->renderBtnActions($unit), // Alterado para 'actions'
+                        'actions' => $this->renderBtnActions($unit),
                         'name' => $unit->name,
                         'email' => $unit->email,
                         'phone' => $unit->phone,
@@ -40,30 +38,29 @@ class UnitService extends MyBaseService
                         'created_at' => $unit->created_at->toDateTimeString()
                     ];
                 });
-                $table->isEmpty = false; // Atualiza a flag para falso, pois há dados
+                $table->isEmpty = false;
             }
 
             return $table;
         });
     }
 
-    // Corrigido o retorno do tipo para ser 'string' em vez de 'string'
+    public function editUnit($id)
+    {
+        return $this->handleExceptions(function() use ($id) {
+            return UnitModel::findOrFail($id);
+        });
+    }
+
     private function renderBtnActions(UnitModel $unit): string
     {
         $btnActions = '<div class="btn-group">';
-        $btnActions .= '<button type="button"
-                                class="btn btn-outline-primary btn-sm dropdown-toggle"
-                                data-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false"
-                                >Ações</button>';
+        $btnActions .= '<button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Ações</button>';
         $btnActions .= '<div class="dropdown-menu">';
-        $btnActions .= '<a class="dropdown-item" href="#">Ação1</a>';
+        $btnActions .= '<a class="dropdown-item" href="' . route('units.edit', $unit->id) . '">Edit</a>';
         $btnActions .= '<a class="dropdown-item" href="#">Ação2</a>';
         $btnActions .= '<a class="dropdown-item" href="#">Ação3</a>';
-        $btnActions .= '</div> </div>';
+        $btnActions .= '</div></div>';
         return $btnActions;
     }
-
 }
-
