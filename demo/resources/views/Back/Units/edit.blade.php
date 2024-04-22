@@ -31,6 +31,11 @@
                 </div>
 
                 <div class="form-group col-md-3">
+                    <label for="password">Senha:</label>
+                    <input type="password" class="form-control" id="password" name="password" value="{{ old('password', $unit->password) }}" required>
+                </div>
+
+                <div class="form-group col-md-3">
                     <label for="phone">Telefone:</label>
                     <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone', $unit->phone) }}">
                 </div>
@@ -46,22 +51,28 @@
                 </div>
 
                 <div class="form-group col-md-3">
-                    <label for="starttime">Início:</label>
+                    <label for="starttime">Início de expediente:</label>
                     <input type="time" class="form-control" id="starttime" name="starttime" value="{{ old('starttime', $unit->starttime) }}">
                 </div>
 
                 <div class="form-group col-md-3">
-                    <label for="endtime">Fim:</label>
+                    <label for="endtime">Fim de expediente:</label>
                     <input type="time" class="form-control" id="endtime" name="endtime" value="{{ old('endtime', $unit->endtime) }}">
                 </div>
 
                 <div class="form-group col-md-3">
                     <label for="servicetime">Tempo de serviço:</label>
-                    <input type="number" class="form-control" id="servicetime" name="servicetime" value="{{ old('servicetime', $unit->servicetime) }}">
+                    <select name="servicetime" id="servicetime" class="form-control">
+                        @foreach ($serviceTimes as $key => $value)
+                            <option value="{{ $key }}" {{ old('servicetime', $unit->servicetime ?? '') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
-                <div class="form-group col-md-3">
-                    <label for="active">Ativo:</label>
+
+
+                <div class="custom-control custom-checkbox">
+                    <label for="active">Registro ativo</label>
                     <input type="checkbox" id="active" name="active" {{ $unit->active ? 'checked' : '' }}>
                 </div>
                 <div class="form-group col-md-10">

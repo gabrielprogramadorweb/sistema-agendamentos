@@ -70,7 +70,7 @@
 
 
                 <div class="form-group col-md-3">
-                    <label for="starttime">Início:</label>
+                    <label for="starttime">Início de expediente:</label>
                     <input type="time" class="form-control" id="starttime" name="starttime" value="{{ old('starttime') }}">
                     @error('starttime')
                     <div class="alert alert-danger">{{ $message }}</div>
@@ -78,7 +78,7 @@
                 </div>
 
                 <div class="form-group col-md-3">
-                    <label for="endtime">Fim:</label>
+                    <label for="endtime">Fim de expediente:</label>
                     <input type="time" class="form-control" id="endtime" name="endtime" value="{{ old('endtime') }}">
                     @error('endtime')
                     <div class="alert alert-danger">{{ $message }}</div>
@@ -87,14 +87,15 @@
 
                 <div class="form-group col-md-3">
                     <label for="servicetime">Tempo de serviço:</label>
-                    <input type="number" class="form-control" id="servicetime" name="servicetime" value="{{ old('servicetime') }}">
-                    @error('address')
-                    <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
+                    <select name="servicetime" class="form-control">
+                        @foreach ($serviceTimes as $key => $value)
+                            <option value="{{ $key }}" {{ old('servicetime') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="form-group col-md-3">
-                    <label for="active">Ativo:</label>
+                    <label for="active">Registro ativo</label>
                     <input type="checkbox" id="active" name="active" {{ old('active') ? 'checked' : '' }}>
                     @error('active')
                     <div class="alert alert-danger">{{ $message }}</div>

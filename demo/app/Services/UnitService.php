@@ -6,6 +6,22 @@ use App\Models\UnitModel;
 
 class UnitService extends MyBaseService
 {
+    private static array $serviceTimes = [
+        '10 minutes' => '10 minutos',
+        '15 minutes' => '15 minutos',
+        '30 minutes' => '30 minutos',
+        '1 hour'     => '1 hora',
+        '2 hour'     => '2 horas',
+    ];
+
+    public function renderTimesInterval(?string $serviceTime = null): string
+    {
+        $options = [];
+        foreach (self::$serviceTimes as $key => $time){
+            $options[$key] = $time;
+        }
+        return form_dropdown(data: 'servicetime', options: $options, selected: old('servicetime', $serviceTime), extra: ['class' => 'form-control']);
+    }
     public function getAllUnitsFormatted($perPage = 10, $search = null)
     {
         return $this->handleExceptions(function() use ($perPage, $search) {
