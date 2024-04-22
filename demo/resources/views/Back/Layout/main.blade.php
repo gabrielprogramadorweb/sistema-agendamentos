@@ -14,16 +14,11 @@
     <!-- Custom fonts for this template-->
     <link href="{{ asset('back/css/sb-admin-2.css') }}" rel="stylesheet">
     <link href="{{ asset('back/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-
     <!-- Espaço reservado para apresentar css especifico do template -->
     @yield('css')
 </head>
 
 <body id="page-top">
-
 <!-- Page Wrapper -->
 <div id="wrapper">
 
@@ -412,7 +407,12 @@
 <script src="{{ asset('back/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
 <!-- Custom scripts for all pages-->
 <!--<script src="js/sb-admin-2.min.js"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-p34f1UUtsS3wqzK/oa+vxW842/D/n7tGT9s4l8k7q9Ee5wichRP9N1qKHcO8I5n5"
+        crossorigin="anonymous"></script>
 <script src="{{ asset('back/css/sb-admin-2.css') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+
 @yield('js')
 
 @push('scripts')

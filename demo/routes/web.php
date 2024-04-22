@@ -30,13 +30,15 @@ Route::get('/', function () {
 Route::prefix('super')->middleware('auth')->group(function () {
     Route::get('/', [HomeController::class, 'index']);
     Route::prefix('units')->middleware('auth')->group(function () {
-        Route::get('/', [UnitsController::class, 'index'])->name('units');
-        Route::get('/units/new', 'App\Http\Controllers\Super\UnitsController@create')->name('units.new');
+
+        Route::get('/', [UnitsController::class, 'index'])->name('units.index');
+        Route::get('/new', [UnitsController::class, 'create'])->name('units.create');
 
     });
+
 });
 
-Route::get('/super', function () {
+Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 

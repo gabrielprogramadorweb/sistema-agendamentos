@@ -3,18 +3,12 @@
 namespace App\Http\Controllers\Super;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreHomeRequest;
-use App\Http\Requests\UpdateHomeRequest;
+use App\Models\UnitModel;
 use App\Services\UnitService;
 use Illuminate\Http\Request;
 
 class UnitsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\View\View
-     */
     protected $unitService;
 
     public function __construct(UnitService $unitService)
@@ -22,13 +16,16 @@ class UnitsController extends Controller
         $this->unitService = $unitService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $table = $this->unitService->getAllUnitsFormatted();
-        return view('Back.Units.index', [
-            'table' => $table,
-            'title' => 'Unidades'
-        ]);
+        $query = UnitModel::query();
+
+        $units = $query->paginate(5)->withQueryString();
+
+        $table = $this->unitService->getAllUnitsFormatted(5);
+
+        $title = 'Unidades'; // Define the title for the view
+        return view('Back.Units.index', compact('units', 'title', 'table'));
     }
 
     /**

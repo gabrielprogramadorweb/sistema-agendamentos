@@ -37,6 +37,7 @@ class UnitModel extends Model
         'active'
     ];
 
+
     /**
      * The attributes that should be cast.
      *
