@@ -6,7 +6,6 @@
     <div class="container">
         <h1>Editar Unidade</h1>
 
-        {{-- Display errors if there are any form validation messages --}}
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -53,6 +52,11 @@
             <div class="form-group">
                 <label for="endtime">Fim:</label>
                 <input type="time" class="form-control" id="endtime" name="endtime" value="{{ old('endtime', $unit->endtime) }}">
+            </div>
+
+            <div class="form-group">
+                <label for="servicetime">Tempo de serviço:</label>
+                <input type="number" class="form-control" id="servicetime" name="servicetime" value="{{ old('servicetime', $unit->servicetime) }}">
             </div>
 
             <div class="form-group">
