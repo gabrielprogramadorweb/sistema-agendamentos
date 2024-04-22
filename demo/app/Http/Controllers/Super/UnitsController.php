@@ -52,16 +52,26 @@ class UnitsController extends Controller
     public function update(Request $request, $id)
     {
         $unit = UnitModel::findOrFail($id);
+
+        // Validate all necessary fields
         $validated = $request->validate([
             'name' => 'required|max:255',
-            // other validation rules...
+            'email' => 'required|email|max:255',
+            'phone' => 'nullable|max:30',
+            'coordinator' => 'nullable|max:255',
+            'address' => 'nullable|max:255',
+            'services' => 'nullable|array',
+            'starttime' => 'nullable|date_format:H:i',
+            'endtime' => 'nullable|date_format:H:i',
+            'servicetime' => 'nullable|numeric',
+            'active' => 'nullable|boolean'
         ]);
 
         $unit->update($validated);
 
-        // Redirect to the units index page under 'super/units'
         return redirect()->route('units.index')->with('success', 'Unit updated successfully.');
     }
+
 
 
     public function destroy($id)
