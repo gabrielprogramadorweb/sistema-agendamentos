@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="container">
-        <h1>Edit Unit</h1>
+        <h1>Editar Unidade</h1>
 
         {{-- Display errors if there are any form validation messages --}}
         @if ($errors->any())
@@ -19,45 +19,44 @@
 
         <form action="{{ route('units.update', $unit->id) }}" method="POST">
             @csrf
-            @method('PUT') <!-- Method spoofing to make it a PUT request -->
-
+            @method('PUT')
             <div class="form-group">
-                <label for="name">Name:</label>
+                <label for="name">Nome:</label>
                 <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $unit->name) }}" required>
             </div>
 
             <div class="form-group">
-                <label for="email">Email:</label>
+                <label for="email">E-mail:</label>
                 <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $unit->email) }}" required>
             </div>
 
             <div class="form-group">
-                <label for="phone">Phone:</label>
+                <label for="phone">Telefone:</label>
                 <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone', $unit->phone) }}">
             </div>
 
             <div class="form-group">
-                <label for="coordinator">Coordinator:</label>
+                <label for="coordinator">Coordenador(a):</label>
                 <input type="text" class="form-control" id="coordinator" name="coordinator" value="{{ old('coordinator', $unit->coordinator) }}">
             </div>
 
             <div class="form-group">
-                <label for="address">Address:</label>
+                <label for="address">Endereço:</label>
                 <input type="text" class="form-control" id="address" name="address" value="{{ old('address', $unit->address) }}">
             </div>
 
             <div class="form-group">
-                <label for="starttime">Start Time:</label>
+                <label for="starttime">Início:</label>
                 <input type="time" class="form-control" id="starttime" name="starttime" value="{{ old('starttime', $unit->starttime) }}">
             </div>
 
             <div class="form-group">
-                <label for="endtime">End Time:</label>
+                <label for="endtime">Fim:</label>
                 <input type="time" class="form-control" id="endtime" name="endtime" value="{{ old('endtime', $unit->endtime) }}">
             </div>
 
             <div class="form-group">
-                <label for="active">Active:</label>
+                <label for="active">Ativo:</label>
                 <input type="checkbox" id="active" name="active" {{ $unit->active ? 'checked' : '' }}>
             </div>
 
