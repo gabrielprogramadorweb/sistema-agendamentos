@@ -1,20 +1,11 @@
 <?php
 
 namespace App\Services;
-
 use App\Models\UnitModel;
 use Illuminate\Http\Request;
 
 class UnitService extends MyBaseService
 {
-    private static array $serviceTimes = [
-        '10 minutes' => '10 minutos',
-        '15 minutes' => '15 minutos',
-        '30 minutes' => '30 minutos',
-        '1 hour'     => '1 hora',
-        '2 hour'     => '2 horas',
-    ];
-
     public function renderTimesInterval(?string $serviceTime = null): string
     {
         $options = [];
@@ -62,21 +53,38 @@ class UnitService extends MyBaseService
         });
     }
 
-    public function validateUnit(Request $request): array
+    public function validateUnit(Request $request)
     {
+        $messages = [
+            'name.required'         => 'O campo nome é obrigatório.',
+            'name.max'              => 'O nome não pode ter mais que 255 caracteres.',
+            'email.required'        => 'O campo e-mail é obrigatório.',
+            'email.email'           => 'Informe um e-mail válido.',
+            'password.required'     => 'O campo senha é obrigatório.',
+            'phone.max'             => 'O telefone não pode ter mais que 11 dígitos.',
+            'phone.numeric'         => 'O telefone deve conter apenas números.',
+            'coordinator.max'       => 'O coordenador não pode ter mais que 255 caracteres.',
+            'address.max'           => 'O endereço não pode ter mais que 255 caracteres.',
+            'starttime.date_format' => 'Formato de hora de início inválido. Use o formato HH:mm.',
+            'endtime.date_format'   => 'Formato de hora de fim inválido. Use o formato HH:mm.',
+            'active.boolean'        => 'O campo ativo deve ser verdadeiro ou falso.'
+        ];
+
         return $request->validate([
-            'name' => 'required|max:255',
-            'email' => 'required|email',
-            'password' => 'required',
-            'phone' => 'nullable|max:30',
+            'name'        => 'required|max:255',
+            'email'       => 'required|email',
+            'password'    => 'required',
+            'phone'       => 'nullable|max:30',
             'coordinator' => 'nullable|max:255',
-            'address' => 'nullable|max:255',
-            'starttime' => 'nullable|date_format:H:i',
-            'endtime' => 'nullable|date_format:H:i',
+            'address'     => 'nullable|max:255',
+            'starttime'   => 'nullable|date_format:H:i',
+            'endtime'     => 'nullable|date_format:H:i',
             'servicetime' => 'nullable|string',
-            'active' => 'nullable|boolean'
-        ]);
+            'active'      => 'nullable|boolean'
+        ], $messages);
     }
+
+
 
     public function editUnit($id)
     {

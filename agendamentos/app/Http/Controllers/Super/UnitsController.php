@@ -39,22 +39,6 @@ class UnitsController extends Controller
         }
     }
 
-    private function validateUnit(Request $request)
-    {
-        return $request->validate([
-            'name' => 'required|max:255',
-            'email' => 'required|email',
-            'password' => 'required',
-            'phone' => 'nullable|max:30',
-            'coordinator' => 'nullable|max:255',
-            'address' => 'nullable|max:255',
-            'starttime' => 'nullable|date_format:H:i',
-            'endtime' => 'nullable|date_format:H:i',
-            'servicetime' => 'nullable|string',
-            'active' => 'nullable|boolean'
-        ]);
-    }
-
     public function create()
     {
         try {
@@ -69,7 +53,7 @@ class UnitsController extends Controller
 
     public function store(Request $request)
     {
-        $validatedData = $this->validateUnit($request);
+        $validatedData = $this->unitService->validateUnit($request);
         $validatedData['active'] = $request->has('active') ? 1 : 0;
 
         try {
@@ -111,7 +95,7 @@ class UnitsController extends Controller
         }
 
         try {
-            $validatedData = $this->validateUnit($request);
+            $validatedData = $this->unitService->validateUnit($request);
             $validatedData['active'] = $request->has('active') ? 1 : 0;
             $unit->update($validatedData);
             $message = $this->messageService->prepareUpdateMessages($changes);
