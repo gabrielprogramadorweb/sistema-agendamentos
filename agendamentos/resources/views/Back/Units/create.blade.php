@@ -100,11 +100,15 @@
 
                 <div class="form-group col-md-3">
                     <label for="active">Registro ativo</label>
-                    <input type="checkbox" id="active" name="active" {{ old('active') ? 'checked' : '' }}>
+                    <!-- Hidden input to default to 0 if the checkbox is not checked -->
+                    <input type="hidden" name="active" value="0">
+                    <!-- Checkbox input, it overrides the hidden field if checked -->
+                    <input type="checkbox" id="active" name="active" value="1" {{ old('active', $unit->active ?? 0) ? 'checked' : '' }}>
                     @error('active')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
+
                 <div class="form-group col-md-10">
                     <button type="submit" class="btn btn-primary">Criar</button>
                 </div>
