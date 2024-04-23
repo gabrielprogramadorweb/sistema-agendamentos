@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\UnitModel;
+use Illuminate\Http\Request;
 
 class UnitService extends MyBaseService
 {
@@ -59,6 +60,22 @@ class UnitService extends MyBaseService
 
             return $table;
         });
+    }
+
+    public function validateUnit(Request $request): array
+    {
+        return $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|email',
+            'password' => 'required',
+            'phone' => 'nullable|max:30',
+            'coordinator' => 'nullable|max:255',
+            'address' => 'nullable|max:255',
+            'starttime' => 'nullable|date_format:H:i',
+            'endtime' => 'nullable|date_format:H:i',
+            'servicetime' => 'nullable|string',
+            'active' => 'nullable|boolean'
+        ]);
     }
 
     public function editUnit($id)
