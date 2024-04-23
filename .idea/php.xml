@@ -124,9 +124,16 @@
       <path value="$PROJECT_DIR$/demo/vendor/phpoption/phpoption" />
       <path value="$PROJECT_DIR$/demo/vendor/nesbot/carbon" />
       <path value="$PROJECT_DIR$/demo/vendor/graham-campbell/result-type" />
+      <path value="$PROJECT_DIR$/demo/vendor/laravel/breeze" />
+      <path value="$PROJECT_DIR$/demo/vendor/inertiajs/inertia-laravel" />
+      <path value="$PROJECT_DIR$/demo/vendor/tightenco/ziggy" />
+      <path value="$PROJECT_DIR$/demo/vendor/pestphp/pest" />
+      <path value="$PROJECT_DIR$/demo/vendor/pestphp/pest-plugin" />
+      <path value="$PROJECT_DIR$/demo/vendor/pestphp/pest-plugin-laravel" />
+      <path value="$PROJECT_DIR$/demo/vendor/yajra/laravel-datatables-oracle" />
     </include_path>
   </component>
-  <component name="PhpProjectSharedConfiguration" php_language_level="8.1">
+  <component name="PhpProjectSharedConfiguration" php_language_level="8.0">
     <option name="suggestChangeDefaultLanguageLevel" value="false" />
   </component>
   <component name="PhpStanOptionsConfiguration">
