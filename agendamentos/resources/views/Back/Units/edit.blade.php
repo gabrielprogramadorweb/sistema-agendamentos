@@ -69,11 +69,10 @@
                     </select>
                 </div>
 
-
-
                 <div class="custom-control custom-checkbox">
                     <label for="active">Registro ativo</label>
-                    <input type="checkbox" id="active" name="active" {{ $unit->active ? 'checked' : '' }}>
+                    <input type="hidden" name="active" value="0">
+                    <input type="checkbox" id="active" name="active" value="1" {{ $unit->active ? 'checked' : '' }}>
                 </div>
                 <div class="form-group col-md-10">
                     <button type="submit" class="btn btn-primary">Salvar</button>

@@ -46,7 +46,7 @@
 
                 <div class="form-group col-md-3">
                     <label for="phone">Telefone:</label>
-                    <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone') }}">
+                    <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone') }}" required>
                     @error('phone')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -54,7 +54,7 @@
 
                 <div class="form-group col-md-3">
                     <label for="coordinator">Coordenador(a):</label>
-                    <input type="text" class="form-control" id="coordinator" name="coordinator" value="{{ old('coordinator') }}">
+                    <input type="text" class="form-control" id="coordinator" name="coordinator" value="{{ old('coordinator') }}"required>
                     @error('coordinator')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -62,7 +62,7 @@
 
                 <div class="form-group col-md-3">
                     <label for="address">Endereço:</label>
-                    <input type="text" class="form-control" id="address" name="address" value="{{ old('address') }}">
+                    <input type="text" class="form-control" id="address" name="address" value="{{ old('address') }}"required>
                     @error('address')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -71,7 +71,7 @@
 
                 <div class="form-group col-md-3">
                     <label for="starttime">Início de expediente:</label>
-                    <input type="time" class="form-control" id="starttime" name="starttime" value="{{ old('starttime') }}">
+                    <input type="time" class="form-control" id="starttime" name="starttime" value="{{ old('starttime') }}"required>
                     @error('starttime')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -79,7 +79,7 @@
 
                 <div class="form-group col-md-3">
                     <label for="endtime">Fim de expediente:</label>
-                    <input type="time" class="form-control" id="endtime" name="endtime" value="{{ old('endtime') }}">
+                    <input type="time" class="form-control" id="endtime" name="endtime" value="{{ old('endtime') }}"required>
                     @error('endtime')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -87,7 +87,7 @@
 
                 <div class="form-group">
                     <label for="servicetime">Tempo de serviço:</label>
-                    <select name="servicetime" id="servicetime" class="form-control">
+                    <select name="servicetime" id="servicetime" class="form-control"required>
                         <option value="">{{ '--Escolha o tempo--' }}</option>
                         @foreach ($serviceTimes as $key => $value)
                             <option value="{{ $key }}" {{ old('servicetime') == $key ? 'selected' : '' }}>

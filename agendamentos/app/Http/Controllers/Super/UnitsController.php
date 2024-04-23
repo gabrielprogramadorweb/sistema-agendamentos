@@ -12,7 +12,13 @@ use App\Http\Requests\UpdateUnitRequest; // Assumed correct request class for up
 class UnitsController extends Controller
 {
     protected $unitService;
-
+    protected $serviceTimes = [
+        '10 minutes' => '10 minutos',
+        '15 minutes' => '15 minutos',
+        '30 minutes' => '30 minutos',
+        '1 hour'     => '1 hora',
+        '2 hours'    => '2 horas',
+    ];
     public function __construct(UnitService $unitService)
     {
         $this->unitService = $unitService;
@@ -31,18 +37,28 @@ class UnitsController extends Controller
         }
     }
 
+    private function validateUnit(Request $request)
+    {
+        return $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|email',
+            'password' => 'required',
+            'phone' => 'nullable|max:30',
+            'coordinator' => 'nullable|max:255',
+            'address' => 'nullable|max:255',
+            'starttime' => 'nullable|date_format:H:i',
+            'endtime' => 'nullable|date_format:H:i',
+            'servicetime' => 'nullable|string',
+            'active' => 'nullable|boolean'
+        ]);
+    }
 
     public function create()
     {
         try {
-            $serviceTimes = [
-                '10 minutes' => '10 minutos',
-                '15 minutes' => '15 minutos',
-                '30 minutes' => '30 minutos',
-                '1 hour'     => '1 hora',
-                '2 hours'    => '2 horas',  // Note: changed from '2 hour' to '2 hours' for consistency
-            ];
+
             $title = 'Create New Unit';
+            $serviceTimes = $this->serviceTimes;
             return view('Back.Units.create', compact('title', 'serviceTimes'));
         } catch (\Exception $e) {
             \Log::error("Error accessing create unit page: " . $e->getMessage());
@@ -53,20 +69,7 @@ class UnitsController extends Controller
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|max:255',
-            'email' => 'required|email',
-            'password' => 'required',
-            'phone' => 'nullable|max:30',
-            'coordinator' => 'nullable|max:255',
-            'address' => 'nullable|max:255',
-            'starttime' => 'nullable|date_format:H:i',
-            'endtime' => 'nullable|date_format:H:i',
-            'servicetime' => 'nullable|string',
-            'active' => 'nullable' // Ensure this is not directly validating as boolean
-        ]);
-
-        // Manually handle the 'active' field to convert it to 0 or 1
+        $validatedData = $this->validateUnit($request);
         $validatedData['active'] = $request->has('active') ? 1 : 0;
 
         UnitModel::create($validatedData);
@@ -80,15 +83,9 @@ class UnitsController extends Controller
     public function edit($id)
     {
         try {
-            $serviceTimes = [
-                '10 minutes' => '10 minutos',
-                '15 minutes' => '15 minutos',
-                '30 minutes' => '30 minutos',
-                '1 hour'     => '1 hora',
-                '2 hours'    => '2 horas',  // Note: changed from '2 hour' to '2 hours' for consistency
-            ];
             $unit = UnitModel::findOrFail($id);
             $title = "Edit Unit";
+            $serviceTimes = $this->serviceTimes;
             return view('Back.Units.edit', compact('unit', 'title', 'serviceTimes'));
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             \Log::error("Unit not found: " . $e->getMessage());
@@ -105,18 +102,7 @@ class UnitsController extends Controller
     {
         try {
             $unit = UnitModel::findOrFail($id);
-            $validatedData = $request->validate([
-                'name' => 'required|max:255',
-                'email' => 'required|email',
-                'password' => 'required',
-                'phone' => 'nullable|max:30',
-                'coordinator' => 'nullable|max:255',
-                'address' => 'nullable|max:255',
-                'starttime' => 'nullable|date_format:H:i',
-                'endtime' => 'nullable|date_format:H:i',
-                'servicetime' => 'nullable|string',
-                'active' => 'nullable'
-            ]);
+            $validatedData = $this->validateUnit($request);
             $unit->update($validatedData);
             return redirect()->route('units.index')->with('success', 'Unit updated successfully.');
         } catch (\Exception $e) {
