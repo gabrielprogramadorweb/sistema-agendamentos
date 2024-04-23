@@ -58,7 +58,6 @@ class UnitsController extends Controller
     public function create()
     {
         try {
-
             $title = 'Criar unidade nova';
             $serviceTimes = $this->serviceTimes;
             return view('Back.Units.create', compact('title', 'serviceTimes'));

@@ -67,6 +67,7 @@
                 </div>
                 <div class="form-group col-md-10">
                     <button type="submit" class="btn btn-primary">Salvar</button>
+                    <a href="{{ route('units.index') }}" class="btn btn-secondary">Voltar</a>
                 </div>
 
             </div>

@@ -46,7 +46,7 @@
 
                 <div class="form-group col-md-3">
                     <label for="phone">Telefone:</label>
-                    <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone') }}" required>
+                    <input type="text" class="form-control" id="phone" name="phone" placeholder="(00)00000-0000" value="{{ old('phone') }}" required>
                     @error('phone')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -111,9 +111,16 @@
 
                 <div class="form-group col-md-10">
                     <button type="submit" class="btn btn-primary">Criar</button>
+                    <a href="{{ route('units.index') }}" class="btn btn-secondary">Voltar</a>
                 </div>
             </div>
 
         </form>
     </div>
 @endsection
+
+<script>
+    $(document).ready(function(){
+        $('#phone').mask('(00) 00000-0000');
+    });
+</script>
