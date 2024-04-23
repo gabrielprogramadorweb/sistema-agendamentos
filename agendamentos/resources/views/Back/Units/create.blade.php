@@ -5,14 +5,10 @@
 @section('content')
     <div class="container">
         <h1>Criar novo registro</h1>
-
-        {{-- Display errors if there are any form validation messages --}}
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
+                        <li>{{ 'Erro ao criar registro!'}}</li>
                 </ul>
             </div>
         @endif

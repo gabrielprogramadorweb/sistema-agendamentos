@@ -57,6 +57,7 @@ class UnitService extends MyBaseService
     {
         $messages = [
             'name.required'         => 'O campo nome é obrigatório.',
+            'name.unique'           => 'Este nome já está em uso.',
             'name.max'              => 'O nome não pode ter mais que 255 caracteres.',
             'email.required'        => 'O campo e-mail é obrigatório.',
             'email.email'           => 'Informe um e-mail válido.',
@@ -71,7 +72,7 @@ class UnitService extends MyBaseService
         ];
 
         return $request->validate([
-            'name'        => 'required|max:255',
+            'name'        => 'required|max:255|unique:units,name',
             'email'       => 'required|email',
             'password'    => 'required',
             'phone'       => 'nullable|max:30',
@@ -99,9 +100,12 @@ class UnitService extends MyBaseService
         $btnActions .= '<button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Ações</button>';
         $btnActions .= '<div class="dropdown-menu">';
         $btnActions .= '<a class="dropdown-item" href="' . route('units.edit', $unit->id) . '">Edit</a>';
-        $btnActions .= '<a class="dropdown-item" href="#">Ação2</a>';
-        $btnActions .= '<a class="dropdown-item" href="#">Ação3</a>';
+        $btnActions .= $unit->active
+            ? '<a class="dropdown-item" href="' . route('units.toggleStatus', $unit->id) . '">Desativar</a>'
+            : '<a class="dropdown-item" href="' . route('units.toggleStatus', $unit->id) . '">Ativar</a>';
+
         $btnActions .= '</div></div>';
         return $btnActions;
     }
+
 }
