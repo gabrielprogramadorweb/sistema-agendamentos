@@ -5367,7 +5367,7 @@ desktop:
     terms:
       - computer
       - cpu
-      - demo
+      - agendamentos
       - desktop
       - device
       - imac
@@ -11324,7 +11324,7 @@ laptop:
       - computer
       - cpu
       - dell
-      - demo
+      - agendamentos
       - device
       - mac
       - macbook
@@ -11343,7 +11343,7 @@ laptop-code:
       - computer
       - cpu
       - dell
-      - demo
+      - agendamentos
       - develop
       - device
       - mac

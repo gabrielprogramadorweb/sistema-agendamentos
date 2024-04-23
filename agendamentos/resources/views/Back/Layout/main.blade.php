@@ -419,7 +419,7 @@
 @push('scripts')
     <script src="{{ asset('back/vendor/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('back/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('back/js/demo/datatables-demo.js') }}"></script>
+    <script src="{{ asset('back/js/agendamentos/datatables-agendamentos.js') }}"></script>
 @endpush
 
 
