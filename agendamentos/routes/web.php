@@ -23,6 +23,7 @@ Route::prefix('super')->middleware('auth')->group(function () {
         Route::post('/', [UnitsController::class, 'store'])->name('units.store');
         Route::get('/', [UnitsController::class, 'index'])->name('units.index');
         Route::get('/create', [UnitsController::class, 'create'])->name('units.create');
+        Route::get('/toggle/{id}', [UnitsController::class, 'toggleStatus'])->name('units.toggleStatus');
         Route::get('/{id}/edit', [UnitsController::class, 'edit'])
             ->where('id', '[0-9]+')
             ->name('units.edit');

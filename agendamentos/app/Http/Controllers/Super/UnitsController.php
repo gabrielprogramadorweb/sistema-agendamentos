@@ -106,6 +106,20 @@ class UnitsController extends Controller
         }
     }
 
+    public function toggleStatus($id)
+    {
+        try {
+            $unit = UnitModel::findOrFail($id);
+            $unit->active = !$unit->active; // Toggle the status
+            $unit->save();
+
+            return redirect()->route('units.index')->with('success', $unit->active ? 'Unidade ativada com sucesso.' : 'Unidade desativada com sucesso.');
+        } catch (\Exception $e) {
+            \Log::error("Error toggling unit status: " . $e->getMessage());
+            return redirect()->back()->withErrors('Falha ao alterar registro.');
+        }
+    }
+
     public function destroy($id)
     {
         try {
