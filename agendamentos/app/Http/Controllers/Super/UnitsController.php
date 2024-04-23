@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Super;
 
 use App\Http\Controllers\Controller;
 use App\Models\UnitModel;
+use App\Services\MessageService;
 use App\Services\UnitService;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreUnitRequest; // Assumed correct request class for storing units
@@ -12,6 +13,8 @@ use App\Http\Requests\UpdateUnitRequest; // Assumed correct request class for up
 class UnitsController extends Controller
 {
     protected $unitService;
+    protected $messageService;
+
     protected $serviceTimes = [
         '10 minutes' => '10 minutos',
         '15 minutes' => '15 minutos',
@@ -19,9 +22,11 @@ class UnitsController extends Controller
         '1 hour'     => '1 hora',
         '2 hours'    => '2 horas',
     ];
-    public function __construct(UnitService $unitService)
+
+    public function __construct(UnitService $unitService, MessageService $messageService)
     {
         $this->unitService = $unitService;
+        $this->messageService = $messageService;
     }
 
     public function index(Request $request)
@@ -52,6 +57,7 @@ class UnitsController extends Controller
             'active' => 'nullable|boolean'
         ]);
     }
+
 
     public function create()
     {
@@ -100,16 +106,28 @@ class UnitsController extends Controller
 
     public function update(Request $request, $id)
     {
+        $unit = UnitModel::findOrFail($id);
+        $currentData = $unit->toArray();
+        $inputData = $request->only(array_keys($currentData));
+        $changes = array_diff_assoc($inputData, $currentData);
+
+        if (empty($changes) && !$request->has('forceUpdate')) {
+            $message = $this->messageService->prepareUpdateMessages($changes);
+            return redirect()->back()->with($message['type'], $message['message']);
+        }
+
         try {
-            $unit = UnitModel::findOrFail($id);
             $validatedData = $this->validateUnit($request);
+            $validatedData['active'] = $request->has('active') ? 1 : 0;
             $unit->update($validatedData);
-            return redirect()->route('units.index')->with('success', 'Unit updated successfully.');
+            $message = $this->messageService->prepareUpdateMessages($changes);
+            return redirect()->back()->with($message['type'], $message['message']);
         } catch (\Exception $e) {
-            \Log::error("Error updating unit: " . $e->getMessage());
-            return redirect()->back()->withErrors('Failed to update the unit:' . $e->getMessage());
+            $message = $this->messageService->prepareUpdateMessages($changes, $e);
+            return redirect()->back()->with($message['type'], $message['message']);
         }
     }
+
 
     public function destroy($id)
     {

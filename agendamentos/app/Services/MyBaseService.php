@@ -19,6 +19,8 @@ abstract class MyBaseService
         }
     }
 
+
+
     /**
      * Exemplo de método que pode ser comum para recuperar todos os registros de um modelo
      */
