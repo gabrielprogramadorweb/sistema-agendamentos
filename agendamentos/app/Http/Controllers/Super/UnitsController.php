@@ -14,7 +14,6 @@ class UnitsController extends Controller
 {
     protected $unitService;
     protected $messageService;
-
     protected $serviceTimes = [
         '10 minutes' => '10 minutos',
         '15 minutes' => '15 minutos',
@@ -22,13 +21,11 @@ class UnitsController extends Controller
         '1 hour'     => '1 hora',
         '2 hours'    => '2 horas',
     ];
-
     public function __construct(UnitService $unitService, MessageService $messageService)
     {
         $this->unitService = $unitService;
         $this->messageService = $messageService;
     }
-
     public function index(Request $request)
     {
         try {
@@ -58,12 +55,11 @@ class UnitsController extends Controller
         ]);
     }
 
-
     public function create()
     {
         try {
 
-            $title = 'Create New Unit';
+            $title = 'Criar unidade nova';
             $serviceTimes = $this->serviceTimes;
             return view('Back.Units.create', compact('title', 'serviceTimes'));
         } catch (\Exception $e) {
@@ -72,19 +68,20 @@ class UnitsController extends Controller
         }
     }
 
-
     public function store(Request $request)
     {
         $validatedData = $this->validateUnit($request);
         $validatedData['active'] = $request->has('active') ? 1 : 0;
 
-        UnitModel::create($validatedData);
-        return redirect()->route('units.index')->with('success', 'Unit created successfully.');
+        try {
+            UnitModel::create($validatedData);
+            $message = $this->messageService->prepareCreateMessages();
+            return redirect()->route('units.index')->with($message['type'], $message['message']);
+        } catch (\Exception $e) {
+            $message = $this->messageService->prepareCreateMessages($e);
+            return redirect()->back()->with($message['type'], $message['message']);
+        }
     }
-
-
-// In your Controller
-
 
     public function edit($id)
     {
@@ -101,8 +98,6 @@ class UnitsController extends Controller
             return redirect()->back()->withErrors('Failed to access the edit unit page.');
         }
     }
-
-
 
     public function update(Request $request, $id)
     {
@@ -128,7 +123,6 @@ class UnitsController extends Controller
         }
     }
 
-
     public function destroy($id)
     {
         try {
@@ -140,5 +134,4 @@ class UnitsController extends Controller
             return redirect()->back()->withErrors('Failed to delete the unit.');
         }
     }
-
 }

@@ -13,4 +13,20 @@ class MessageService {
 
         return ['type' => 'success', 'message' => 'Registro atualizado com sucesso.'];
     }
+
+    public function prepareCreateMessages($exception = null)
+    {
+        if ($exception) {
+            \Log::error("Error creating unit: " . $exception->getMessage());
+            return [
+                'type' => 'error',
+                'message' => 'Falha ao criar unidade..'
+            ];
+        }
+
+        return [
+            'type' => 'success',
+            'message' => 'Unidade criada com sucesso.'
+        ];
+    }
 }
