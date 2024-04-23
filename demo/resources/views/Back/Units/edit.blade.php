@@ -76,7 +76,7 @@
                     <input type="checkbox" id="active" name="active" {{ $unit->active ? 'checked' : '' }}>
                 </div>
                 <div class="form-group col-md-10">
-                    <button type="submit" class="btn btn-primary">Atualizar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
                 </div>
 
             </div>

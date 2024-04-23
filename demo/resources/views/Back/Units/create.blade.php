@@ -85,14 +85,18 @@
                     @enderror
                 </div>
 
-                <div class="form-group col-md-3">
+                <div class="form-group">
                     <label for="servicetime">Tempo de serviço:</label>
-                    <select name="servicetime" class="form-control">
+                    <select name="servicetime" id="servicetime" class="form-control">
+                        <option value="">{{ '--Escolha o tempo--' }}</option>
                         @foreach ($serviceTimes as $key => $value)
-                            <option value="{{ $key }}" {{ old('servicetime') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                            <option value="{{ $key }}" {{ old('servicetime') == $key ? 'selected' : '' }}>
+                                {{ $value }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
+
 
                 <div class="form-group col-md-3">
                     <label for="active">Registro ativo</label>
