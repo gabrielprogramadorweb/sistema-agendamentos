@@ -2,31 +2,42 @@
 namespace App\Services;
 
 class MessageService {
-    public function prepareUpdateMessages($changes, $exception = null) {
-        if (empty($changes)) {
-            return ['type' => 'info', 'message' => 'Não há nada para ser atualizado.'];
-        }
-
-        if ($exception) {
-            return ['type' => 'error', 'message' => 'Falha ao atualizar o registro: ' . $exception->getMessage()];
-        }
-
-        return ['type' => 'success', 'message' => 'Registro atualizado com sucesso.'];
-    }
-
-    public function prepareCreateMessages($exception = null)
-    {
-        if ($exception) {
-            \Log::error("Error creating unit: " . $exception->getMessage());
+    public function prepareCreateMessages(\Exception $e = null) {
+        if ($e === null) {
+            return [
+                'type' => 'success',
+                'message' => '<i class="fa fa-check-circle"></i> Registro criada com sucesso.'
+            ];
+        } else {
             return [
                 'type' => 'error',
-                'message' => 'Falha ao criar unidade..'
+                'message' => '<i class="fa fa-exclamation-circle"></i> ' . $this->formatExceptionMessage($e)
             ];
         }
-
-        return [
-            'type' => 'success',
-            'message' => 'Unidade criada com sucesso.'
-        ];
     }
+
+    public function prepareUpdateMessages($changes, \Exception $e = null) {
+        if ($e === null && empty($changes)) {
+            return [
+                'type' => 'info',
+                'message' => 'Não há nada para ser atualizado.'
+            ];
+        } elseif ($e !== null) {
+            return [
+                'type' => 'error',
+                'message' => $this->formatExceptionMessage($e)
+            ];
+        } else {
+            return [
+                'type' => 'success',
+                'message' => 'Registro atualizada com sucesso.'
+            ];
+        }
+    }
+
+    private function formatExceptionMessage(\Exception $e) {
+        // Custom formatting can be enhanced here as needed
+        return 'Falha ao processar a solicitação: ' . $e->getMessage();
+    }
+
 }
