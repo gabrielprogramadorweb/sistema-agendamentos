@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreHomeRequest;
 use App\Http\Requests\UpdateHomeRequest;
 use App\Models\Home;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -14,18 +15,20 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $data = ['title' => 'Home'];
-            return view('Back.Home.index', $data);
+            $title = 'Home'; // Definindo o título
+            return view('Back.Home.index', compact('title')); // Passando o título para a view
         } catch (\Exception $e) {
-            // Log the error
-            \Log::error("Error loading the home index view: " . $e->getMessage());
-            // Optionally, redirect to a custom error page
-            return redirect()->route('error.page')->with('error', 'Error loading the page');
+            // Log do erro
+            \Log::error("Erro ao carregar a página inicial: " . $e->getMessage());
+            // Redirecionamento opcional para uma página de erro personalizada
+            return redirect()->route('error.page')->with('error', 'Erro ao carregar a página');
         }
     }
+
+
 
 
     /**
