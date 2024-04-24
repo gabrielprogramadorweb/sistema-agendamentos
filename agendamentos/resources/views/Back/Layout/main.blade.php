@@ -31,13 +31,12 @@
             <div class="sidebar-brand-icon rotate-n-15">
 
             </div>
-            <div class="sidebar-brand-text mx-3">Admin <sup> ● Agendamentos</sup></div>
+
+            <div class="sidebar-brand-text mx-3">Admin <sup> ● </sup></div>
         </a>
 
-        <!-- Divider -->
         <hr class="sidebar-divider my-0">
 
-        <!-- Nav Item - Dashboard -->
         <li class="nav-item">
             <a class="nav-link" href="{{ route('home.index') }}">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
@@ -45,7 +44,8 @@
             </a>
         </li>
 
-        <!-- Nav Item - Units -->
+        <hr class="sidebar-divider my-0">
+
         <li class="nav-item">
             <a class="nav-link" href="{{ route('units.index') }}">
                 <i class="fas fa-fw fa-building"></i>
@@ -53,7 +53,14 @@
             </a>
         </li>
 
+        <hr class="sidebar-divider my-0">
 
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('services.index') }}">
+                <i class="fas fa-fw fa-cogs"></i>
+                <span>Serviços</span>
+            </a>
+        </li>
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
 

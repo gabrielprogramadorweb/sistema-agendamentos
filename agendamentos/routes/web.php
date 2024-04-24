@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Super\HomeController;
+use App\Http\Controllers\Super\ServiceController;
 use App\Http\Controllers\Super\UnitsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,18 @@ Route::prefix('super')->middleware('auth')->group(function () {
             ->where('id', '[0-9]+')
             ->name('units.edit');
         Route::put('/{id}', [UnitsController::class, 'update'])->name('units.update');
+    });
+
+    Route::prefix('services')->group(function () {
+        Route::post('/', [ServiceController::class, 'store'])->name('services.store');
+        Route::get('/', [ServiceController::class, 'index'])->name('services.index');
+        Route::get('/create', [ServiceController::class, 'create'])->name('services.create');
+        Route::delete('/{id}', [ServiceController::class, 'destroy'])->name('services.destroy');
+        Route::get('/toggle/{id}', [ServiceController::class, 'toggleStatus'])->name('services.toggleStatus');
+        Route::get('/{id}/edit', [ServiceController::class, 'edit'])
+            ->where('id', '[0-9]+')
+            ->name('services.edit');
+        Route::put('/{id}', [ServiceController::class, 'update'])->name('services.update');
     });
 });
 
