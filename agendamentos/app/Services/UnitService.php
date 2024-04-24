@@ -85,8 +85,6 @@ class UnitService extends MyBaseService
         ], $messages);
     }
 
-
-
     public function editUnit($id)
     {
         return $this->handleExceptions(function() use ($id) {
@@ -100,10 +98,11 @@ class UnitService extends MyBaseService
         $btnActions .= '<button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Ações</button>';
         $btnActions .= '<div class="dropdown-menu">';
         $btnActions .= '<a class="dropdown-item" href="' . route('units.edit', $unit->id) . '">Edit</a>';
-        $btnActions .= $unit->active
-            ? '<a class="dropdown-item" href="' . route('units.toggleStatus', $unit->id) . '">Desativar</a>'
-            : '<a class="dropdown-item" href="' . route('units.toggleStatus', $unit->id) . '">Ativar</a>';
-
+        if ($unit->active) {
+            $btnActions .= '<a class="dropdown-item" href="' . route('units.toggleStatus', $unit->id) . '">Desativar</a>';
+        } else {
+            $btnActions .= '<a class="dropdown-item" href="' . route('units.toggleStatus', $unit->id) . '">Ativar</a>';
+        }
         $btnActions .= '</div></div>';
         return $btnActions;
     }

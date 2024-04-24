@@ -16,6 +16,21 @@ class MessageService {
         }
     }
 
+    public function prepareActiveMessages($isActive, \Exception $e = null) {
+        if ($e === null) {
+            return [
+                'type' => 'success',
+                'message' => '<i class="fa fa-check-circle"></i> ' . ($isActive ? 'Unidade ativada com sucesso.' : 'Unidade desativada com sucesso.')
+            ];
+        } else {
+            return [
+                'type' => 'error',
+                'message' => '<i class="fa fa-exclamation-circle"></i> ' . $this->formatExceptionMessage($e)
+            ];
+        }
+    }
+
+
     public function prepareUpdateMessages($changes, \Exception $e = null) {
         if ($e === null && empty($changes)) {
             return [
@@ -34,6 +49,8 @@ class MessageService {
             ];
         }
     }
+
+
 
     private function formatExceptionMessage(\Exception $e) {
         // Custom formatting can be enhanced here as needed
