@@ -42,7 +42,7 @@ class ServiceService extends MyBaseService
                         'actions'    => $this->renderBtnActions($service),
                         'name'       => $service->name,
                         'status'     => $statusLabel, // Modificação aqui
-                        'created_at' => $service->created_at->toDateTimeString()
+                        'created_at' => MyBaseService::formatDateTime($service->created_at),
                     ];
                 });
                 $table->isEmpty = false;

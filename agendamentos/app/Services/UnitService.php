@@ -42,10 +42,10 @@ class UnitService extends MyBaseService
                         'name'       => $unit->name,
                         'email'      => $unit->email,
                         'phone'      => $unit->phone,
-                        'status'     => $statusLabel, // Modificação aqui
+                        'status'     => $statusLabel,
                         'starttime'  => $unit->starttime,
                         'endtime'    => $unit->endtime,
-                        'created_at' => $unit->created_at->toDateTimeString()
+                        'created_at' => MyBaseService::formatDateTime($unit->created_at),
                     ];
                 });
                 $table->isEmpty = false;
@@ -59,11 +59,8 @@ class UnitService extends MyBaseService
     {
         // Aplica a função de sanitização em cada valor do array de input
         return array_map(function ($value) {
-            // Remove tags HTML e PHP
             $value = strip_tags($value);
-            // Remove caracteres especiais
             $value = preg_replace('/[^\p{L}\p{N}\s]/u', '', $value);
-            // Remove espaços extras
             $value = trim(preg_replace('/\s+/', ' ', $value));
 
             return $value;

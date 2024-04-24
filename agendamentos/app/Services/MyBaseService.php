@@ -19,7 +19,11 @@ abstract class MyBaseService
         }
     }
 
-
+    public static function formatDateTime($dateTime)
+    {
+        // Formata a data e hora para o formato desejado (data brasileira, hora e minuto)
+        return $dateTime->format('d/m/Y H:i');
+    }
 
     /**
      * Exemplo de método que pode ser comum para recuperar todos os registros de um modelo
