@@ -60,7 +60,6 @@ class UnitService extends MyBaseService
     {
         $messages = [
             'name.required'         => 'O campo nome é obrigatório.',
-            'name.unique'           => 'Este nome já está em uso.',
             'name.max'              => 'O nome não pode ter mais que 255 caracteres.',
             'email.required'        => 'O campo e-mail é obrigatório.',
             'email.email'           => 'Informe um e-mail válido.',
@@ -75,7 +74,7 @@ class UnitService extends MyBaseService
         ];
 
         return $request->validate([
-            'name'        => 'required|max:255|unique:units,name',
+            'name'        => 'required|max:255',
             'email'       => 'required|email',
             'password'    => 'required',
             'phone'       => 'nullable|max:30',
