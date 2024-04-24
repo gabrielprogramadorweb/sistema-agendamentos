@@ -55,6 +55,20 @@ class UnitService extends MyBaseService
         });
     }
 
+    public function sanitizeInput(array $input)
+    {
+        // Aplica a função de sanitização em cada valor do array de input
+        return array_map(function ($value) {
+            // Remove tags HTML e PHP
+            $value = strip_tags($value);
+            // Remove caracteres especiais
+            $value = preg_replace('/[^\p{L}\p{N}\s]/u', '', $value);
+            // Remove espaços extras
+            $value = trim(preg_replace('/\s+/', ' ', $value));
+
+            return $value;
+        }, $input);
+    }
 
     public function validateUnit(Request $request)
     {
