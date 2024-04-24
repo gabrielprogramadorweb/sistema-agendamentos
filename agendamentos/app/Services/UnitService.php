@@ -113,6 +113,8 @@ class UnitService extends MyBaseService
         $btnActions .= '<a class="dropdown-item" href="' . route('units.edit', $unit->id) . '">Editar</a>';
         if ($unit->active) {
             $btnActions .= '<a class="dropdown-item" href="' . route('units.toggleStatus', $unit->id) . '">Desativar</a>';
+            $btnActions .= '<a class="dropdown-item" href="' . route('services.toggleStatus', $unit->id) . '">Serviços</a>';
+
         } else {
             $btnActions .= '<a class="dropdown-item" href="' . route('units.toggleStatus', $unit->id) . '">Ativar</a>';
         }

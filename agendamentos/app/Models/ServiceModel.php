@@ -48,6 +48,17 @@ class ServiceModel extends Model
     protected $dates = [
         'deleted_at', // For soft deletes
     ];
+    protected static function booted()
+    {
+        static::created(function ($service) {
+            $allUnitIds = \App\Models\UnitModel::all()->pluck('id');
+            $service->units()->syncWithoutDetaching($allUnitIds);
+        });
+    }
+    public function units()
+    {
+        return $this->belongsToMany(UnitModel::class, 'service_unit', 'service_id', 'unit_id');
+    }
 
 
 }

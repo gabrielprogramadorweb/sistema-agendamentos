@@ -10,53 +10,38 @@ class UnitModel extends Model
 {
     use HasFactory, SoftDeletes;
 
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
     protected $table = 'units';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<string>
-     */
     protected $fillable = [
         'name',
         'email',
-        'email_verified_at',
-        'password',
         'phone',
         'coordinator',
         'address',
-        'services',
         'starttime',
         'endtime',
         'servicetime',
         'active'
     ];
 
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        'services' => 'array',
         'active' => 'boolean'
     ];
 
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array<string>
-     */
-    protected $dates = [
-        'deleted_at', // For soft deletes
+    protected $dates = ['deleted_at'];
+
+    protected array $cast = [
+        'services' => 'array',
     ];
+
+    // Assuming 'services' contains an array of service IDs
+    public function getServicesAttribute()
+    {
+        if ($this->attributes['services']) {
+            return ServiceModel::whereIn('id', $this->attributes['services'])->get();
+        }
+        return collect(); // Return an empty collection if there are no services
+    }
 
 
 }

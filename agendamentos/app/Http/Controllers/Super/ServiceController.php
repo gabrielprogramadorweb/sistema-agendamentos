@@ -29,7 +29,7 @@ class ServiceController extends Controller
     {
         try {
             $services = ServiceModel::query()->paginate(5)->withQueryString();
-            $table = $this->serviceService->getAllUnitsFormatted(5);
+            $table = $this->serviceService->getAllServicesFormatted(5);
             $title = 'Services';
             return view('Back.Services.index', compact('services', 'title', 'table'));
         } catch (\Exception $e) {
@@ -52,7 +52,7 @@ class ServiceController extends Controller
 
     public function store(Request $request)
     {
-        $validatedData = $this->serviceService->validateUnit($request);
+        $validatedData = $this->serviceService->validateService($request);
         $validatedData['active'] = $request->has('active') ? 1 : 0;
 
         try {
@@ -70,15 +70,15 @@ class ServiceController extends Controller
     {
         try {
             $services = ServiceModel::findOrFail($id);
-            $title = "Edit Services";
+            $title = "Editar Serviços";
             $serviceTimes = $this->serviceTimes;
             return view('Back.Services.edit', compact('services', 'title', 'serviceTimes'));
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             \Log::error("Unit not found: " . $e->getMessage());
-            return redirect()->route('services.index')->with('error', "Unit not found.");
+            return redirect()->route('services.index')->with('error', "Services not found.");
         } catch (\Exception $e) {
             \Log::error("Error accessing edit unit page: " . $e->getMessage());
-            return redirect()->back()->withErrors('Failed to access the edit unit page.');
+            return redirect()->back()->withErrors('Failed to access the Services unit page.');
         }
     }
 
@@ -95,7 +95,7 @@ class ServiceController extends Controller
         }
 
         try {
-            $validatedData = $this->serviceService->validateUnit($request);
+            $validatedData = $this->serviceService->validateService($request);
             $validatedData['active'] = $request->has('active') ? 1 : 0;
             $validatedData = $this->serviceService->sanitizeInput($request->all());
             $services->update($validatedData);

@@ -5,7 +5,7 @@
 @section('content')
     <div class="container" id="app">
         <success-modal :visible="showSuccessModal" :message="'Unidade atualizada com sucesso!'" @close="showSuccessModal = false"></success-modal>
-        <h1>Editar Unidade</h1>
+        <h1>Editar Serviço</h1>
         @include('components.messages')
         <form action="{{ route('services.update', $services->id) }}" method="POST">
             @csrf

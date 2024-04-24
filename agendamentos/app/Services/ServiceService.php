@@ -15,7 +15,7 @@ class ServiceService extends MyBaseService
         }
         return form_dropdown(data: 'servicetime', options: $options, selected: old('servicetime', $serviceTime), extra: ['class' => 'form-control']);
     }
-    public function getAllUnitsFormatted($perPage = 10, $search = null)
+    public function getAllServicesFormatted($perPage = 10, $search = null)
     {
         return $this->handleExceptions(function() use ($perPage, $search) {
             $query = ServiceModel::query();
@@ -67,7 +67,7 @@ class ServiceService extends MyBaseService
         }, $input);
     }
 
-    public function validateUnit(Request $request)
+    public function validateService(Request $request)
     {
         $messages = [
             'name.required'         => 'O campo nome é obrigatório.',
