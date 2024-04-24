@@ -106,14 +106,12 @@ class UnitService extends MyBaseService
         } else {
             $btnActions .= '<a class="dropdown-item" href="' . route('units.toggleStatus', $unit->id) . '">Ativar</a>';
         }
-        $btnActions .= '<form action="' . route('units.destroy', $unit->id) . '" method="POST" style="display: inline-block;">';
-        $btnActions .= csrf_field();
-        $btnActions .= method_field('DELETE');
-        $btnActions .= '<button type="submit" class="dropdown-item text-danger" onclick="return confirm(\'Tem certeza que deseja excluir esta unidade?\')">Excluir</button>';
-        $btnActions .= '</form>';
-
+        $btnActions .= '<a class="dropdown-item text-danger" href="#" data-id="' . $unit->id . '" data-toggle="modal" data-target="#confirmDeleteModal' . $unit->id . '" onclick="setDeleteUrl(this)">Excluir</a>';
+        $btnActions .= '</div></div>';
         return $btnActions;
     }
+
+
 
 
 }

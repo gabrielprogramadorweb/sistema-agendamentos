@@ -46,10 +46,8 @@
                                 <tr>
                                     @foreach($row as $key => $cell)
                                         <td>
-                                            @if($key == 'status')
-                                                {!! $cell !!}
-                                            @elseif($key == 'actions')
-                                                {!! $cell !!}
+                                            @if($key == 'actions')
+                                                {!! $cell !!} <!-- Make sure this includes a call to setDeleteUrl passing the unit's ID -->
                                             @else
                                                 {{ $cell }}
                                             @endif
@@ -66,9 +64,48 @@
                         </div>
 
                     @endif
+
                 </div>
             </div>
         </div>
-
     </div>
+
+    <!-- Modals de confirmação de exclusão -->
+    @foreach($units as $unit)
+        <div class="modal fade" id="confirmDeleteModal{{ $unit->id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Confirmar Exclusão</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Tem certeza que deseja excluir esta unidade?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <form id="deleteForm{{ $unit->id }}" action="{{ route('units.destroy', ['id' => $unit->id]) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">Excluir</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+@endsection
+
+@section('scripts')
+    <script>
+        function setDeleteUrl(element) {
+            var id = element.getAttribute('data-id');
+            var form = document.getElementById('deleteForm' + id); // Correctly append the id to match the form's ID
+            form.action = '/super/units/' + id;
+        }
+
+
+    </script>
 @endsection
