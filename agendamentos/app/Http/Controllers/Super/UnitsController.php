@@ -7,8 +7,8 @@ use App\Models\UnitModel;
 use App\Services\MessageService;
 use App\Services\UnitService;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreUnitRequest; // Assumed correct request class for storing units
-use App\Http\Requests\UpdateUnitRequest; // Assumed correct request class for updating units
+use App\Http\Requests\StoreUnitRequest;
+use App\Http\Requests\UpdateUnitRequest;
 
 class UnitsController extends Controller
 {
@@ -110,15 +110,16 @@ class UnitsController extends Controller
     {
         try {
             $unit = UnitModel::findOrFail($id);
-            $unit->active = !$unit->active; // Toggle the status
+            $unit->active = !$unit->active;
             $unit->save();
-
-            return redirect()->route('units.index')->with('success', $unit->active ? 'Unidade ativada com sucesso.' : 'Unidade desativada com sucesso.');
+            $message = $this->messageService->prepareActiveMessages($unit->active);
+            return redirect()->route('units.index')->with($message['type'], $message['message']);
         } catch (\Exception $e) {
-            \Log::error("Error toggling unit status: " . $e->getMessage());
-            return redirect()->back()->withErrors('Falha ao alterar registro.');
+            $message = $this->messageService->prepareActiveMessages($unit->active ?? false, $e);
+            return redirect()->back()->with($message['type'], $message['message']);
         }
     }
+
 
     public function destroy($id)
     {
