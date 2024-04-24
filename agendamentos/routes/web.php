@@ -18,7 +18,6 @@ Route::get('/', function () {
 
 Route::prefix('super')->middleware('auth')->group(function () {
     Route::get('/', [HomeController::class, 'index']);
-
     Route::prefix('units')->group(function () {
         Route::post('/', [UnitsController::class, 'store'])->name('units.store');
         Route::get('/', [UnitsController::class, 'index'])->name('units.index');
