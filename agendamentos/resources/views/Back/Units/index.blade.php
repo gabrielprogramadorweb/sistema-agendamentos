@@ -49,7 +49,7 @@
                                             @if($key == 'actions')
                                                 {!! $cell !!} <!-- Make sure this includes a call to setDeleteUrl passing the unit's ID -->
                                             @else
-                                                {{ $cell }}
+                                                {!! $cell !!}
                                             @endif
                                         </td>
                                     @endforeach
