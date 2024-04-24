@@ -100,14 +100,20 @@ class UnitService extends MyBaseService
         $btnActions = '<div class="btn-group">';
         $btnActions .= '<button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Ações</button>';
         $btnActions .= '<div class="dropdown-menu">';
-        $btnActions .= '<a class="dropdown-item" href="' . route('units.edit', $unit->id) . '">Edit</a>';
+        $btnActions .= '<a class="dropdown-item" href="' . route('units.edit', $unit->id) . '">Editar</a>';
         if ($unit->active) {
             $btnActions .= '<a class="dropdown-item" href="' . route('units.toggleStatus', $unit->id) . '">Desativar</a>';
         } else {
             $btnActions .= '<a class="dropdown-item" href="' . route('units.toggleStatus', $unit->id) . '">Ativar</a>';
         }
-        $btnActions .= '</div></div>';
+        $btnActions .= '<form action="' . route('units.destroy', $unit->id) . '" method="POST" style="display: inline-block;">';
+        $btnActions .= csrf_field();
+        $btnActions .= method_field('DELETE');
+        $btnActions .= '<button type="submit" class="dropdown-item text-danger" onclick="return confirm(\'Tem certeza que deseja excluir esta unidade?\')">Excluir</button>';
+        $btnActions .= '</form>';
+
         return $btnActions;
     }
+
 
 }

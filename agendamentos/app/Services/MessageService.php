@@ -16,6 +16,21 @@ class MessageService {
         }
     }
 
+    public function prepareExcluirMessages(\Exception $e = null) {
+        if ($e === null) {
+            return [
+                'type' => 'success',
+                'message' => '<i class="fa fa-check-circle"></i> Unidade excluída com sucesso.'
+            ];
+        } else {
+            return [
+                'type' => 'error',
+                'message' => '<i class="fa fa-exclamation-circle"></i> ' . $this->formatExceptionMessage($e)
+            ];
+        }
+    }
+
+
     public function prepareActiveMessages($isActive, \Exception $e = null) {
         if ($e === null) {
             return [
