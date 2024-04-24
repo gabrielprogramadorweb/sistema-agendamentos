@@ -126,10 +126,13 @@ class UnitsController extends Controller
         try {
             $unit = UnitModel::findOrFail($id);
             $unit->delete();
-            return redirect()->route('units.index')->with('success', 'Unit deleted successfully.');
+            $message = $this->messageService->prepareExcluirMessages(); // Chama sem passar nenhum argumento quando a ação é bem-sucedida.
+            return redirect()->route('units.index')->with($message['type'], $message['message']);
         } catch (\Exception $e) {
-            \Log::error("Error deleting unit: " . $e->getMessage());
-            return redirect()->back()->withErrors('Failed to delete the unit.');
+            $message = $this->messageService->prepareExcluirMessages($e); // Passa a exceção quando ocorre um erro.
+            return redirect()->back()->with($message['type'], $message['message']);
         }
     }
+
+
 }
