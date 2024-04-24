@@ -21,6 +21,7 @@ class UnitsController extends Controller
         '1 hour'     => '1 hora',
         '2 hours'    => '2 horas',
     ];
+
     public function __construct(UnitService $unitService, MessageService $messageService)
     {
         $this->unitService = $unitService;
@@ -57,6 +58,7 @@ class UnitsController extends Controller
         $validatedData['active'] = $request->has('active') ? 1 : 0;
 
         try {
+            $validatedData = $this->unitService->sanitizeInput($request->all());
             UnitModel::create($validatedData);
             $message = $this->messageService->prepareCreateMessages();
             return redirect()->route('units.index')->with($message['type'], $message['message']);
@@ -97,6 +99,7 @@ class UnitsController extends Controller
         try {
             $validatedData = $this->unitService->validateUnit($request);
             $validatedData['active'] = $request->has('active') ? 1 : 0;
+            $validatedData = $this->unitService->sanitizeInput($request->all());
             $unit->update($validatedData);
             $message = $this->messageService->prepareUpdateMessages($changes);
             return redirect()->back()->with($message['type'], $message['message']);
