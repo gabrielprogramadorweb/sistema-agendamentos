@@ -46,7 +46,9 @@
                                 <tr>
                                     @foreach($row as $key => $cell)
                                         <td>
-                                            @if($key == 'actions')
+                                            @if($key == 'status')
+                                                {!! $cell !!}
+                                            @elseif($key == 'actions')
                                                 {!! $cell !!}
                                             @else
                                                 {{ $cell }}
