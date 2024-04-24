@@ -120,19 +120,16 @@ class UnitsController extends Controller
         }
     }
 
-
     public function destroy($id)
     {
         try {
             $unit = UnitModel::findOrFail($id);
             $unit->delete();
-            $message = $this->messageService->prepareExcluirMessages(); // Chama sem passar nenhum argumento quando a ação é bem-sucedida.
+            $message = $this->messageService->prepareExcluirMessages();
             return redirect()->route('units.index')->with($message['type'], $message['message']);
         } catch (\Exception $e) {
-            $message = $this->messageService->prepareExcluirMessages($e); // Passa a exceção quando ocorre um erro.
+            $message = $this->messageService->prepareExcluirMessages($e);
             return redirect()->back()->with($message['type'], $message['message']);
         }
     }
-
-
 }
