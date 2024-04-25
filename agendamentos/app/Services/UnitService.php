@@ -37,7 +37,7 @@ class UnitService extends MyBaseService
             if (!$units->isEmpty()) {
                 $table->rows = $units->map(function ($unit) {
                     $servicesList = $unit->services->map(function($service) {
-                        $activeStatus = $service->active ? 'Ativo' : 'Desativado';
+                        $activeStatus = $service->active ? '<span class="badge badge-success">Ativado</span>' : '<span class="badge badge-danger">Desativado</span>';
                         return "<li>{$service->name} - {$activeStatus}</li>";
                     })->implode('');                    $statusLabel = $unit->active ? '<span class="badge badge-success">Ativado</span>' : '<span class="badge badge-danger">Desativado</span>';
                     return [
