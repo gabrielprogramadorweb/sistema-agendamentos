@@ -20,7 +20,7 @@ use Inertia\Inertia;
 //    ]);
 //});
 //Route::post('/super/units/{id}/services/store', [UnitsServicesController::class, 'storeServices'])->name('units.services.store');
-Route::get('/', [WebHomeController::class, 'index'])->name('home.index');
+Route::get('/', [WebHomeController::class, 'index'])->name('web-home.index');
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
