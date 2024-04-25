@@ -10,6 +10,9 @@ use App\Services\UnitServiceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * @property $request
+ */
 class UnitsServicesController extends Controller
 {
     public function __construct(
@@ -36,6 +39,26 @@ class UnitsServicesController extends Controller
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             Log::error("Unit not found: {$unitId}");
             return redirect()->route('units.index')->with('error', 'Unidade não encontrada.');
+        }
+    }
+
+    public function storeServices(Request $request, int $unitId)
+    {
+        try {
+            $unit = $this->unitModel->findOrFail($unitId);
+            $servicesData = $request->input('services', []);
+            $validatedData = $request->validate([
+                'services' => 'required|array',
+                'services.*' => 'exists:services,id',
+            ]);
+
+            $unit->services = $validatedData['services'];
+            $unit->save();
+            return redirect()->route('units.index')->with('success', 'Serviços atualizados com sucesso.');
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return redirect()->route('units.index')->with('error', 'Unidade não encontrada.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Erro ao atualizar serviços: ' . $e->getMessage());
         }
     }
 }

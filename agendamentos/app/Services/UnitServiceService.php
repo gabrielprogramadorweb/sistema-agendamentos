@@ -11,6 +11,7 @@ class UnitServiceService extends MyBaseService
     public function renderServicesOptions(?array $existingServicesIds = null): string
     {
         $output = '';
+        $existingServicesIds = collect($existingServicesIds);
         try {
             $services = ServiceModel::orderBy('name', 'ASC')->get();
 
@@ -21,7 +22,7 @@ class UnitServiceService extends MyBaseService
                 $ul = '<ul class="list-group">';
 
                 foreach ($services as $service) {
-                    $checked = in_array($service->id, $existingServicesIds ?? []) ? 'checked' : '';
+                    $checked = $existingServicesIds->contains($service->id) ? 'checked' : '';
                     $serviceName = htmlspecialchars($service->name, ENT_QUOTES, 'UTF-8');
                     $serviceId = htmlspecialchars($service->id, ENT_QUOTES, 'UTF-8');
 
@@ -36,7 +37,6 @@ class UnitServiceService extends MyBaseService
                 $ul .= '</ul>';
                 $output .= $ul;
             }
-
             return $output;
         } catch (\Exception $e) {
             Log::error("Error rendering service options: " . $e->getMessage());
@@ -44,4 +44,3 @@ class UnitServiceService extends MyBaseService
         }
     }
 }
-

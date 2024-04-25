@@ -12,36 +12,38 @@ class UnitModel extends Model
 
     protected $table = 'units';
 
+    // Define all attributes you expect to be mass assignable
     protected $fillable = [
         'name',
         'email',
         'phone',
+        'password',
         'coordinator',
         'address',
         'starttime',
         'endtime',
         'servicetime',
-        'active'
+        'active',
+        'services'
     ];
 
     protected $casts = [
-        'active' => 'boolean'
+        'active'   => 'boolean',
+        'services' => 'array',
     ];
 
     protected $dates = ['deleted_at'];
 
-    protected array $cast = [
-        'services' => 'array',
-    ];
-
-    // Assuming 'services' contains an array of service IDs
+    /**
+     * Custom accessor to get the services associated with the unit.
+     * This assumes 'services' is stored as an array of IDs.
+     */
     public function getServicesAttribute()
     {
-        if ($this->attributes['services']) {
-            return ServiceModel::whereIn('id', $this->attributes['services'])->get();
+        if (!empty($this->attributes['services'])) {
+            $servicesIds = json_decode($this->attributes['services'], true);
+            return ServiceModel::whereIn('id', $servicesIds)->get();
         }
-        return collect(); // Return an empty collection if there are no services
+        return collect();
     }
-
-
 }

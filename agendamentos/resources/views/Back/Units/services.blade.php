@@ -4,6 +4,15 @@
 
 @section('content')
     <div class="container-fluid">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         @if(session('success'))
             <div class="alert alert-success">
                 {!! session('success') !!}
@@ -22,7 +31,7 @@
             <div class="card-body">
                 <form action="{{ route('units.services.store', $unit->id) }}" method="POST">
                     @csrf
-                    @method('PUT')
+                    <!-- @method('PUT') REMOVE this line if using POST -->
                     <button type="submit" class="btn btn-sm btn-success">Salvar</button><br>
                     <button type="button" id="btnToggleAll" class="btn btn-sm btn-primary mt-2 mb-1">Marcar todos</button>
                     {!! $servicesOptions !!}
@@ -36,9 +45,14 @@
     <script>
         document.getElementById('btnToggleAll').addEventListener('click', function() {
             let checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            // Set all checkboxes to checked
+            let allChecked = true;
             checkboxes.forEach(function(checkbox) {
-                checkbox.checked = true;
+                if (!checkbox.checked) {
+                    allChecked = false;
+                }
+            });
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = !allChecked;
             });
         });
     </script>

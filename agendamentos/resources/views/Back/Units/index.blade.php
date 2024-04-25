@@ -62,14 +62,11 @@
                             <small>Showing {{ $units->firstItem() }} to {{ $units->lastItem() }} of {{ $units->total() }} results</small>
                             {{ $units->links('vendor.pagination.bootstrap-4') }}
                         </div>
-
                     @endif
-
                 </div>
             </div>
         </div>
     </div>
-
     <!-- Modals de confirmação de exclusão -->
     @foreach($units as $unit)
         <div class="modal fade" id="confirmDeleteModal{{ $unit->id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
@@ -105,7 +102,5 @@
             var form = document.getElementById('deleteForm' + id); // Correctly append the id to match the form's ID
             form.action = '/super/units/' + id;
         }
-
-
     </script>
 @endsection

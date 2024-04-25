@@ -7,7 +7,7 @@ use App\Models\UnitModel;
 use App\Services\MessageService;
 use App\Services\UnitService;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreUnitRequest;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\UpdateUnitRequest;
 
 class UnitsController extends Controller
@@ -54,12 +54,15 @@ class UnitsController extends Controller
 
     public function store(Request $request)
     {
-        $validatedData = $this->unitService->validateUnit($request);
-        $validatedData['active'] = $request->has('active') ? 1 : 0;
-
         try {
-            $validatedData = $this->unitService->sanitizeInput($request->all());
-            UnitModel::create($validatedData);
+            $inputData = $this->unitService->sanitizeInput($request->all());
+            $validatedData = $this->unitService->validateUnit(new Request($inputData));
+            $validatedData['active'] = $request->has('active') ? 1 : 0;
+            if (isset($validatedData['password'])) {
+                $validatedData['password'] = Hash::make($validatedData['password']);
+            }
+
+            $unit = UnitModel::create($validatedData);
             $message = $this->messageService->prepareCreateMessages();
             return redirect()->route('units.index')->with($message['type'], $message['message']);
         } catch (\Exception $e) {

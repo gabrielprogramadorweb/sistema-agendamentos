@@ -17,6 +17,7 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+//Route::post('/super/units/{id}/services/store', [UnitsServicesController::class, 'storeServices'])->name('units.services.store');
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
@@ -34,13 +35,9 @@ Route::middleware('auth')->group(function () {
             Route::get('/toggle/{id}', [UnitsController::class, 'toggleStatus'])->where('id', '[0-9]+')->name('units.toggleStatus');
             Route::get('/{id}/edit', [UnitsController::class, 'edit'])->where('id', '[0-9]+')->name('units.edit');
             Route::put('/{id}', [UnitsController::class, 'update'])->where('id', '[0-9]+')->name('units.update');
-
-            // Route for viewing services related to a specific unit
             Route::get('/{id}/services', [UnitsServicesController::class, 'services'])->name('units.services');
-            // Route to save services to a unit
-            Route::put('/{id}/services/save', [UnitsServicesController::class, 'saveServices'])->name('units.services.save');
-            // Assuming there's a need to store new services in a way similar to updating
             Route::post('/{id}/services/store', [UnitsServicesController::class, 'storeServices'])->name('units.services.store');
+            Route::put('/{id}/services/save', [UnitsServicesController::class, 'saveServices'])->name('units.services.save');
         });
 
         Route::prefix('services')->group(function () {
@@ -60,4 +57,3 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
-

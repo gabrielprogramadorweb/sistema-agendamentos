@@ -64,7 +64,6 @@
                     @enderror
                 </div>
 
-
                 <div class="form-group col-md-3">
                     <label for="starttime">Início de expediente:</label>
                     <input type="time" class="form-control" id="starttime" name="starttime" value="{{ old('starttime') }}"required>
@@ -93,12 +92,9 @@
                     </select>
                 </div>
 
-
                 <div class="form-group col-md-3">
                     <label for="active">Registro ativo</label>
-                    <!-- Hidden input to default to 0 if the checkbox is not checked -->
                     <input type="hidden" name="active" value="0">
-                    <!-- Checkbox input, it overrides the hidden field if checked -->
                     <input type="checkbox" id="active" name="active" value="1" {{ old('active', $unit->active ?? 0) ? 'checked' : '' }}>
                     @error('active')
                     <div class="alert alert-danger">{{ $message }}</div>
@@ -110,13 +106,13 @@
                     <a href="{{ route('units.index') }}" class="btn btn-secondary">Voltar</a>
                 </div>
             </div>
-
         </form>
     </div>
 @endsection
-
+@section('scripts')
 <script>
     $(document).ready(function(){
         $('#phone').mask('(00) 00000-0000');
     });
 </script>
+@endsection

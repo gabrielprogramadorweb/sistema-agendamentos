@@ -58,26 +58,14 @@ class UnitService extends MyBaseService
     public function sanitizeInput(array $input)
     {
         return array_map(function ($value) {
-            // Strip HTML tags to prevent XSS
             $value = strip_tags($value);
-
-            // Remove script tags or any potentially malicious JavaScript code
             $value = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $value);
-
-            // Allow alphanumeric characters, spaces, and specific symbols: @ . ( ) -
-            // Note: \p{L} matches any letter, \p{N} matches any number, \s matches any whitespace character
             $value = preg_replace('/[^\p{L}\p{N}\s@.:\(\)-]/u', '', $value);
-
-            // Replace multiple spaces with a single space
             $value = preg_replace('/\s+/', ' ', $value);
-
-            // Trim the string to remove spaces at the beginning and end
             $value = trim($value);
-
             return $value;
         }, $input);
     }
-
 
     public function validateUnit(Request $request)
     {
@@ -134,8 +122,4 @@ class UnitService extends MyBaseService
         $btnActions .= '</div></div>';
         return $btnActions;
     }
-
-
-
-
 }
