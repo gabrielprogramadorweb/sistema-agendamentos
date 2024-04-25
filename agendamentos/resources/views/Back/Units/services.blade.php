@@ -31,7 +31,7 @@
             <div class="card-body">
                 <form action="{{ route('units.services.store', $unit->id) }}" method="POST">
                     @csrf
-                    <!-- @method('PUT') REMOVE this line if using POST -->
+                    @method('PUT')
                     <button type="submit" class="btn btn-sm btn-success">Salvar</button><br>
                     <button type="button" id="btnToggleAll" class="btn btn-sm btn-primary mt-2 mb-1">Marcar todos</button>
                     {!! $servicesOptions !!}
@@ -45,13 +45,11 @@
     <script>
         document.getElementById('btnToggleAll').addEventListener('click', function() {
             let checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            let allChecked = true;
-            checkboxes.forEach(function(checkbox) {
-                if (!checkbox.checked) {
-                    allChecked = false;
-                }
-            });
-            checkboxes.forEach(function(checkbox) {
+            // Determine if all checkboxes are currently checked
+            let allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+
+            // If all are checked, uncheck them, otherwise check them
+            checkboxes.forEach(checkbox => {
                 checkbox.checked = !allChecked;
             });
         });

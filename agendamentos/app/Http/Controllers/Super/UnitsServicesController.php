@@ -46,14 +46,18 @@ class UnitsServicesController extends Controller
     {
         try {
             $unit = $this->unitModel->findOrFail($unitId);
-            $servicesData = $request->input('services', []);
+
+            // Validate that services is an array and each element exists in the services table
+            // Remove 'required' to allow for empty arrays to be valid
             $validatedData = $request->validate([
-                'services' => 'required|array',
+                'services' => 'sometimes|array',
                 'services.*' => 'exists:services,id',
             ]);
 
-            $unit->services = $validatedData['services'];
+            // Even if services is empty, it will now pass validation and can be set
+            $unit->services = $validatedData['services'] ?? [];
             $unit->save();
+
             return redirect()->route('units.index')->with('success', 'Serviços atualizados com sucesso.');
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return redirect()->route('units.index')->with('error', 'Unidade não encontrada.');
@@ -61,4 +65,5 @@ class UnitsServicesController extends Controller
             return redirect()->back()->with('error', 'Erro ao atualizar serviços: ' . $e->getMessage());
         }
     }
+
 }
