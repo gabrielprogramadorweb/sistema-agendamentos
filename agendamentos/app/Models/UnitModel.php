@@ -61,5 +61,13 @@ class UnitModel extends Model
         }
     }
 
+    public function services()
+    {
+        return $this->belongsToMany(ServiceModel::class, 'unit_service_table', 'unit_id', 'service_id');
+    }
+
+
+
+
 
 }

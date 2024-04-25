@@ -30,21 +30,23 @@ class UnitService extends MyBaseService
             $units = $query->paginate($perPage);
 
             $table = new \stdClass();
-            $table->headers = ['Ações', 'Nome', 'E-mail', 'Telefone', 'Status','Início', 'Fim', 'Criado'];
+            $table->headers = ['Ações', 'Nome', 'E-mail', 'Telefone', 'Serviços', 'Status', 'Criado'];
             $table->rows = [];
             $table->isEmpty = true;
 
             if (!$units->isEmpty()) {
                 $table->rows = $units->map(function ($unit) {
-                    $statusLabel = $unit->active ? '<span class="badge badge-success">Ativado</span>' : '<span class="badge badge-danger">Desativado</span>';
+                    $servicesList = $unit->services->map(function($service) {
+                        $activeStatus = $service->active ? 'Ativo' : 'Desativado';
+                        return "<li>{$service->name} - {$activeStatus}</li>";
+                    })->implode('');                    $statusLabel = $unit->active ? '<span class="badge badge-success">Ativado</span>' : '<span class="badge badge-danger">Desativado</span>';
                     return [
                         'actions'    => $this->renderBtnActions($unit),
                         'name'       => $unit->name,
                         'email'      => $unit->email,
                         'phone'      => $unit->phone,
+                        'services'   => "<ul>{$servicesList}</ul>",
                         'status'     => $statusLabel,
-                        'starttime'  => $unit->starttime,
-                        'endtime'    => $unit->endtime,
                         'created_at' => MyBaseService::formatDateTime($unit->created_at),
                     ];
                 });

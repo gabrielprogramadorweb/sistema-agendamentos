@@ -42,6 +42,7 @@
                             </tr>
                             </thead>
                             <tbody>
+
                             @foreach($table->rows as $row)
                                 <tr>
                                     @foreach($row as $key => $cell)
@@ -50,6 +51,7 @@
                                                 {!! $cell !!} <!-- Make sure this includes a call to setDeleteUrl passing the unit's ID -->
                                             @else
                                                 {!! $cell !!}
+
                                             @endif
                                         </td>
                                     @endforeach

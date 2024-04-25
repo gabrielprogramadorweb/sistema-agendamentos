@@ -57,8 +57,9 @@ class ServiceModel extends Model
     }
     public function units()
     {
-        return $this->belongsToMany(UnitModel::class, 'service_unit', 'service_id', 'unit_id');
+        return $this->belongsToMany(UnitModel::class, 'unit_service', 'service_id', 'unit_id');
     }
+
 
 
 }
