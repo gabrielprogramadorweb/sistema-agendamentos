@@ -1,5 +1,7 @@
 # Docker Laravel
 
+#### Entre na pasta agendamentos: 
+`cd agendamentos`
 #### . Create .env file
 `cp .env.example .env`  
 
