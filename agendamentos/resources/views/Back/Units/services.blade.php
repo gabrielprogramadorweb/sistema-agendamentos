@@ -9,6 +9,7 @@
                 <ul>
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
+
                     @endforeach
                 </ul>
             </div>
@@ -31,7 +32,7 @@
             <div class="card-body">
                 <form action="{{ route('units.services.store', $unit->id) }}" method="POST">
                     @csrf
-                    @method('PUT')
+                    <!-- Remove @method('PUT') or change to @method('POST') if it must be POST -->
                     <button type="submit" class="btn btn-sm btn-success">Salvar</button><br>
                     <button type="button" id="btnToggleAll" class="btn btn-sm btn-primary mt-2 mb-1">Marcar todos</button>
                     {!! $servicesOptions !!}

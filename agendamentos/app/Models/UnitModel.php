@@ -40,10 +40,26 @@ class UnitModel extends Model
      */
     public function getServicesAttribute()
     {
-        if (!empty($this->attributes['services'])) {
-            $servicesIds = json_decode($this->attributes['services'], true);
+        // Ensure the services attribute is decoded properly from JSON
+        $servicesIds = json_decode($this->attributes['services'], true);
+
+        // Check if $servicesIds is an array before querying
+        if (is_array($servicesIds)) {
             return ServiceModel::whereIn('id', $servicesIds)->get();
         }
+
+        // If $servicesIds is not an array, return an empty collection
         return collect();
     }
+
+    public function setServicesAttribute($value)
+    {
+        if (is_array($value)) {
+            $this->attributes['services'] = json_encode($value);
+        } else {
+            $this->attributes['services'] = '[]'; // Default to an empty array as JSON
+        }
+    }
+
+
 }
