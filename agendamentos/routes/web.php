@@ -5,20 +5,22 @@ use App\Http\Controllers\Super\HomeController;
 use App\Http\Controllers\Super\ServiceController;
 use App\Http\Controllers\Super\UnitsController;
 use App\Http\Controllers\Super\UnitsServicesController;
+use App\Http\Controllers\WebHomeController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
-//Route::post('/super/units/{id}/services/store', [UnitsServicesController::class, 'storeServices'])->name('units.services.store');
 
+//Route::get('/', function () {
+//    return Inertia::render('Welcome', [
+//        'canLogin' => Route::has('login'),
+//        'canRegister' => Route::has('register'),
+//        'laravelVersion' => Application::VERSION,
+//        'phpVersion' => PHP_VERSION,
+//    ]);
+//});
+//Route::post('/super/units/{id}/services/store', [UnitsServicesController::class, 'storeServices'])->name('units.services.store');
+Route::get('/', [WebHomeController::class, 'index'])->name('home.index');
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
