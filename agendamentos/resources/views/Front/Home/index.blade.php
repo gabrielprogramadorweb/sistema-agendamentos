@@ -69,7 +69,7 @@
         </div>
         <div class="row mt-4">
             <div class="col-m-12">
-                <a href="" class="btn btn-lg btn-primary">Criar agendamento</a>
+                <a href="{{route('schedules.new')}}" class="btn btn-lg btn-primary">Criar agendamento</a>
             </div>
         </div>
     </div>

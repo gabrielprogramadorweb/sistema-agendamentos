@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SchedulesController;
 use App\Http\Controllers\Super\HomeController;
 use App\Http\Controllers\Super\ServiceController;
 use App\Http\Controllers\Super\UnitsController;
@@ -56,6 +57,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+//rotas de agendamentos do user logado
+Route::prefix('schedules')->group(function () {
+    Route::get('/', [SchedulesController::class, 'index'])->name('schedules.new');
+
 });
 
 require __DIR__.'/auth.php';

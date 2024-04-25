@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: setup-mysql
--- Tempo de geração: 24-Abr-2024 às 22:56
+-- Tempo de geração: 25-Abr-2024 às 23:05
 -- Versão do servidor: 8.0.36
 -- versão do PHP: 8.2.18
 
@@ -85,7 +85,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (5, '2024_04_20_013032_create_home_controllers_table', 1),
 (6, '2024_04_20_013339_create_homes_table', 2),
 (7, '2024_04_20_043808_create_units_table', 3),
-(8, '2024_04_24_043709_create_table_services', 4);
+(8, '2024_04_24_043709_create_table_services', 4),
+(10, '2024_04_25_175254_create_unit_service_table', 5);
 
 -- --------------------------------------------------------
 
@@ -139,11 +140,15 @@ CREATE TABLE `services` (
 --
 
 INSERT INTO `services` (`id`, `name`, `active`, `remember_token`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'New Service', 0, NULL, '2024-04-24 13:21:26', '2024-04-24 15:06:49', NULL),
+(1, 'New Service', 1, NULL, '2024-04-24 13:21:26', '2024-04-25 17:26:18', NULL),
 (2, 'Segunda Via Documentos atualizado', 1, NULL, '2024-04-24 15:08:37', '2024-04-24 15:08:37', NULL),
 (3, 'Abertura de MEI', 0, NULL, '2024-04-24 15:09:00', '2024-04-24 15:09:00', NULL),
 (4, 'Orientação profissional', 1, NULL, '2024-04-24 15:09:21', '2024-04-24 15:09:21', NULL),
-(5, 'Segunda via documentos', 1, NULL, '2024-04-24 15:09:35', '2024-04-24 15:09:35', NULL);
+(5, 'Segunda via documentos', 1, NULL, '2024-04-24 15:09:35', '2024-04-24 15:09:35', NULL),
+(47, 'Texteporraaaa', 0, NULL, '2024-04-25 16:14:04', '2024-04-25 17:12:05', '2024-04-25 17:12:05'),
+(48, 'ww', 0, NULL, '2024-04-25 17:11:41', '2024-04-25 17:11:59', '2024-04-25 17:11:59'),
+(49, 'Serviço novo', 0, NULL, '2024-04-25 17:29:10', '2024-04-25 17:29:10', NULL),
+(50, '2222', 0, NULL, '2024-04-25 18:11:18', '2024-04-25 18:19:39', '2024-04-25 18:19:39');
 
 -- --------------------------------------------------------
 
@@ -193,12 +198,12 @@ INSERT INTO `units` (`id`, `name`, `email`, `email_verified_at`, `password`, `ph
 (61, 'new-3', 'new-3@gmail.com', NULL, '@Gc983734145', '(91) 98400-7852', 'new-3', 'new-3', NULL, '22:22', '22:22', '2 hours', 1, NULL, '2024-04-23 00:33:16', '2024-04-24 11:50:16', '2024-04-24 11:50:16'),
 (63, 'Gabriel Castro3', 'gabriel@gmail.com2', NULL, '@Gc983734145', '(91) 98400-78523', '1', 'Rua Rui Barata, 23', NULL, '22:22', '22:22', '15 minutes', 1, NULL, '2024-04-23 01:02:23', '2024-04-24 03:03:08', '2024-04-24 03:03:08'),
 (64, 'new4', 'new4gmailcom', NULL, 'Gc983734145', '92929282200', '1324', 'Rua Rui Barata 23', NULL, '', '', '10 minutes', 0, NULL, '2024-04-23 14:48:07', '2024-04-24 14:59:29', '2024-04-24 14:59:29'),
-(65, 'new-5', 'new-5@gmail.com', NULL, '@Gc983734145', '(91)92928-2200', '1', 'Rua Rui Barata, 23', NULL, '16:02', '16:02', '30 minutes', 1, NULL, '2024-04-23 18:02:17', '2024-04-23 18:02:17', NULL),
-(66, 'new-6', 'new-6@gmail.com', NULL, '@Gc983734145', '(91) 98400-7852', '13', 'Rua Rui Barata, 23', NULL, '15:19', '15:19', '10 minutes', 1, NULL, '2024-04-23 18:18:44', '2024-04-23 18:18:44', NULL),
+(65, 'Unidade Central', 'central@gmail.com', NULL, '@Gc983734145', '(91)92928-2200', 'Gabriel', 'São Paulo', '[\"3\", \"1\", \"4\", \"5\", \"2\", \"49\"]', '20:46', '21:45', '30 minutes', 1, NULL, '2024-04-23 18:02:17', '2024-04-25 23:04:29', NULL),
+(66, 'Unidade de campus', 'campus@gmail.com', NULL, '@Gc983734145', '(91) 98420-7852', 'Maria Helena', 'Belém - PA', '[\"3\", \"1\", \"4\", \"5\", \"2\", \"49\"]', '15:19', '15:19', '10 minutes', 1, NULL, '2024-04-23 18:18:44', '2024-04-25 23:01:24', NULL),
 (67, 'new-7', 'new-7@gmail.com', NULL, '@Gc983734145', '(91) 98400-7852', '2', 'Rua Rui Barata, 23', NULL, '16:32', '16:31', '1 hour', 1, NULL, '2024-04-23 18:31:37', '2024-04-24 04:09:47', '2024-04-24 04:09:47'),
-(71, 'new-8', 'new-8@gmail.com', NULL, '@Gc983734145', '(91) 98400-7852', '1', 'Rua Rui Barata, 23', NULL, '16:36', '16:36', '15 minutes', 1, NULL, '2024-04-23 18:37:01', '2024-04-23 18:37:01', NULL),
-(72, 'new-10', 'new-10@gmail.com', NULL, '@Gc983734145', '(91) 98400-7852', '1', 'Rua Rui Barata, 23', NULL, '19:09', '20:08', '10 minutes', 1, NULL, '2024-04-23 22:09:00', '2024-04-23 22:09:00', NULL),
-(73, 'new-11', 'new-11@gmail.com', NULL, '@Gc983734145', '(91) 98400-7852', '1', 'Rua Rui Barata, 23', NULL, '22:14', '21:13', '10 minutes', 1, NULL, '2024-04-23 22:13:18', '2024-04-23 22:13:18', NULL),
+(71, 'Unidade Metropolitana', 'metropolitana@gmail.com', NULL, '@Gc983734145', '(91) 98400-7233', 'Carlos Augusto', 'Rio de Janeiro', '[\"3\"]', '16:36', '16:36', '15 minutes', 1, NULL, '2024-04-23 18:37:01', '2024-04-25 23:02:18', NULL),
+(72, 'Unidade Região Norte', 'unidade-norte@gmail.com', NULL, '@Gc983734145', '(91) 98400-0022', 'Mario Couto', 'São Paulo - Zona Norte', '[\"3\", \"1\", \"4\", \"5\", \"2\", \"49\"]', '19:09', '20:08', '10 minutes', 1, NULL, '2024-04-23 22:09:00', '2024-04-25 23:04:40', NULL),
+(73, 'Unidade Região Sul', 'unidade-sul@gmail.com', NULL, '@Gc983734145', '(93) 98400-2021', 'Kleber Castro', 'São Paulo - Zona Sul', '[\"3\", \"1\", \"4\", \"5\", \"2\", \"49\"]', '22:14', '21:13', '10 minutes', 1, NULL, '2024-04-23 22:13:18', '2024-04-25 23:04:47', NULL),
 (74, 'new-12', 'new-12@gmail.com', NULL, '@Gc983734145', '(91) 98400-7852', '1', 'Rua Rui Barata, 23', NULL, '19:18', '20:17', '15 minutes', 1, NULL, '2024-04-23 22:17:22', '2024-04-23 22:17:22', NULL),
 (75, 'new-13', 'new-13@gmail.com', NULL, '@Gc983734145', '(91) 98400-7852', '1', 'Rua Rui Barata, 23', NULL, '22:22', '22:22', '10 minutes', 1, NULL, '2024-04-23 22:18:48', '2024-04-23 22:18:48', NULL),
 (80, 'new-33', 'new-33@gmail.com', NULL, '@Gc983734145', '(91) 98400-7852', '1', 'Rua Rui Barata, 23', NULL, '20:39', '11:11', '15 minutes', 1, NULL, '2024-04-23 22:40:10', '2024-04-23 22:40:10', NULL),
@@ -211,7 +216,47 @@ INSERT INTO `units` (`id`, `name`, `email`, `email_verified_at`, `password`, `ph
 (91, 'alertEu sou um alert', 'xxxxxxgmailcom', NULL, 'Gc983734145xxxx', '91 984007852', '1', 'Rua Rui Barata 23', NULL, '1111', '1101', '10 minutes', 1, NULL, '2024-04-24 03:57:08', '2024-04-24 12:26:16', '2024-04-24 12:26:16'),
 (92, 'alertEu sou um alert', 'xxxxgmailcom', NULL, 'Gc983734145xx', '91 984007852', '2', 'Rua Rui Barata 23', NULL, '2202', '2222', '10 minutes', 0, NULL, '2024-04-24 04:01:14', '2024-04-24 04:02:04', '2024-04-24 04:02:04'),
 (93, 'alertEu sou um alert', 'xxxxxxxxxxxxxgmailcom', NULL, 'Gc983734145xx', '91 984007852', 'x', 'Rua Rui Barata 23', NULL, '2202', '2202', '10 minutes', 0, NULL, '2024-04-24 04:01:55', '2024-04-24 04:02:13', '2024-04-24 04:02:13'),
-(95, 'alertEu sou um alert', '1111gmailcom', NULL, 'Gc9837341452', '91 984007852', '22', '22', NULL, '2202', '2222', '15 minutes', 0, NULL, '2024-04-24 04:05:29', '2024-04-24 04:09:56', '2024-04-24 04:09:56');
+(95, 'alertEu sou um alert', '1111gmailcom', NULL, 'Gc9837341452', '91 984007852', '22', '22', NULL, '2202', '2222', '15 minutes', 0, NULL, '2024-04-24 04:05:29', '2024-04-24 04:09:56', '2024-04-24 04:09:56'),
+(96, 'new-3www', 'gabrwiel@gmail.com', NULL, '$2y$10$ZIT36S1RfGr3zWDeBvJTLuGEVUwEWOh1ZG41ZBkr32vLbDVx17Vp6', '(91)192928-2200', 'w', 'w', NULL, '22:22', '22:02', '15 minutes', 1, NULL, '2024-04-25 12:05:15', '2024-04-25 12:05:15', NULL),
+(97, 'wwwwwwwwwww', 'wwwww@gmail.com', NULL, '$2y$10$BdWQb2PvuQdyA2Ela5AsJ.xZMtHNcPCLuBQaL.ix55gVUHUF43mKW', '(91) 98400-7852', 'wwwwwwww', 'wwwwwww', '[\"1\", \"4\", \"5\", \"2\"]', '22:22', '22:22', '10 minutes', 1, NULL, '2024-04-25 12:05:57', '2024-04-25 12:06:33', NULL),
+(98, 'alert(Eu sou um alert)', 'vai@gmail.com', NULL, '$2y$10$SlTCbrnQhdtGeGMxymRHpeMqlC6U1gjbOiGGNvK/9/TdtmItWg7CS', '(91) 98400-7852', 'vai', 'vai', NULL, '12:22', '11:01', '10 minutes', 1, NULL, '2024-04-25 14:11:05', '2024-04-25 14:11:05', NULL),
+(99, 'Texte-porraaaawwe2222', 'gabriel@gmail.com22', NULL, '$2y$10$PtGmWvVfd7Hr0ru23ui/3u0LMuABjcYRcqjfnWvcQAU48pLvIp9CW', '(91) 98400-7852', '33', '222', NULL, '22:22', '22:22', '10 minutes', 1, NULL, '2024-04-25 18:11:02', '2024-04-25 18:11:09', '2024-04-25 18:11:09');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `unit_service`
+--
+
+CREATE TABLE `unit_service` (
+  `id` bigint UNSIGNED NOT NULL,
+  `unit_id` bigint UNSIGNED NOT NULL,
+  `service_id` bigint UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Extraindo dados da tabela `unit_service`
+--
+
+INSERT INTO `unit_service` (`id`, `unit_id`, `service_id`, `created_at`, `updated_at`) VALUES
+(1, 65, 50, NULL, NULL),
+(2, 66, 50, NULL, NULL),
+(3, 71, 50, NULL, NULL),
+(4, 72, 50, NULL, NULL),
+(5, 73, 50, NULL, NULL),
+(6, 74, 50, NULL, NULL),
+(7, 75, 50, NULL, NULL),
+(8, 80, 50, NULL, NULL),
+(9, 82, 50, NULL, NULL),
+(10, 86, 50, NULL, NULL),
+(11, 87, 50, NULL, NULL),
+(12, 88, 50, NULL, NULL),
+(13, 90, 50, NULL, NULL),
+(14, 96, 50, NULL, NULL),
+(15, 97, 50, NULL, NULL),
+(16, 98, 50, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -294,6 +339,14 @@ ALTER TABLE `units`
   ADD UNIQUE KEY `units_email_unique` (`email`);
 
 --
+-- Índices para tabela `unit_service`
+--
+ALTER TABLE `unit_service`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `unit_service_unit_id_foreign` (`unit_id`),
+  ADD KEY `unit_service_service_id_foreign` (`service_id`);
+
+--
 -- Índices para tabela `users`
 --
 ALTER TABLE `users`
@@ -326,7 +379,7 @@ ALTER TABLE `home_controllers`
 -- AUTO_INCREMENT de tabela `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de tabela `personal_access_tokens`
@@ -338,19 +391,36 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT de tabela `services`
 --
 ALTER TABLE `services`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT de tabela `units`
 --
 ALTER TABLE `units`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
+
+--
+-- AUTO_INCREMENT de tabela `unit_service`
+--
+ALTER TABLE `unit_service`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de tabela `users`
 --
 ALTER TABLE `users`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- Restrições para despejos de tabelas
+--
+
+--
+-- Limitadores para a tabela `unit_service`
+--
+ALTER TABLE `unit_service`
+  ADD CONSTRAINT `unit_service_service_id_foreign` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `unit_service_unit_id_foreign` FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
