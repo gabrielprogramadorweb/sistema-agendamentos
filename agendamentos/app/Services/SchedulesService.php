@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\UnitModel;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class SchedulesService
@@ -26,9 +25,9 @@ class SchedulesService
             } else {
                 $radios = '';
                 foreach ($units as $unit) {
-                    $checked = ''; // You might need logic to determine if something should be checked
+                    $checked = ''; // Add logic here if you need to pre-select any radio button
                     $radios .= '<div class="form-check mb-2">';
-                    $radios .= "<input type='radio' name='unit_id' value='{$unit->id}' class='form-check-input' id='radio-unit-{$unit->id}'>";
+                    $radios .= "<input type='radio' name='unit_id' data-name='{$unit->name }'  data-address='{$unit->address}' value='{$unit->id}' class='form-check-input' id='radio-unit-{$unit->id}'>";
                     $radios .= "<label class='form-check-label' for='radio-unit-{$unit->id}'>{$unit->name} - {$unit->address}</label>";
                     $radios .= '</div>';
                 }
@@ -41,4 +40,3 @@ class SchedulesService
         }
     }
 }
-
