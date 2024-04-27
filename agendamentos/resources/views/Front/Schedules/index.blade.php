@@ -7,6 +7,7 @@
 @section('content')
     <div class="container pt-5">
         <h1 class="mt-5">{{ $title }}</h1>
+        <div id="boxErrors" class="mt-4 mb-3"></div>
         <div class="row">
             <div class="col-md-8">
                 <div class="row">
@@ -18,7 +19,7 @@
                     <!-- Serviços da unidade (inicialmente oculto) -->
                     <div id="mainBoxServices" class="col-md-12 mb-4 d-none">
                         <p class="lead">Escolha o Serviço</p>
-                        <div id="boxServices"></div>
+                        <select id="boxServices"></select>
                     </div>
                 </div>
             </div>
@@ -39,18 +40,50 @@
 @section('js')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            const URL_GET_SERVICES = '{{ route('get.unit.services', ['unitId' => ':unitId']) }}'; // Make sure this route is correctly defined in Laravel
+            const boxErrors = document.getElementById('boxErrors');
             const mainBoxServices = document.getElementById('mainBoxServices');
+            const boxServices = document.getElementById('boxServices');
             const chosenUnitText = document.getElementById('chosenUnitText');
             const units = document.querySelectorAll('input[name="unit_id"]');
 
-            units.forEach(element => {
-                element.addEventListener('click', (event) => {
+            units.forEach(unit => {
+                unit.addEventListener('click', function () {
                     mainBoxServices.classList.remove('d-none');
-                    const unitName = element.getAttribute('data-name');
-                    const unitAddress = element.getAttribute('data-address');
-                    chosenUnitText.innerText = unitName + " - " + unitAddress;
+                    chosenUnitText.innerText = `${unit.getAttribute('data-name')} - ${unit.getAttribute('data-address')}`;
+                    const url = URL_GET_SERVICES.replace(':unitId', unit.value);
+                    fetchServices(url);
                 });
             });
+
+            async function fetchServices(url) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: { "X-Requested-With": "XMLHttpRequest" }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+
+                    const data = await response.json(); // Parse JSON response
+                    console.log(data); // Check what's received exactly.
+
+                    if (data.services) {
+                        boxServices.innerHTML = data.services; // Assuming boxServices is the select element
+                        mainBoxServices.classList.remove('d-none');
+                    } else {
+                        throw new Error("No services data found");
+                    }
+                } catch (error) {
+                    console.error('Error fetching services:', error);
+                    boxErrors.innerHTML = `<div class="alert alert-danger">Não foi possível recuperar os Serviços. Error: ${error.message}</div>`;
+                }
+            }
+
         });
     </script>
 @endsection
+
+

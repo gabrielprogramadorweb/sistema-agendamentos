@@ -61,7 +61,7 @@ Route::middleware('auth')->group(function () {
 //rotas de agendamentos do user logado
 Route::prefix('schedules')->group(function () {
     Route::get('/', [SchedulesController::class, 'index'])->name('schedules.new');
-
+    Route::get('/services/{unitId}', [SchedulesController::class, 'unitServices'])->name('get.unit.services');
 });
 
 require __DIR__.'/auth.php';
