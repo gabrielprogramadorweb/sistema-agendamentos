@@ -39,29 +39,6 @@ class SchedulesService
         }
     }
     //Recupera os serviços ssociados à unidade informada
-    public function renderUnitServices(int $unitId): string
-    {
-        $unit = UnitModel::where('active', 1)->findOrFail($unitId);
-        $serviceIds = json_decode($unit->services, true);
-
-        if (empty($serviceIds)) {
-            Log::warning("No service IDs found for unit {$unitId}");
-            return "No services available"; // Simple text or you can choose to throw an exception
-        }
-
-        $services = ServiceModel::whereIn('id', $serviceIds)->where('active', 1)->get();
-        if ($services->isEmpty()) {
-            Log::info("No active services found for unit {$unit->name}");
-            return "No active services available";
-        }
-
-        $options = '<option value="">Select Service</option>';
-        foreach ($services as $service) {
-            $options .= "<option value='{$service->id}'>{$service->name}</option>";
-        }
-        return $options;
-    }
-
     public function getUnitServices(int $unitId)
     {
         try {
@@ -70,7 +47,7 @@ class SchedulesService
 
             // Flatten the array if it's nested
             if (is_array($serviceIds) && count($serviceIds) && is_array($serviceIds[0])) {
-                $serviceIds = array_column($serviceIds, 'id'); // Adjusting based on the structure
+                $serviceIds = array_column($serviceIds, 'id');
             }
 
             if (empty($serviceIds)) {
@@ -82,7 +59,7 @@ class SchedulesService
             return $services;
         } catch (\Exception $e) {
             Log::error("Failed to retrieve services for unit {$unitId}: " . $e->getMessage());
-            throw $e; // Re-throw the exception to be handled by the controller
+            throw $e;
         }
     }
 

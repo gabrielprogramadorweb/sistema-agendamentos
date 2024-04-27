@@ -19,7 +19,17 @@
                     <!-- Serviços da unidade (inicialmente oculto) -->
                     <div id="mainBoxServices" class="col-md-12 mb-4 d-none">
                         <p class="lead">Escolha o Serviço</p>
-                        <select id="boxServices"></select>
+                        <select class="form-select" id="boxServices"></select>
+                    </div>
+                    <!-- Serviços da unidade (inicialmente oculto) -->
+                    <div id="boxMonths" class="col-md-12 mb-4 d-none">
+                        <p class="lead">Escolha o Mês</p>
+                        <select id="month" class="form-select">
+                            <option value="">--- Escolha ---</option>
+                            @foreach ($months as $key => $value)
+                                <option value="{{ $key }}">{{ $value }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>
@@ -44,6 +54,7 @@
             const boxErrors = document.getElementById('boxErrors');
             const mainBoxServices = document.getElementById('mainBoxServices');
             const boxServices = document.getElementById('boxServices');
+            const boxMonths = document.getElementById('boxMonths');
             const chosenUnitText = document.getElementById('chosenUnitText');
             const units = document.querySelectorAll('input[name="unit_id"]');
 
@@ -67,12 +78,18 @@
                         throw new Error(`HTTP error! Status: ${response.status}`);
                     }
 
-                    const data = await response.json(); // Parse JSON response
-                    console.log(data); // Check what's received exactly.
-
+                    const data = await response.json();
                     if (data.services) {
-                        boxServices.innerHTML = data.services; // Assuming boxServices is the select element
+                        //boxServices contem o id do service associado
+                        boxServices.innerHTML = data.services;
                         mainBoxServices.classList.remove('d-none');
+                        // Add event listener to boxServices once the options are loaded
+                        boxServices.addEventListener('change', function(event) {
+                            serviceId = boxServices.value ?? null;
+                            let serviceName = serviceId !== 'null' ? boxServices.options[event.target.selectedIndex].text : null;
+                            chosenServiceText.innerText = serviceName === '--Escolha--' ? '' : serviceName;
+                            serviceId !== '' ? boxMonths.classList.remove('d-none') : boxMonths.classList.add('d-none');
+                        });
                     } else {
                         throw new Error("No services data found");
                     }
@@ -81,7 +98,6 @@
                     boxErrors.innerHTML = `<div class="alert alert-danger">Não foi possível recuperar os Serviços. Error: ${error.message}</div>`;
                 }
             }
-
         });
     </script>
 @endsection

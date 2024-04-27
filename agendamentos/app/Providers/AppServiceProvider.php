@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\CalendarService;
+use App\Services\ConcreteCalendarService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,9 +13,8 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
-    {
-        //
+    public function register() {
+        $this->app->bind(CalendarService::class, ConcreteCalendarService::class);
     }
 
     /**
