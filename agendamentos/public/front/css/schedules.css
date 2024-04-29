@@ -1,0 +1,48 @@
+.btn-calendar-day {
+    max-width: 36px;
+    min-width: 36px;
+    line-height: 0px;
+    padding: 10%;
+    height: 30px;
+    background-color: #0a53be;
+    display: table-cell;
+    vertical-align: middle;
+    color: #fff;
+    border: 1px solid #0a53be;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.btn-calendar-day:not(.disabled):hover {
+    background-color: dodgerblue;
+    color: black;
+    border-color: dodgerblue;
+}
+
+.btn-calendar-day-chosen,
+.btn-hour-chosen {
+    color: #fff;
+    background-color: #0a53be;
+    border-color: #0a53be;
+}
+
+.btn-hour {
+    margin-bottom: 10px;
+    max-width: 55px;
+    min-width: 55px;
+    padding-left: 8px;
+    line-height: 0px;
+    height: 30px;
+    background-color: #0a53be;
+    color: #fff;
+    border: 1px solid #0a53be;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.wizard .content .form-control {
+    padding: .375rem 0.75rem;
+}

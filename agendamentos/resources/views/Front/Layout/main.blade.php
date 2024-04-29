@@ -15,6 +15,7 @@
 
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('front/css/bootstrap.min.css') }}" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="{{ asset('front/css/schedules.css') }}" rel="stylesheet" crossorigin="anonymous">
 
     <!-- Favicons -->
     <link rel="apple-touch-icon" href="/docs/5.0/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
@@ -60,9 +61,9 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
+{{--                    <li class="nav-item">--}}
+{{--                        <a class="nav-link" href="#">Link</a>--}}
+{{--                    </li>--}}
                     <li class="nav-item">
                         <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
                     </li>
@@ -82,12 +83,11 @@
 
 </main>
 
-<footer class="footer mt-auto py-3 bg-light">
+<footer class="bg-white text-center mt-auto py-3">
     <div class="container">
-        <span class="text-muted">Place sticky footer content here.</span>
+        <span>Copyright &copy; Agendamentos BR 2024</span>
     </div>
 </footer>
-
 
 <script src="{{ asset('front/js/bootstrap.bundle.min.js') }}" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
