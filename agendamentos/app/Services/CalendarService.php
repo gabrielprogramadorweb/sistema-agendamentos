@@ -77,13 +77,12 @@ abstract class CalendarService {
     }
 
     private function renderDayButton(int $day, int $month, bool $disable): string {
-        $class = $disable ? 'btn btn-secondary btn-calendar-day disabled' : 'btn btn-primary btn-calendar-day';
+        $class = $disable ? 'btn btn-secondary btn-calendar-day disabled' : 'btn btn-primary btn-calendar-day clickable-day';
         $style = $disable ? 'background-color: rgba(0, 0, 0, 0.2); cursor: not-allowed;' : 'cursor: pointer; background-color: #007bff;';
         $disabled = $disable ? 'disabled' : '';
         $dataDay = "data-day='{$day}'";
 
         return "<button type='button' class='{$class}' style='{$style}' {$disabled} {$dataDay}>{$day}</button>";
     }
-
 
 }

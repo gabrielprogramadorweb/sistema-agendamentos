@@ -13,7 +13,7 @@
 }
 
 .btn-calendar-day:not(.disabled):hover {
-    background-color: dodgerblue;
+    background-color: green;
     color: black;
     border-color: dodgerblue;
 }

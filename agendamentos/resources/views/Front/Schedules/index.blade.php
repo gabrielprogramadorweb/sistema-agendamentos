@@ -68,6 +68,117 @@
 @endsection
 
 @section('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const URL_GET_SERVICES = '{{ route('get.unit.services', ['unitId' => ':unitId']) }}';
+            const boxErrors = document.getElementById('boxErrors');
+            const mainBoxServices = document.getElementById('mainBoxServices');
+            const boxServices = document.getElementById('boxServices');
+            const boxMonths = document.getElementById('boxMonths');
+            const mainBoxCalendar = document.getElementById('mainBoxCalendar');
+            const boxCalendar = document.getElementById('boxCalendar');
+            const chosenUnitText = document.getElementById('chosenUnitText');
+            const units = document.querySelectorAll('input[name="unit_id"]');
+            const calendarContainer = document.getElementById('boxCalendar');
 
+            function showErrorMessage(message) {
+                return `<div class="alert alert-danger">${message}</div>`;
+            }
+
+            units.forEach(unit => {
+                unit.addEventListener('click', function () {
+                    mainBoxServices.classList.remove('d-none');
+                    chosenUnitText.innerText = `${unit.getAttribute('data-name')} - ${unit.getAttribute('data-address')}`;
+                    const url = URL_GET_SERVICES.replace(':unitId', unit.value);
+                    fetchServices(url);
+                });
+            });
+
+            calendarContainer.addEventListener('click', function(event) {
+                if (event.target.classList.contains('clickable-day')) {
+                    document.querySelectorAll('.clickable-day').forEach(button => {
+                        button.style.backgroundColor = '#007bff';
+                    });
+
+                    event.target.style.backgroundColor = 'green';
+
+                    console.log(event.target.getAttribute('data-day'));
+                }
+            });
+
+            async function fetchServices(url) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: { "X-Requested-With": "XMLHttpRequest" }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    if (data.services) {
+                        boxServices.innerHTML = data.services;
+                        mainBoxServices.classList.remove('d-none');
+                        boxServices.addEventListener('change', function(event) {
+                            let serviceId = boxServices.value;
+                            let serviceName = serviceId !== 'null' ? boxServices.options[event.target.selectedIndex].text : null;
+                            chosenServiceText.innerText = serviceName === '--- Escolha ---' ? '' : serviceName;
+                            serviceId !== '' ? boxMonths.classList.remove('d-none') : boxMonths.classList.add('d-none');
+                        });
+                    } else {
+                        throw new Error("No services data found");
+                    }
+                } catch ( error) {
+                    console.error('Error fetching services:', error);
+                    boxErrors.innerHTML = showErrorMessage(`Não foi possível recuperar os Serviços. Error: ${error.message}`);
+                }
+            }
+
+            document.getElementById('month').addEventListener('change', (event) => {
+                const chosenMonthText = document.getElementById('chosenMonthText');
+                const selectedOption = event.target.options[event.target.selectedIndex];
+                chosenMonthText.innerText = selectedOption.text === '--- Escolha ---' ? '' : selectedOption.text;
+                if(selectedOption.value !== '') {
+                    getCalendar(selectedOption.value);
+                }
+            });
+
+            const URL_GET_CALENDAR = '{{ route('get.calendar') }}';
+            const getCalendar = async (month) => {
+                boxErrors.innerHTML = '';
+                chosenDayText.innerText = '';
+                chosenHourText.innerText = '';
+
+                let url = `${URL_GET_CALENDAR}?month=${encodeURIComponent(month)}`;
+                try {
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: { "X-Requested-With": "XMLHttpRequest" }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    console.log(data);
+                    mainBoxCalendar.classList.remove('d-none');
+                    boxCalendar.innerHTML = data.calendar;
+
+                    // Set up event listeners for day buttons
+                    document.querySelectorAll('.btn-calendar-day:not([disabled])').forEach(button => {
+                        button.addEventListener('click', function() {
+                            console.log(this.getAttribute('data-day'));
+                        });
+                    });
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                    boxErrors.innerHTML = showErrorMessage('Erro ao conectar ao servidor.');
+                }
+            }
+        });
+    </script>
 @endsection
 
