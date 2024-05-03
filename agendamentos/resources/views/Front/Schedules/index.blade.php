@@ -102,7 +102,6 @@
 
                     event.target.style.backgroundColor = 'green';
 
-                    console.log(event.target.getAttribute('data-day'));
                 }
             });
 
@@ -150,7 +149,8 @@
             const getCalendar = async (month) => {
                 boxErrors.innerHTML = '';
                 chosenDayText.innerText = '';
-                chosenHourText.innerText = '';
+                const buttonsChosenDay = document.querySelectorAll('.btn-calendar-day');
+                removeClassFromElements(buttonsChosenDay, 'btn-calendar-day-chosen');
 
                 let url = `${URL_GET_CALENDAR}?month=${encodeURIComponent(month)}`;
                 try {
@@ -167,22 +167,20 @@
                     mainBoxCalendar.classList.remove('d-none');
                     boxCalendar.innerHTML = data.calendar;
 
-                    //retorna o dia selecionado
                     document.querySelectorAll('.btn-calendar-day:not([disabled])').forEach(button => {
                         button.addEventListener('click', function() {
+                            boxHours.innerHTML = '<span class="text-info">Carregando as horas...</span>';
                             chosenDayText.innerText = this.getAttribute('data-day');
                             getHours();
                         });
                     });
-
                 } catch (error) {
                     console.error('Fetch error:', error);
                     boxErrors.innerHTML = showErrorMessage('Erro ao conectar ao servidor.');
                 }
-            }
+            };
             // calendário
             const getHours = async () => {
-
                 const URL_GET_HOURS = '{{ route('get.hours') }}';
                 boxErrors.innerHTML = '';
 
@@ -219,6 +217,22 @@
                     const data = await response.json();
                     if (data.hours) {
                         boxHours.innerHTML = data.hours;
+                        // Retrieve elements with the class '.btn-hour', which are the hour buttons
+                        const buttonsBtnHours = document.querySelectorAll('.btn-hour');
+                        // Iterate over them to add event listeners
+                        buttonsBtnHours.forEach(element => {
+                            element.addEventListener('click', (event) => {
+                                // Remove the class and reset style from all buttons
+                                removeClassFromElements(buttonsBtnHours, 'btn-hour-chosen');
+                                // Add the class and change style only to the clicked button
+                                event.target.classList.add('btn-hour-chosen');
+                                event.target.style.backgroundColor = 'green'; // Change background to green
+                                // Store the selected hour and display it
+                                const chosenHour = event.target.dataset.hour;
+                                const chosenHourText = document.getElementById('chosenHourText');
+                                chosenHourText.innerText = chosenHour;
+                            });
+                        });
                     } else {
                         boxHours.innerHTML = showErrorMessage(`Não há horários disponíveis para o dia ${day}`);
                     }
@@ -226,6 +240,13 @@
                     console.error('Fetch error:', error);
                     boxErrors.innerHTML = showErrorMessage('Erro ao conectar ao servidor.');
                 }
+            };
+            // Função para remover a classe e resetar a cor de fundo
+            const removeClassFromElements = (elements, className) => {
+                elements.forEach(element => {
+                    element.classList.remove(className);
+                    element.style.backgroundColor = '';
+                });
             };
 
         });
