@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\CalendarService;
 use App\Services\SchedulesService;
+use App\Services\UnitAvaiableHoursService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
@@ -12,11 +13,12 @@ class SchedulesController extends Controller
 {
     private SchedulesService $schedulesService;
     private CalendarService $calendarService;
-    private $request;
+    private UnitAvaiableHoursService $UnitAvaiableHoursService;
 
-    public function __construct(SchedulesService $schedulesService, CalendarService $calendarService) {
+    public function __construct(UnitAvaiableHoursService $unitAvaiableHoursService, SchedulesService $schedulesService, CalendarService $calendarService) {
         $this->schedulesService = $schedulesService;
         $this->calendarService = $calendarService;
+        $this->UnitAvaiableHoursService = $unitAvaiableHoursService;
     }
 
     public function index() {
@@ -26,16 +28,10 @@ class SchedulesController extends Controller
             $months = $this->calendarService->renderMonths();
             return view('Front.Schedules.index', compact('title', 'units', 'months'));
         } catch (\Exception $e) {
-            Log::error("Error in index method of SchedulesController: " . $e->getMessage());
-            return response()->json([
-                'error' => 'An error occurred while retrieving schedule units.',
-                'details' => $e->getMessage() // You might want to remove this line in production for security reasons.
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            Log::error("Error in index method of SchedulesController: {$e}");
+            return response()->json(['error' => 'An error occurred while retrieving schedule units.', 'details' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-
-
-
     public function unitServices(Request $request, $unitId)
     {
         if (!$request->ajax()) {
@@ -88,6 +84,42 @@ class SchedulesController extends Controller
             return response()->json(['error' => 'An error occurred while retrieving the calendar'], 500);
         }
     }
+
+    //recupera as horas
+    public function getHours(Request $request)
+    {
+        Log::info("Received parameters:", $request->all());
+
+        if (!$request->ajax()) {
+            return response()->json(['error' => 'This endpoint only accepts AJAX requests'], 400);
+        }
+
+        try {
+            $unitId = $request->query('unit_id');
+            $month = $request->query('month');
+            $day = $request->query('day');
+
+            if (is_null($unitId) || is_null($month) || is_null($day)) {
+                return response()->json(['error' => 'All parameters (unit_id, month, day) are required'], 400);
+            }
+
+            $hours = $this->UnitAvaiableHoursService->renderHours([
+                'unit_id' => $unitId,
+                'month' => $month,
+                'day' => $day
+            ]);
+
+            if (empty($hours)) {
+                return response()->json(['error' => "No available hours for the selected day"], 404);
+            }
+
+            return response()->json(['hours' => $hours], 200);
+        } catch (\Exception $e) {
+            Log::error("Error retrieving hours: " . $e->getMessage());
+            return response()->json(['error' => 'An error occurred while processing your request'], 500);
+        }
+    }
+
 
     /**
      * A hypothetical method to fetch calendar details by month

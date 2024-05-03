@@ -146,6 +146,7 @@
             });
 
             const URL_GET_CALENDAR = '{{ route('get.calendar') }}';
+            // mês
             const getCalendar = async (month) => {
                 boxErrors.innerHTML = '';
                 chosenDayText.innerText = '';
@@ -163,21 +164,70 @@
                     }
 
                     const data = await response.json();
-                    console.log(data);
                     mainBoxCalendar.classList.remove('d-none');
                     boxCalendar.innerHTML = data.calendar;
 
-                    // Set up event listeners for day buttons
+                    //retorna o dia selecionado
                     document.querySelectorAll('.btn-calendar-day:not([disabled])').forEach(button => {
                         button.addEventListener('click', function() {
-                            console.log(this.getAttribute('data-day'));
+                            chosenDayText.innerText = this.getAttribute('data-day');
+                            getHours();
                         });
                     });
+
                 } catch (error) {
                     console.error('Fetch error:', error);
                     boxErrors.innerHTML = showErrorMessage('Erro ao conectar ao servidor.');
                 }
             }
+            // calendário
+            const getHours = async () => {
+
+                const URL_GET_HOURS = '{{ route('get.hours') }}';
+                boxErrors.innerHTML = '';
+
+                // Ensure that a unit has been selected
+                const selectedUnit = document.querySelector('input[name="unit_id"]:checked');
+                if (!selectedUnit) {
+                    boxErrors.innerHTML = showErrorMessage('Você precisa escolher a Unidade de atendimento');
+                    return;
+                }
+
+                const unitId = selectedUnit.value;
+                const month = chosenMonthText.innerText;
+                const day = chosenDayText.innerText;
+
+                // Ensure month and day have been selected
+                if (!month || !day) {
+                    boxErrors.innerHTML = showErrorMessage('Você precisa selecionar um mês e um dia');
+                    return;
+                }
+
+                // Construct URL with query parameters
+                const url = `${URL_GET_HOURS}?unit_id=${unitId}&month=${encodeURIComponent(month)}&day=${day}`;
+
+                try {
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: { "X-Requested-With": "XMLHttpRequest" }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    if (data.hours) {
+                        boxHours.innerHTML = data.hours;
+                    } else {
+                        boxHours.innerHTML = showErrorMessage(`Não há horários disponíveis para o dia ${day}`);
+                    }
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                    boxErrors.innerHTML = showErrorMessage('Erro ao conectar ao servidor.');
+                }
+            };
+
         });
     </script>
 @endsection

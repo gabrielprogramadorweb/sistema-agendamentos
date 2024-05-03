@@ -48,7 +48,7 @@
                                     @foreach($row as $key => $cell)
                                         <td>
                                             @if($key == 'actions')
-                                                {!! $cell !!} <!-- Make sure this includes a call to setDeleteUrl passing the unit's ID -->
+                                                {!! $cell !!}
                                             @else
                                                 {!! $cell !!}
 
@@ -101,7 +101,7 @@
     <script>
         function setDeleteUrl(element) {
             var id = element.getAttribute('data-id');
-            var form = document.getElementById('deleteForm' + id); // Correctly append the id to match the form's ID
+            var form = document.getElementById('deleteForm' + id);
             form.action = '/super/units/' + id;
         }
     </script>

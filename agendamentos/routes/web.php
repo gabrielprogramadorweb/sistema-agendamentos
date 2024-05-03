@@ -63,6 +63,7 @@ Route::prefix('schedules')->group(function () {
     Route::get('/', [SchedulesController::class, 'index'])->name('schedules.new');
     Route::get('/services/{unitId}', [SchedulesController::class, 'unitServices'])->name('get.unit.services');
     Route::get('/calendar', [SchedulesController::class, 'getCalendar'])->name('get.calendar');
+    Route::get('/hours', [SchedulesController::class, 'getHours'])->name('get.hours');
 });
 
 require __DIR__.'/auth.php';
