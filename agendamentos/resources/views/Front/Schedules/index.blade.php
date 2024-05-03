@@ -88,6 +88,10 @@
             units.forEach(unit => {
                 unit.addEventListener('click', function () {
                     mainBoxServices.classList.remove('d-none');
+                    // redefine as opções dos meses
+                    resetMonthOptions();
+                    // redefine o calendário
+                    resetBoxCalendar();
                     chosenUnitText.innerText = `${unit.getAttribute('data-name')} - ${unit.getAttribute('data-address')}`;
                     const url = URL_GET_SERVICES.replace(':unitId', unit.value);
                     fetchServices(url);
@@ -149,6 +153,7 @@
             const getCalendar = async (month) => {
                 boxErrors.innerHTML = '';
                 chosenDayText.innerText = '';
+                resetBoxCalendar();
                 const buttonsChosenDay = document.querySelectorAll('.btn-calendar-day');
                 removeClassFromElements(buttonsChosenDay, 'btn-calendar-day-chosen');
 
@@ -159,6 +164,11 @@
                         headers: { "X-Requested-With": "XMLHttpRequest" }
                     });
 
+                    if (!month){
+                        resetMonthDataVariables();
+                        resetBoxCalendar();
+                        return;
+                    }
                     if (!response.ok) {
                         throw new Error(`HTTP error! Status: ${response.status}`);
                     }
@@ -241,6 +251,35 @@
                     boxErrors.innerHTML = showErrorMessage('Erro ao conectar ao servidor.');
                 }
             };
+
+            // redefine as opções dos meses
+            const resetMonthOptions = () => {
+                console.log('Redefini as opções de meses...');
+                // oculta a div dos meses
+                boxMonths.classList.add('d-none');
+                // volta para a opção '--- Escolha ---'
+                document.getElementById('month').selectedIndex = 0;
+                // nulamos esses campos
+                resetMonthDataVariables();
+            }
+
+            // Redefini as variaveis pertinentes ao mês, dia, hora...
+            const resetMonthDataVariables = () => {
+                console.log('Redefini as variaveis pertinentes ao mês, dia, hora...');
+                chosenMonth = null;
+                chosenDay = null;
+                chosenHour = null;
+            }
+
+            // Redefine o calendário
+            const resetBoxCalendar = () => {
+                console.log('Redefini o calendário...');
+                mainBoxCalendar.classList.add('d-none');
+
+                boxCalendar.innerHTML = '';
+                boxHours.innerHTML    = '';
+            }
+
             // Função para remover a classe e resetar a cor de fundo
             const removeClassFromElements = (elements, className) => {
                 elements.forEach(element => {
