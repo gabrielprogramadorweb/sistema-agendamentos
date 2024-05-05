@@ -2,6 +2,9 @@
 namespace App\Services;
 use App\Models\ServiceModel;
 use App\Models\UnitModel;
+use Illuminate\Support\Facades\DB;  // Correct namespace for DB
+use App\Models\Schedule; // Correct reference to Schedule model
+
 use http\Exception\InvalidArgumentException;
 use Illuminate\Support\Facades\Log;
 
@@ -59,6 +62,27 @@ class SchedulesService
             return $services;
         } catch (\Exception $e) {
             Log::error("Failed to retrieve services for unit {$unitId}: " . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    public function createSchedule(array $data): ?Schedule
+    {
+        try {
+            DB::beginTransaction();
+
+            $schedule = new Schedule(); // Now correctly referenced
+            $schedule->unit_id = $data['unit_id'];
+            $schedule->service_id = $data['service_id'];
+            $schedule->month = $data['month'];
+            $schedule->day = $data['day'];
+            $schedule->hour = $data['hour'];
+            $schedule->save();
+
+            DB::commit();
+            return $schedule;
+        } catch (Exception $e) {
+            DB::rollBack();
             throw $e;
         }
     }

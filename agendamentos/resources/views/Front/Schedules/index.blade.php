@@ -5,16 +5,28 @@
 @endsection
 
 @section('content')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="container pt-5">
         <h1 class="mt-5">{{ $title }}</h1>
-        <div id="boxErrors" class="mt-4 mb-3"></div>
         <div class="row">
             <div class="col-md-8">
-                <div class="row">
+                <div id="boxSuccess" class="mt-4 mb-3"></div>
+
+            @if(session('success'))
+                    <div class="alert alert-success">
+                        {!! session('success') !!}
+                    </div>
+                @endif
+                @if(session('info'))
+                    <div class="alert alert-info">
+                        {{ session('info') }}
+                    </div>
+                @endif
+                <div class="row" id='container'>
                     <!-- Unidades -->
                     <div class="col-md-12 mb-4">
-                        <p class="lead">Escolha uma Unidade</p>
-                        <div>{!! $units !!}</div>
+                        <p id='escUnidade' class="lead">Escolha uma Unidade</p>
+                        <div id="unitsEsc" >{!! $units !!}</div>
                     </div>
                     <!-- Serviços da unidade (inicialmente oculto) -->
                     <div id="mainBoxServices" class="col-md-8 mb-4 d-none">
@@ -33,7 +45,7 @@
                     </div>
                     <!-- Calendar -->
                     <div id="mainBoxCalendar" class="col-md-8 d-none mb-4"></div>
-                        <p class="lead">Escolha o dia e o horário</p>
+                        <p id='escHorario' class="lead">Escolha o dia e o horário</p>
                         <div class="row">
                             <div class="col-md-6 form-group">
                                 <div id="boxCalendar">
@@ -46,12 +58,17 @@
 
                                 </div>
                             </div>
+                            <div id="boxErrors" class="mt-4 mb-3"></div>
+
+                            <div class="col-md-12 border-top pt-4">
+                               <button id="btnTryCreate" class="btn btn-primary">Criar meu agendamento</button>
+                            </div>
                         </div>
                 </div>
             </div>
             <!-- Preview das escolhas feitas -->
             <div class="col-md-4 ms-auto">
-                <div class="preview-details">
+                <div id="divRight" class="preview-details">
                     <p class="lead mt-4">Unidade escolhida: <br><span id="chosenUnitText" class="text-muted small"></span></p>
                     <p class="lead">Serviço escolhido: <br><span id="chosenServiceText" class="text-muted small"></span></p>
                     <p class="lead">Mês escolhido: <br><span id="chosenMonthText" class="text-muted small"></span></p>
@@ -71,26 +88,55 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const URL_GET_SERVICES = '{{ route('get.unit.services', ['unitId' => ':unitId']) }}';
+            const URL_CREATION_SCHEDULE = '{{ route('create.schedule') }}';
+            const URL_GET_CALENDAR = '{{ route('get.calendar') }}';
+            const btnTryCreate = document.getElementById('btnTryCreate');
             const boxErrors = document.getElementById('boxErrors');
+            const boxSuccess = document.getElementById('boxSuccess');
             const mainBoxServices = document.getElementById('mainBoxServices');
             const boxServices = document.getElementById('boxServices');
             const boxMonths = document.getElementById('boxMonths');
-            const mainBoxCalendar = document.getElementById('mainBoxCalendar');
+            let mainBoxCalendar = document.getElementById('mainBoxCalendar');
             const boxCalendar = document.getElementById('boxCalendar');
             const chosenUnitText = document.getElementById('chosenUnitText');
             const units = document.querySelectorAll('input[name="unit_id"]');
             const calendarContainer = document.getElementById('boxCalendar');
+            let chosenMonth = null, chosenDay = null, chosenHour = null; // Added to declare the scope of these variables properly
+
+            let csrfTokenValue = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            let selectedUnitId = null;
 
             function showErrorMessage(message) {
                 return `<div class="alert alert-danger">${message}</div>`;
+            }
+            function showSuccessesMessage(message) {
+                return `<div class="alert alert-success">${message}</div>`;
+            }
+
+            function hideInputFields() {
+                mainBoxServices.style.display = 'none';
+                boxServices.style.display = 'none';
+                boxMonths.style.display = 'none';
+                mainBoxCalendar.style.display = 'none';
+                btnTryCreate.style.display = 'none'; // Hide the button as well
+                // Add more fields as necessary
+            }
+
+            function hideDivsByIds() {
+                var ids = ['container', 'divRight']; // List of div IDs to hide
+                ids.forEach(function(id) {
+                    var element = document.getElementById(id);
+                    if (element) {
+                        element.style.display = 'none';
+                    }
+                });
             }
 
             units.forEach(unit => {
                 unit.addEventListener('click', function () {
                     mainBoxServices.classList.remove('d-none');
-                    // redefine as opções dos meses
                     resetMonthOptions();
-                    // redefine o calendário
+                    selectedUnitId = unit.value;
                     resetBoxCalendar();
                     chosenUnitText.innerText = `${unit.getAttribute('data-name')} - ${unit.getAttribute('data-address')}`;
                     const url = URL_GET_SERVICES.replace(':unitId', unit.value);
@@ -103,9 +149,8 @@
                     document.querySelectorAll('.clickable-day').forEach(button => {
                         button.style.backgroundColor = '#007bff';
                     });
-
                     event.target.style.backgroundColor = 'green';
-
+                    chosenDay = event.target.getAttribute('data-day'); // Assign the chosen day
                 }
             });
 
@@ -113,7 +158,12 @@
                 try {
                     const response = await fetch(url, {
                         method: 'GET',
-                        headers: { "X-Requested-With": "XMLHttpRequest" }
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-Requested-With": "XMLHttpRequest",
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+
                     });
 
                     if (!response.ok) {
@@ -139,16 +189,196 @@
                 }
             }
 
+            const formatWithTwoDigits = number => number.toString().padStart(2, '0');
+
             document.getElementById('month').addEventListener('change', (event) => {
                 const chosenMonthText = document.getElementById('chosenMonthText');
                 const selectedOption = event.target.options[event.target.selectedIndex];
                 chosenMonthText.innerText = selectedOption.text === '--- Escolha ---' ? '' : selectedOption.text;
+                chosenMonth = formatWithTwoDigits(event.target.value);// Correctly assigning the month
                 if(selectedOption.value !== '') {
                     getCalendar(selectedOption.value);
                 }
             });
+            btnTryCreate.addEventListener('click', async (event) => {
+                event.preventDefault();
+                let formData = new FormData();
+                formData.append('unit_id', selectedUnitId);
+                formData.append('service_id', boxServices.value);
+                formData.append('month', chosenMonth);
+                formData.append('day', chosenDay);
+                formData.append('hour', chosenHour);
+                formData.append('_token', csrfTokenValue);
 
-            const URL_GET_CALENDAR = '{{ route('get.calendar') }}';
+                try {
+                    const response = await fetch(URL_CREATION_SCHEDULE, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        // If the backend redirects and handles session flash:
+                        // window.location.href = window.location.href' // Adjust this to the appropriate route that displays the session flash message
+
+                        boxSuccess.innerHTML = showSuccessesMessage('Agendamento criado com sucesso! ');
+                        mainBoxCalendar = '';
+                        hideInputFields(); // Hide input fields on success
+                        hideDivsByIds();
+                        // alert(data.message);
+                    } else {
+                        throw new Error(data.message || 'Erro ao criar o agendamento.');
+                    }
+                } catch (error) {
+                    console.error('Error creating schedule:', error);
+                    boxErrors.innerHTML = showErrorMessage('Erro ao criar o agendamento: ' + error.message);
+                }
+            });
+            // Example of calling the function
+            document.getElementById('btnTryCreate').addEventListener('click', function() {
+                hideDivsByIds();
+            });
+
+            btnTryCreate.addEventListener('click', async (event) => {
+                event.preventDefault();
+                if (!chosenHour) {
+                    boxErrors.innerHTML = showErrorMessage('Por favor, selecione uma hora.');
+                    return;
+                }
+
+                if (!units.length) {
+                    boxErrors.innerHTML = showErrorMessage('Escolha a Unidade');
+                    return;
+                }
+
+                if (!boxServices.value) {
+                    boxErrors.innerHTML = showErrorMessage('Escolha o Serviço');
+                    return;
+                }
+
+                // Obtenha o valor do serviço selecionado
+                const serviceId = boxServices.value;
+
+                btnTryCreate.disabled = true;
+                btnTryCreate.innerText = 'Estamos criando o seu agendamento...';
+
+                // URL do servidor onde os agendamentos são criados
+                const url = 'http://localhost/api/agendamentos'; // Substitua pela URL correta
+
+                const requestData = {
+                    unitId: selectedUnitId,
+                    serviceId: serviceId,
+                    month: chosenMonth,
+                    day: chosenDay,
+                    hour: chosenHour
+                };
+
+
+                try {
+                    const unitId = document.querySelector('input[name="unit_id"]:checked').value;
+                    const serviceId = boxServices.value;
+
+                    const body = {
+                        unit_id: parseInt(selectedUnitId),
+                        service_id: parseInt(boxServices.value),
+                        month: chosenMonth.toString().padStart(2, '0'), // Garantindo dois dígitos
+                        day: chosenDay.toString().padStart(2, '0'),     // Garantindo dois dígitos
+                        hour: chosenHour.toString() + ':00',             // Convertendo em string e adicionando minutos se necessário
+                        _token: csrfTokenValue
+                    };
+
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                    const response = await fetch(URL_CREATION_SCHEDULE, {
+                        method: 'POST',
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-Requested-With": "XMLHttpRequest",
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+
+                        body: JSON.stringify(body)
+                    });
+
+                    if (!response.ok) {
+                        btnTryCreate.disabled = false;
+                        btnTryCreate.innerText = 'Criar meu agendamento';
+
+                        if (response.status === 400) {
+                            const data = await response.json();
+                            const errors = data.errors;
+                            csrfTokenValue = data.token;
+                            let message = Object.keys(errors).map(field => errors[field]).join(', ');
+                            boxErrors.innerHTML = showErrorMessage(message);
+                            return;
+                        }
+
+                        boxErrors.innerHTML = showErrorMessage('Não foi possível criar o seu agendamento');
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+
+
+                } catch (error) {
+                    console.error('Error creating schedule:', error);
+                    btnTryCreate.disabled = false;
+                    btnTryCreate.innerText = 'Criar meu agendamento';
+                    boxErrors.innerHTML = showErrorMessage('Erro ao criar o agendamento');
+                }
+            });
+
+            //-----------------------FUNÇÕES------------------------------------//
+            // tenta criar o agendamento
+            const tryCreateSchedule = async () => {
+                boxErrors.innerHTML = '';
+                // o que será enviado no request
+                const body = {
+                    unit_id    : unitId,
+                    service_id  : serviceId,
+                    month      : chosenMonth,
+                    day        : chosenDay,
+                    hour       : chosenHour
+                };
+
+
+                body[csrfTokenName] = csrfTokenValue;
+
+                const response = await fetch(URL_CREATION_SCHEDULE, {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                    ,
+                    body: JSON.stringify(body)
+                });
+
+
+                if (!response.ok) {
+                    if (response.status === 400){
+                        btnTryCreate.disabled = false;
+                        btnTryCreate.innerText = 'Criar meu agendamento';
+
+                        const data = await response.json();
+                        const errors = data.errors;
+                        // atualiza o token do CSRF
+                        csrfTokenValue = data.token;
+                        // transformo o array de rros em uma string
+                        let message = Object.keys(errors).map(field => errors[field]).join(', ');
+                        boxErrors.innerHTML = showErrorMessage(message);
+                        return;
+                    }
+                    // erro diferente de 400
+                    boxErrors.innerHTML = showErrorMessage('Não foi possivel criar o seu agendamento');
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                // retornamos para a mesma view para exibir a mensagem de sucesso
+                window.location.href = window.location.href;
+
+            };
+
             // mês
             const getCalendar = async (month) => {
                 boxErrors.innerHTML = '';
@@ -161,7 +391,12 @@
                 try {
                     const response = await fetch(url, {
                         method: 'GET',
-                        headers: { "X-Requested-With": "XMLHttpRequest" }
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-Requested-With": "XMLHttpRequest",
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+
                     });
 
                     if (!month){
@@ -194,7 +429,6 @@
                 const URL_GET_HOURS = '{{ route('get.hours') }}';
                 boxErrors.innerHTML = '';
 
-                // Ensure that a unit has been selected
                 const selectedUnit = document.querySelector('input[name="unit_id"]:checked');
                 if (!selectedUnit) {
                     boxErrors.innerHTML = showErrorMessage('Você precisa escolher a Unidade de atendimento');
@@ -205,19 +439,22 @@
                 const month = chosenMonthText.innerText;
                 const day = chosenDayText.innerText;
 
-                // Ensure month and day have been selected
                 if (!month || !day) {
                     boxErrors.innerHTML = showErrorMessage('Você precisa selecionar um mês e um dia');
                     return;
                 }
 
-                // Construct URL with query parameters
                 const url = `${URL_GET_HOURS}?unit_id=${unitId}&month=${encodeURIComponent(month)}&day=${day}`;
 
                 try {
                     const response = await fetch(url, {
                         method: 'GET',
-                        headers: { "X-Requested-With": "XMLHttpRequest" }
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-Requested-With": "XMLHttpRequest",
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+
                     });
 
                     if (!response.ok) {
@@ -227,22 +464,21 @@
                     const data = await response.json();
                     if (data.hours) {
                         boxHours.innerHTML = data.hours;
-                        // Retrieve elements with the class '.btn-hour', which are the hour buttons
                         const buttonsBtnHours = document.querySelectorAll('.btn-hour');
-                        // Iterate over them to add event listeners
                         buttonsBtnHours.forEach(element => {
                             element.addEventListener('click', (event) => {
-                                // Remove the class and reset style from all buttons
-                                removeClassFromElements(buttonsBtnHours, 'btn-hour-chosen');
-                                // Add the class and change style only to the clicked button
+                                buttonsBtnHours.forEach(btn => {
+                                    btn.classList.remove('btn-hour-chosen');
+                                    btn.style.backgroundColor = ''; // Remove any special coloring
+                                });
                                 event.target.classList.add('btn-hour-chosen');
-                                event.target.style.backgroundColor = 'green'; // Change background to green
-                                // Store the selected hour and display it
-                                const chosenHour = event.target.dataset.hour;
+                                event.target.style.backgroundColor = 'green'; // Highlight selected hour
+                                chosenHour = event.target.dataset.hour; // Store the selected hour
                                 const chosenHourText = document.getElementById('chosenHourText');
-                                chosenHourText.innerText = chosenHour;
+                                chosenHourText.innerText = chosenHour; // Display the selected hour
                             });
                         });
+
                     } else {
                         boxHours.innerHTML = showErrorMessage(`Não há horários disponíveis para o dia ${day}`);
                     }
@@ -292,3 +528,6 @@
     </script>
 @endsection
 
+@section('js')
+    <script src="{{ asset('js/schedule.js') }}"></script>
+@endsection

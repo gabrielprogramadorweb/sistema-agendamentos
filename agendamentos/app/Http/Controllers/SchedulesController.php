@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Schedule;
 use App\Services\CalendarService;
 use App\Services\SchedulesService;
 use App\Services\UnitAvaiableHoursService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+
+// Adjust namespace according to your Laravel app structure
 
 class SchedulesController extends Controller
 {
@@ -97,6 +103,7 @@ class SchedulesController extends Controller
         try {
             $unitId = $request->query('unit_id');
             $month = $request->query('month');
+            $serviceId = $request->query('service_id');
             $day = $request->query('day');
 
             if (is_null($unitId) || is_null($month) || is_null($day)) {
@@ -106,7 +113,8 @@ class SchedulesController extends Controller
             $hours = $this->UnitAvaiableHoursService->renderHours([
                 'unit_id' => $unitId,
                 'month' => $month,
-                'day' => $day
+                'day' => $day,
+                'service_id' => $serviceId
             ]);
 
             if (empty($hours)) {
@@ -121,20 +129,76 @@ class SchedulesController extends Controller
     }
 
 
-    /**
-     * A hypothetical method to fetch calendar details by month
-     */
+    //Tenta criar o agendamento
+
+    public function createSchedule(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'unit_id' => 'required|integer|min:1',
+            'service_id' => 'required|integer|min:1',
+            'month' => 'required|string|min:1|max:12',
+            'day' => 'required|string|min:1|max:31',
+            'hour' => 'required|string'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $schedule = new Schedule();
+            $schedule->unit_id = $request->unit_id;
+            $schedule->service_id = $request->service_id;
+            $schedule->month = $request->month; // Ensure this is converted from month name to number before saving
+            $schedule->day = $request->day;
+            $schedule->hour = $request->hour;
+            $schedule->save();
+
+            DB::commit();
+            return response()->json(['success' => true, 'message' => 'Agendamento criado com sucesso!'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => 'Failed to create schedule', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+    private function monthToNumber($monthName) {
+        $months = [
+            'Janeiro' => '01', 'Fevereiro' => '02', 'Março' => '03', 'Abril' => '04',
+            'Maio' => '05', 'Junho' => '06', 'Julho' => '07', 'Agosto' => '08',
+            'Setembro' => '09', 'Outubro' => '10', 'Novembro' => '11', 'Dezembro' => '12'
+        ];
+        return $months[$monthName] ?? null;
+    }
+
+
+    private function parseMonth($input)
+    {
+        $months = [
+            'Janeiro' => 1, 'Fevereiro' => 2, 'Março' => 3, 'Abril' => 4,
+            'Maio' => 5, 'Junho' => 6, 'Julho' => 7, 'Agosto' => 8,
+            'Setembro' => 9, 'Outubro' => 10, 'Novembro' => 11, 'Dezembro' => 12
+        ];
+        $parts = explode(' / ', $input);
+        $name = $parts[0];
+        return $months[$name] ?? null; // Return the month number or null if not found
+    }
+
+
     private function fetchCalendarDetailsByMonth($month)
     {
-        // Assuming you have a model or a service to get calendar data
         try {
-            // Simulated fetching logic
             return "Details for month {$month}";
         } catch (\Exception $e) {
             Log::error("Failed fetching calendar data for month {$month}: " . $e->getMessage());
             return null;
         }
     }
-
-
 }
+
+
