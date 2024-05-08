@@ -21,9 +21,9 @@
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
+{{--                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">--}}
+{{--                        {{ $header }}--}}
+{{--                    </div>--}}
                 </header>
             @endif
 
@@ -31,6 +31,11 @@
             <main>
                 {{ $slot }}
             </main>
+            <footer class="bg-white text-center mt-auto py-3">
+                <div class="container">
+                    <span>Copyright &copy; Agendamentos BR 2024</span>
+                </div>
+            </footer>
         </div>
     </body>
 </html>

@@ -1,7 +1,7 @@
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Alterar imagem') }}
+            {{ __('Imagem de perfil') }}
         </h2>
     </header>
 
@@ -11,7 +11,7 @@
 
         <!-- Campo de Upload de Imagem -->
         <div>
-            <x-input-label for="profile_image" :value="__('Profile Image')" />
+            <x-input-label for="profile_image" :value="__('Alterar imagem')" />
             <div id="image_preview" class="mt-4">
                 <img src="{{ $user->profile_image ? Storage::url($user->profile_image) : '' }}" id="preview_img" style="max-width: 300px; max-height: 300px; {{ $user->profile_image ? '' : 'display: none;' }}" alt="Profile Image">
             </div>
@@ -21,7 +21,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+            <x-primary-button>{{ __('Salvar') }}</x-primary-button>
         </div>
     </form>
 </section>
