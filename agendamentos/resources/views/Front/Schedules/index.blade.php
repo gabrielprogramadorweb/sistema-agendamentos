@@ -7,12 +7,12 @@
 @section('content')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="container pt-5">
-        <h1 class="mt-5">{{ $title }}</h1>
+        <h1 id="titulo" class="font-weight-bolder">{{ $title }}</h1>
         <div class="row">
             <div class="col-md-8">
                 <div id="boxSuccess" class="mt-4 mb-3"></div>
 
-            @if(session('success'))
+                @if(session('success'))
                     <div class="alert alert-success">
                         {!! session('success') !!}
                     </div>
@@ -45,25 +45,25 @@
                     </div>
                     <!-- Calendar -->
                     <div id="mainBoxCalendar" class="col-md-8 d-none mb-4"></div>
-                        <p id='escHorario' class="lead">Escolha o dia e o horário</p>
-                        <div class="row">
-                            <div class="col-md-6 form-group">
-                                <div id="boxCalendar">
+                    <p id='escHorario' class="lead">Escolha o dia e o horário</p>
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <div id="boxCalendar">
 
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 form-group">
-                                <div id="boxHours">
-
-                                </div>
-                            </div>
-                            <div id="boxErrors" class="mt-4 mb-3"></div>
-
-                            <div class="col-md-12 border-top pt-4">
-                               <button id="btnTryCreate" class="btn btn-primary">Criar meu agendamento</button>
                             </div>
                         </div>
+
+                        <div class="col-md-6 form-group">
+                            <div id="boxHours">
+
+                            </div>
+                        </div>
+                        <div id="boxErrors" class="mt-4 mb-3"></div>
+
+                        <div class="col-md-12 border-top pt-4">
+                            <button id="btnTryCreate" class="btn btn-primary disabled">Criar meu agendamento</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- Preview das escolhas feitas -->
@@ -81,7 +81,12 @@
 @endsection
 
 @section('css')
-
+    <style>
+        #titulo {
+            font-weight: 700; /* Equivalent to 'bolder' */
+            font-size: 2.5rem; /* Adjust size as needed */
+        }
+    </style>
 @endsection
 
 @section('js')
@@ -114,16 +119,22 @@
             }
 
             function hideInputFields() {
-                mainBoxServices.style.display = 'none';
-                boxServices.style.display = 'none';
-                boxMonths.style.display = 'none';
-                mainBoxCalendar.style.display = 'none';
+                // Hide all input-related fields
+                document.getElementById('mainBoxServices').style.display = 'none';
+                document.getElementById('boxServices').style.display = 'none';
+                document.getElementById('boxMonths').style.display = 'none';
+                document.getElementById('mainBoxCalendar').style.display = 'none';
+                document.getElementById('boxCalendar').style.display = 'none';
+                document.getElementById('boxHours').style.display = 'none';
+                document.getElementById('escHorario').style.display = 'none';
+                document.getElementById('divRight').style.display = 'none';
+                document.getElementById('container').style.display = 'none';
+                document.getElementById('titulo').style.display = 'none';
                 btnTryCreate.style.display = 'none'; // Hide the button as well
-                // Add more fields as necessary
             }
 
             function hideDivsByIds() {
-                var ids = ['container', 'divRight']; // List of div IDs to hide
+                var ids = ['container', 'divRight', 'titulo']; // List of div IDs to hide
                 ids.forEach(function(id) {
                     var element = document.getElementById(id);
                     if (element) {
@@ -134,6 +145,7 @@
 
             units.forEach(unit => {
                 unit.addEventListener('click', function () {
+                    boxErrors.innerHTML = ''
                     mainBoxServices.classList.remove('d-none');
                     resetMonthOptions();
                     selectedUnitId = unit.value;
@@ -172,6 +184,7 @@
 
                     const data = await response.json();
                     if (data.services) {
+                        boxErrors.innerHTML = ''
                         boxServices.innerHTML = data.services;
                         mainBoxServices.classList.remove('d-none');
                         boxServices.addEventListener('change', function(event) {
@@ -200,8 +213,8 @@
                     getCalendar(selectedOption.value);
                 }
             });
+
             btnTryCreate.addEventListener('click', async (event) => {
-                event.preventDefault();
                 let formData = new FormData();
                 formData.append('unit_id', selectedUnitId);
                 formData.append('service_id', boxServices.value);
@@ -209,43 +222,7 @@
                 formData.append('day', chosenDay);
                 formData.append('hour', chosenHour);
                 formData.append('_token', csrfTokenValue);
-
-                try {
-                    const response = await fetch(URL_CREATION_SCHEDULE, {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    const data = await response.json();
-
-                    if (data.success) {
-                        // If the backend redirects and handles session flash:
-                        // window.location.href = window.location.href' // Adjust this to the appropriate route that displays the session flash message
-
-                        boxSuccess.innerHTML = showSuccessesMessage('Agendamento criado com sucesso! ');
-                        mainBoxCalendar = '';
-                        hideInputFields(); // Hide input fields on success
-                        hideDivsByIds();
-                        // alert(data.message);
-                    } else {
-                        throw new Error(data.message || 'Erro ao criar o agendamento.');
-                    }
-                } catch (error) {
-                    console.error('Error creating schedule:', error);
-                    boxErrors.innerHTML = showErrorMessage('Erro ao criar o agendamento: ' + error.message);
-                }
-            });
-            // Example of calling the function
-            document.getElementById('btnTryCreate').addEventListener('click', function() {
-                hideDivsByIds();
-            });
-
-            btnTryCreate.addEventListener('click', async (event) => {
                 event.preventDefault();
-                if (!chosenHour) {
-                    boxErrors.innerHTML = showErrorMessage('Por favor, selecione uma hora.');
-                    return;
-                }
 
                 if (!units.length) {
                     boxErrors.innerHTML = showErrorMessage('Escolha a Unidade');
@@ -256,6 +233,13 @@
                     boxErrors.innerHTML = showErrorMessage('Escolha o Serviço');
                     return;
                 }
+
+
+                if (!chosenHour) {
+                    boxErrors.innerHTML = showErrorMessage('Por favor, selecione uma hora.');
+                    return;
+                }
+
 
                 // Obtenha o valor do serviço selecionado
                 const serviceId = boxServices.value;
@@ -298,7 +282,7 @@
                             "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                         },
 
-                        body: JSON.stringify(body)
+                        body: JSON.stringify(body), formData
                     });
 
                     if (!response.ok) {
@@ -318,11 +302,17 @@
                         throw new Error(`HTTP error! Status: ${response.status}`);
                     }
 
+                    const data = await response.json();
+
+                    if (data.success) {
+                        boxSuccess.innerHTML = showSuccessesMessage('Agendamento criado com sucesso!');
+                        hideInputFields();
+                    } else {
+                        throw new Error(data.message || 'Erro ao criar o agendamento.');
+                    }
 
                 } catch (error) {
                     console.error('Error creating schedule:', error);
-                    btnTryCreate.disabled = false;
-                    btnTryCreate.innerText = 'Criar meu agendamento';
                     boxErrors.innerHTML = showErrorMessage('Erro ao criar o agendamento');
                 }
             });
@@ -357,8 +347,6 @@
 
                 if (!response.ok) {
                     if (response.status === 400){
-                        btnTryCreate.disabled = false;
-                        btnTryCreate.innerText = 'Criar meu agendamento';
 
                         const data = await response.json();
                         const errors = data.errors;
@@ -469,6 +457,8 @@
                             element.addEventListener('click', (event) => {
                                 buttonsBtnHours.forEach(btn => {
                                     btn.classList.remove('btn-hour-chosen');
+                                    btnTryCreate.classList.remove('disabled');
+
                                     btn.style.backgroundColor = ''; // Remove any special coloring
                                 });
                                 event.target.classList.add('btn-hour-chosen');

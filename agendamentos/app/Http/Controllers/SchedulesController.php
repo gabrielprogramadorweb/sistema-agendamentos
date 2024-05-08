@@ -138,7 +138,7 @@ class SchedulesController extends Controller
             'service_id' => 'required|integer|min:1',
             'month' => 'required|string|min:1|max:12',
             'day' => 'required|string|min:1|max:31',
-            'hour' => 'required|string'
+            'hour' => 'required|string|'
         ]);
 
         if ($validator->fails()) {
@@ -154,9 +154,10 @@ class SchedulesController extends Controller
             $schedule = new Schedule();
             $schedule->unit_id = $request->unit_id;
             $schedule->service_id = $request->service_id;
-            $schedule->month = $request->month; // Ensure this is converted from month name to number before saving
+            $schedule->month = $request->month;
             $schedule->day = $request->day;
             $schedule->hour = $request->hour;
+            $schedule->user_id = auth()->user()->id; // Ensure you handle authentication
             $schedule->save();
 
             DB::commit();
@@ -166,6 +167,8 @@ class SchedulesController extends Controller
             return response()->json(['success' => false, 'message' => 'Failed to create schedule', 'details' => $e->getMessage()], 500);
         }
     }
+
+
 
     private function monthToNumber($monthName) {
         $months = [
