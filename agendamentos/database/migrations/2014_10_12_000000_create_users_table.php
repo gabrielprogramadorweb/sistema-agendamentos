@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('phone')->nullable(); // Adicionando campo de telefone
+            $table->string('role')->default('user'); // Adiciona campo de role para diferenciar os usuários
             $table->rememberToken();
             $table->timestamps();
         });
