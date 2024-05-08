@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -47,4 +48,13 @@ class Handler extends ExceptionHandler
             //
         });
     }
+    public function render($request, Throwable $exception)
+    {
+        if ($exception instanceof BadRequestException) {
+            return response()->view('errors.custom', ['message' => $exception->getMessage()], 400);
+        }
+
+        return parent::render($request, $exception);
+    }
+
 }
