@@ -19,7 +19,7 @@ class WebHomeController extends Controller
         $title = 'Home';
 
         // Set a default image URL
-        $imageUrl = asset('front/assets/default-profile.png');
+        $imageUrl = asset('front/image/default-profile.png');
 
         // Update image URL if the user has a profile image that exists
         if ($user && $user->profile_image && Storage::exists('public/' . $user->profile_image)) {

@@ -90,7 +90,7 @@
                                 @endif
                                 <div>{{ Auth::user()->name }}</div>
                             @else
-                                <img src="{{ asset('front/assets/default-profile.png') }}" alt="Guest" width="50" class="pr-3">
+                                <img src="{{ asset('front/image/default-profile.png') }}" alt="Guest" width="50" class="pr-3">
                                 <div></div>
                             @endif
                             <div class="ml-1">
