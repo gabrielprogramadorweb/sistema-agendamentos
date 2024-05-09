@@ -8,7 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="generator" content="Hugo 0.84.0">
     <title>Meus agendamentos | @yield('title')</title>
-    <link rel="icon" sizes="180x180" href="{{ asset('front/assets/favicon.png') }}">
+    <link rel="icon" sizes="180x180" href="{{ asset('front/image/favicon.png') }}">
 
     <link rel="canonical" href="{{ asset('front/css/bootstrap.min.css') }}">
     <!-- Bootstrap core CSS -->
@@ -53,7 +53,7 @@
     <!-- Fixed navbar -->
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ route('web-home.index') }}"><img src="{{ asset('front/assets/dental+.png') }}" alt="Descrição da Imagem" width="300"></a>
+            <a class="navbar-brand" href="{{ route('web-home.index') }}"><img src="{{ asset('front/image/dental+.png') }}" alt="Descrição da Imagem" width="300"></a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>

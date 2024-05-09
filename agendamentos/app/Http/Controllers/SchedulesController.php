@@ -6,6 +6,7 @@ use App\Models\Schedule;
 use App\Services\CalendarService;
 use App\Services\SchedulesService;
 use App\Services\UnitAvaiableHoursService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -133,12 +134,16 @@ class SchedulesController extends Controller
 
     public function createSchedule(Request $request)
     {
+        $request->merge([
+            'hour' => substr($request->hour, 0, 5) // Trims off the seconds from 'HH:MM:SS'
+        ]);
+
         $validator = Validator::make($request->all(), [
             'unit_id' => 'required|integer|min:1',
             'service_id' => 'required|integer|min:1',
             'month' => 'required|string|min:1|max:12',
             'day' => 'required|string|min:1|max:31',
-            'hour' => 'required|string|'
+            'hour' => 'required|string|regex:/^\d{2}:\d{2}$/'
         ]);
 
         if ($validator->fails()) {
@@ -151,13 +156,18 @@ class SchedulesController extends Controller
         try {
             DB::beginTransaction();
 
+            $currentYear = now()->year;
+            // Ensure $request->hour includes minutes e.g., '14:00'
+            $chosenDate = Carbon::createFromFormat('Y-m-d H:i', "{$currentYear}-{$request->month}-{$request->day} {$request->hour}", 'UTC');
+
             $schedule = new Schedule();
             $schedule->unit_id = $request->unit_id;
             $schedule->service_id = $request->service_id;
             $schedule->month = $request->month;
             $schedule->day = $request->day;
             $schedule->hour = $request->hour;
-            $schedule->user_id = auth()->user()->id; // Ensure you handle authentication
+            $schedule->chosen_date = $chosenDate; // Assuming $chosenDate is a Carbon instance
+            $schedule->user_id = auth()->user()->id;
             $schedule->save();
 
             DB::commit();
@@ -167,8 +177,6 @@ class SchedulesController extends Controller
             return response()->json(['success' => false, 'message' => 'Failed to create schedule', 'details' => $e->getMessage()], 500);
         }
     }
-
-
 
     private function monthToNumber($monthName) {
         $months = [

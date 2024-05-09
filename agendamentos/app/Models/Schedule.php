@@ -4,46 +4,50 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Ramsey\Uuid\Type\Time;
 
 class Schedule extends Model
 {
-    /**
-     * Get the validation rules that apply to the schedule.
-     *
-     * @return array
-     */
-    protected $dates = ['created_at', 'update_at'];
+    protected $dates = ['created_at', 'updated_at', 'chosen_date']; // Correção do typo em 'update_at' para 'updated_at'
     protected $casts = [
         'finished' => 'boolean',
         'canceled' => 'boolean',
     ];
 
-    public function updatedAt():string
+    /**
+     * Formata a data e hora de atualização.
+     *
+     * @return string
+     */
+    public function getFormattedUpdatedAt(): string
     {
-        return Carbon::parse($this->updated_at)->format('d-m-Y H:i');
+        return $this->updated_at->format('d-m-Y H:i');
     }
 
-    public function situation(): string
+    /**
+     * Determina a situação do agendamento.
+     *
+     * @return string
+     */
+    public function getSituation(): string
     {
-        if ($this->finished){
-            return 'Finalizado em {$$this->>updatedAt()}';
+        if ($this->finished) {
+            return 'Finalizado em ' . $this->getFormattedUpdatedAt();
         }
-       if ($this->canceled){
-            return 'Cancelado em {$$this->>updatedAt()}';
+        if ($this->canceled) {
+            return 'Cancelado em ' . $this->getFormattedUpdatedAt();
         }
 
-       $isBefore = Carbon::parse($this->chosen_date)->isBefore(Carbon::now());
-
-       return $isBefore ? `Ocorreu em {$this->formated_chosen_date}` : `Será em {$this->formated_chosen_date}`;
+        $isBefore = $this->chosen_date->isBefore(now());
+        return $isBefore ? "Ocorreu em " . $this->chosen_date->format('d-m-Y H:i') : "Será em " . $this->chosen_date->format('d-m-Y H:i');
     }
+
+    /**
+     * Verifica se o agendamento pode ser cancelado.
+     *
+     * @return bool
+     */
     public function canBeCanceled(): bool
     {
-        if ($this->finished || $this->canceled){
-            return false;
-        }
-        return Carbon::parse($this->chosen_date)->isAfter(Carbon::now());
+        return !$this->finished && !$this->canceled && $this->chosen_date->isFuture();
     }
-
 }
-
