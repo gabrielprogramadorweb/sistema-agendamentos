@@ -11,7 +11,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>Agendamentos | Admin | @yield('title')</title>
-
+    <link rel="icon" sizes="180x180" href="{{ asset('front/assets/favicon.png') }}">
     <!-- Custom fonts for this template-->
     <link rel="canonical" href="{{ asset('front/css/bootstrap.min.css') }}">
     <!-- Bootstrap core CSS -->

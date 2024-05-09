@@ -6,6 +6,7 @@ use App\Http\Controllers\Super\HomeController;
 use App\Http\Controllers\Super\ServiceController;
 use App\Http\Controllers\Super\UnitsController;
 use App\Http\Controllers\Super\UnitsServicesController;
+use App\Http\Controllers\WebHomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,12 +30,26 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/', [\App\Http\Controllers\WebHomeController::class, 'index'])->name('web-home.index')->middleware(['auth', 'verified']);;
+Route::get('/', [WebHomeController::class, 'index'])->name('web-home.index');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->middleware('verified')->name('dashboard');
+
+    Route::prefix('profile')->group(function () {
+        Route::get('/', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    });
+
+    Route::prefix('schedules')->group(function () {
+        Route::get('/', [SchedulesController::class, 'index'])->name('schedules.new');
+        Route::get('/services/{unitId}', [SchedulesController::class, 'unitServices'])->name('get.unit.services');
+        Route::get('/calendar', [SchedulesController::class, 'getCalendar'])->name('get.calendar');
+        Route::get('/hours', [SchedulesController::class, 'getHours'])->name('get.hours');
+        Route::post('/create', [SchedulesController::class, 'createSchedule'])->name('create.schedule');
+    });
 });
 
 Route::prefix('super')->middleware('admin')->group(function () {
@@ -68,13 +83,5 @@ Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit')
 Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-//rotas de agendamentos do user logado
-Route::prefix('schedules')->group(function () {
-    Route::get('/', [SchedulesController::class, 'index'])->name('schedules.new');
-    Route::get('/services/{unitId}', [SchedulesController::class, 'unitServices'])->name('get.unit.services');
-    Route::get('/calendar', [SchedulesController::class, 'getCalendar'])->name('get.calendar');
-    Route::get('/hours', [SchedulesController::class, 'getHours'])->name('get.hours');
-    Route::post('/create', [SchedulesController::class, 'createSchedule'])->name('create.schedule');
-});
 
 require __DIR__.'/auth.php';

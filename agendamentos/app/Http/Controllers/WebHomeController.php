@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class WebHomeController extends Controller
 {
@@ -13,9 +14,22 @@ class WebHomeController extends Controller
      */
     public function index()
     {
+        $user = Auth::user(); // Pega o usuário autenticado
         $title = 'Home';
-        return view('Front.Home.index', compact('title'));
+        $hasImage = false;
+        $imageUrl = asset('front/assets/perfil.png'); // Imagem padrão
+
+        if ($user && $user->profile_image && Storage::exists('public/' . $user->profile_image)) {
+            $hasImage = true;
+            $imageUrl = asset('storage/' . $user->profile_image);
+        }
+
+        return view('Front.Home.index', compact('user', 'hasImage', 'imageUrl', 'title'));
     }
+
+
+
+
 
     /**
      * Show the form for creating a new resource.

@@ -8,6 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="generator" content="Hugo 0.84.0">
     <title>Meus agendamentos | @yield('title')</title>
+    <link rel="icon" sizes="180x180" href="{{ asset('front/assets/favicon.png') }}">
 
     <link rel="canonical" href="{{ asset('front/css/bootstrap.min.css') }}">
     <!-- Bootstrap core CSS -->
@@ -74,7 +75,6 @@
             </div>
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
-
                 <form class="d-flex me-7 ">
                     <input class="form-control rounded-lg me-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn rounded-lg btn-outline-primary" type="submit">Search</button>
@@ -82,12 +82,17 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border-0 text-sm leading-4 font-medium text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150 shadow-none">
-                            @if (Auth::user()->profile_image && Storage::exists('public/' . Auth::user()->profile_image))
-                                <img src="{{ asset('storage/' . Auth::user()->profile_image) }}" alt="Profile Image" width="50" class="pr-3">
+                            @if (Auth::check())
+                                @if ($hasImage)
+                                    <img src="{{ $imageUrl }}" alt="Profile Image" width="50" class="pr-3">
+                                @else
+                                    <img src="{{ $imageUrl }}" alt="Default Profile Image" width="50" class="pr-3">
+                                @endif
+                                <div>{{ Auth::user()->name }}</div>
                             @else
-                                <img src="{{ asset('front/assets/perfil.png') }}" alt="Default Profile Image" width="50" class="pr-3">
+                                <img src="{{ asset('front/assets/perfil.png') }}" alt="Guest" width="50" class="pr-3">
+                                <div>Guest</div>
                             @endif
-                            <div>{{ Auth::user()->name }}</div>
                             <div class="ml-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -95,26 +100,29 @@
                             </div>
                         </button>
                     </x-slot>
-
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Editar Perfil') }}
-                        </x-dropdown-link>
-
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                             onclick="event.preventDefault();
-                                      this.closest('form').submit();">
-                                {{ __('Sair') }}
+                        @if (Auth::check())
+                            <x-dropdown-link :href="route('profile.edit')">
+                                {{ __('Editar Perfil') }}
                             </x-dropdown-link>
-                        </form>
+                            <!-- Authentication -->
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <x-dropdown-link :href="route('logout')"
+                                                 onclick="event.preventDefault();
+                                                  this.closest('form').submit();">
+                                    {{ __('Sair') }}
+                                </x-dropdown-link>
+                            </form>
+                        @else
+                            <x-dropdown-link :href="route('login')">
+                                {{ __('Login') }}
+                            </x-dropdown-link>
+                        @endif
                     </x-slot>
                 </x-dropdown>
-
             </div>
+
         </div>
     </nav>
 </header>
