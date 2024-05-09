@@ -138,13 +138,7 @@ class SchedulesController extends Controller
             'hour' => substr($request->hour, 0, 5) // Trims off the seconds from 'HH:MM:SS'
         ]);
 
-        $validator = Validator::make($request->all(), [
-            'unit_id' => 'required|integer|min:1',
-            'service_id' => 'required|integer|min:1',
-            'month' => 'required|string|min:1|max:12',
-            'day' => 'required|string|min:1|max:31',
-            'hour' => 'required|string|regex:/^\d{2}:\d{2}$/'
-        ]);
+        $validator = $this->schedulesService->validateSchedule($request);
 
         if ($validator->fails()) {
             return response()->json([
@@ -157,8 +151,12 @@ class SchedulesController extends Controller
             DB::beginTransaction();
 
             $currentYear = now()->year;
-            // Ensure $request->hour includes minutes e.g., '14:00'
             $chosenDate = Carbon::createFromFormat('Y-m-d H:i', "{$currentYear}-{$request->month}-{$request->day} {$request->hour}", 'UTC');
+            $existingSchedule = Schedule::where('chosen_date', $chosenDate)->exists();
+
+            if ($existingSchedule) {
+                throw new \Exception('Já existe uma programação com a data e hora especificadas.');
+            }
 
             $schedule = new Schedule();
             $schedule->unit_id = $request->unit_id;
@@ -166,7 +164,7 @@ class SchedulesController extends Controller
             $schedule->month = $request->month;
             $schedule->day = $request->day;
             $schedule->hour = $request->hour;
-            $schedule->chosen_date = $chosenDate; // Assuming $chosenDate is a Carbon instance
+            $schedule->chosen_date = $chosenDate;
             $schedule->user_id = auth()->user()->id;
             $schedule->save();
 
@@ -174,9 +172,14 @@ class SchedulesController extends Controller
             return response()->json(['success' => true, 'message' => 'Agendamento criado com sucesso!'], 200);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['success' => false, 'message' => 'Failed to create schedule', 'details' => $e->getMessage()], 500);
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create schedule',
+                'details' => $e->getMessage()  // This will include the exception thrown for existing schedules
+            ], 500);
         }
     }
+
 
     private function monthToNumber($monthName) {
         $months = [

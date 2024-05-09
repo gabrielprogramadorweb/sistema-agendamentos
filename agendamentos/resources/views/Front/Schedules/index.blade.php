@@ -8,6 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="container pt-5">
         <h1 id="titulo" class="font-weight-bolder">{{ $title }}</h1>
+        <img src="{{ asset('front/image/agendamento.png') }}" alt="Image" id="agendado" class="d-none">
         <div class="row">
             <div class="col-md-8">
                 <div id="boxSuccess" class="mt-4 mb-3"></div>
@@ -81,9 +82,7 @@
 @endsection
 
 @section('css')
-    <style>
 
-    </style>
 @endsection
 
 @section('js')
@@ -98,13 +97,12 @@
             const mainBoxServices = document.getElementById('mainBoxServices');
             const boxServices = document.getElementById('boxServices');
             const boxMonths = document.getElementById('boxMonths');
-            let mainBoxCalendar = document.getElementById('mainBoxCalendar');
+            const mainBoxCalendar = document.getElementById('mainBoxCalendar');
             const boxCalendar = document.getElementById('boxCalendar');
             const chosenUnitText = document.getElementById('chosenUnitText');
             const units = document.querySelectorAll('input[name="unit_id"]');
             const calendarContainer = document.getElementById('boxCalendar');
-            let chosenMonth = null, chosenDay = null, chosenHour = null; // Added to declare the scope of these variables properly
-
+            let chosenMonth = null, chosenDay = null, chosenHour = null;
             let csrfTokenValue = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             let selectedUnitId = null;
 
@@ -116,26 +114,16 @@
             }
 
             function hideInputFields() {
-                // Hide all input-related fields
-                document.getElementById('mainBoxServices').style.display = 'none';
-                document.getElementById('boxServices').style.display = 'none';
-                document.getElementById('boxMonths').style.display = 'none';
-                document.getElementById('mainBoxCalendar').style.display = 'none';
-                document.getElementById('boxCalendar').style.display = 'none';
-                document.getElementById('boxHours').style.display = 'none';
-                document.getElementById('escHorario').style.display = 'none';
-                document.getElementById('divRight').style.display = 'none';
-                document.getElementById('container').style.display = 'none';
-                document.getElementById('titulo').style.display = 'none';
-                btnTryCreate.style.display = 'none'; // Hide the button as well
-            }
-
-            function hideDivsByIds() {
-                var ids = ['container', 'divRight', 'titulo']; // List of div IDs to hide
-                ids.forEach(function(id) {
-                    var element = document.getElementById(id);
+                const ids = [
+                    'mainBoxServices', 'boxServices', 'boxMonths', 'mainBoxCalendar',
+                    'boxCalendar', 'boxHours', 'escHorario', 'divRight', 'container',
+                    'titulo', 'btnTryCreate', 'boxSuccess'
+                ];
+                ids.forEach(id => {
+                    const element = document.getElementById(id);
                     if (element) {
                         element.style.display = 'none';
+                        agendado.classList.remove('d-none');
                     }
                 });
             }
@@ -193,6 +181,7 @@
                     } else {
                         throw new Error("No services data found");
                     }
+
                 } catch ( error) {
                     console.error('Error fetching services:', error);
                     boxErrors.innerHTML = showErrorMessage(`Não foi possível recuperar os Serviços. Error: ${error.message}`);
@@ -205,7 +194,7 @@
                 const chosenMonthText = document.getElementById('chosenMonthText');
                 const selectedOption = event.target.options[event.target.selectedIndex];
                 chosenMonthText.innerText = selectedOption.text === '--- Escolha ---' ? '' : selectedOption.text;
-                chosenMonth = formatWithTwoDigits(event.target.value);// Correctly assigning the month
+                chosenMonth = formatWithTwoDigits(event.target.value);
                 if(selectedOption.value !== '') {
                     getCalendar(selectedOption.value);
                 }
@@ -237,16 +226,10 @@
                     return;
                 }
 
-
-                // Obtenha o valor do serviço selecionado
                 const serviceId = boxServices.value;
-
                 btnTryCreate.disabled = true;
                 btnTryCreate.innerText = 'Estamos criando o seu agendamento...';
-
-                // URL do servidor onde os agendamentos são criados
-                const url = 'http://localhost/api/agendamentos'; // Substitua pela URL correta
-
+                const url = 'http://localhost/api/agendamentos';
                 const requestData = {
                     unitId: selectedUnitId,
                     serviceId: serviceId,
@@ -254,8 +237,6 @@
                     day: chosenDay,
                     hour: chosenHour
                 };
-
-
                 try {
                     const unitId = document.querySelector('input[name="unit_id"]:checked').value;
                     const serviceId = boxServices.value;
@@ -263,9 +244,9 @@
                     const body = {
                         unit_id: parseInt(selectedUnitId),
                         service_id: parseInt(boxServices.value),
-                        month: chosenMonth.toString().padStart(2, '0'), // Garantindo dois dígitos
-                        day: chosenDay.toString().padStart(2, '0'),     // Garantindo dois dígitos
-                        hour: chosenHour.toString() + ':00',             // Convertendo em string e adicionando minutos se necessário
+                        month: chosenMonth.toString().padStart(2, '0'),
+                        day: chosenDay.toString().padStart(2, '0'),
+                        hour: chosenHour.toString() + ':00',
                         _token: csrfTokenValue
                     };
 
@@ -310,12 +291,11 @@
 
                 } catch (error) {
                     console.error('Error creating schedule:', error);
-                    boxErrors.innerHTML = showErrorMessage('Erro ao criar o agendamento');
+                    boxErrors.innerHTML = showErrorMessage('Já existe uma programação com a data e hora especificadas. ');
                 }
             });
 
             //-----------------------FUNÇÕES------------------------------------//
-            // tenta criar o agendamento
             const tryCreateSchedule = async () => {
                 boxErrors.innerHTML = '';
                 // o que será enviado no request
@@ -347,19 +327,14 @@
 
                         const data = await response.json();
                         const errors = data.errors;
-                        // atualiza o token do CSRF
                         csrfTokenValue = data.token;
-                        // transformo o array de rros em uma string
                         let message = Object.keys(errors).map(field => errors[field]).join(', ');
                         boxErrors.innerHTML = showErrorMessage(message);
                         return;
                     }
-                    // erro diferente de 400
                     boxErrors.innerHTML = showErrorMessage('Não foi possivel criar o seu agendamento');
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
-
-                // retornamos para a mesma view para exibir a mensagem de sucesso
                 window.location.href = window.location.href;
 
             };
@@ -513,8 +488,4 @@
 
         });
     </script>
-@endsection
-
-@section('js')
-    <script src="{{ asset('js/schedule.js') }}"></script>
 @endsection

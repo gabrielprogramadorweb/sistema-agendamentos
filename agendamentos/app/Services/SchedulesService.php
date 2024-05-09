@@ -2,11 +2,13 @@
 namespace App\Services;
 use App\Models\ServiceModel;
 use App\Models\UnitModel;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;  // Correct namespace for DB
 use App\Models\Schedule; // Correct reference to Schedule model
 
 use http\Exception\InvalidArgumentException;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class SchedulesService
 {
@@ -65,26 +67,15 @@ class SchedulesService
             throw $e;
         }
     }
-
-    public function createSchedule(array $data): ?Schedule
+    public function validateSchedule(Request $request)
     {
-        try {
-            DB::beginTransaction();
-
-            $schedule = new Schedule(); // Now correctly referenced
-            $schedule->unit_id = $data['unit_id'];
-            $schedule->service_id = $data['service_id'];
-            $schedule->month = $data['month'];
-            $schedule->day = $data['day'];
-            $schedule->hour = $data['hour'];
-            $schedule->save();
-
-            DB::commit();
-            return $schedule;
-        } catch (Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        return Validator::make($request->all(), [
+            'unit_id' => 'required|integer|min:1',
+            'service_id' => 'required|integer|min:1',
+            'month' => 'required|string|min:1|max:12',
+            'day' => 'required|string|min:1|max:31',
+            'hour' => 'required|string|regex:/^\d{2}:\d{2}$/'
+        ]);
     }
 
 }
