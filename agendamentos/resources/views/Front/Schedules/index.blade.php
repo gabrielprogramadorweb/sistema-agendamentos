@@ -82,10 +82,7 @@
 
 @section('css')
     <style>
-        #titulo {
-            font-weight: 700; /* Equivalent to 'bolder' */
-            font-size: 2.5rem; /* Adjust size as needed */
-        }
+
     </style>
 @endsection
 
