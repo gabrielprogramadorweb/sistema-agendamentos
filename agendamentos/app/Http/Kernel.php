@@ -24,7 +24,6 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\ValidateMaxUploadSize::class,
     ];
 
-
     /**
      * The application's route middleware groups.
      *
@@ -59,6 +58,7 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
         'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,

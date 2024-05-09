@@ -37,7 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::prefix('super')->group(function () {
+Route::prefix('super')->middleware('admin')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
 
     Route::prefix('units')->group(function () {
