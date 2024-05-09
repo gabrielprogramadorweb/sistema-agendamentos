@@ -83,15 +83,15 @@
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border-0 text-sm leading-4 font-medium text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150 shadow-none">
                             @if (Auth::check())
-                                @if ($hasImage)
+                                @if (isset($hasImage) && $hasImage)
                                     <img src="{{ $imageUrl }}" alt="Profile Image" width="50" class="pr-3">
                                 @else
                                     <img src="{{ $imageUrl }}" alt="Default Profile Image" width="50" class="pr-3">
                                 @endif
                                 <div>{{ Auth::user()->name }}</div>
                             @else
-                                <img src="{{ asset('front/assets/perfil.png') }}" alt="Guest" width="50" class="pr-3">
-                                <div>Guest</div>
+                                <img src="{{ asset('front/assets/default-profile.png') }}" alt="Guest" width="50" class="pr-3">
+                                <div></div>
                             @endif
                             <div class="ml-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">

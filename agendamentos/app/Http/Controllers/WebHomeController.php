@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage; // Correctly added import for Storage
 
 class WebHomeController extends Controller
 {
@@ -14,20 +15,20 @@ class WebHomeController extends Controller
      */
     public function index()
     {
-        $user = Auth::user(); // Pega o usuário autenticado
+        $user = Auth::user(); // Correct method to fetch the authenticated user
         $title = 'Home';
-        $hasImage = false;
-        $imageUrl = asset('front/assets/perfil.png'); // Imagem padrão
 
+        // Set a default image URL
+        $imageUrl = asset('front/assets/default-profile.png');
+
+        // Update image URL if the user has a profile image that exists
         if ($user && $user->profile_image && Storage::exists('public/' . $user->profile_image)) {
-            $hasImage = true;
             $imageUrl = asset('storage/' . $user->profile_image);
         }
 
-        return view('Front.Home.index', compact('user', 'hasImage', 'imageUrl', 'title'));
+        // Pass data to the view
+        return view('Front.Home.index', compact('user', 'imageUrl', 'title'));
     }
-
-
 
 
 
