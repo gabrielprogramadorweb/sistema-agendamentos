@@ -11,7 +11,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>Agendamentos | Admin | @yield('title')</title>
-    <link rel="icon" sizes="180x180" href="{{ asset('front/assets/favicon.png') }}">
+    <link rel="icon" sizes="180x180" href="{{ asset('front/image/favicon.png') }}">
     <!-- Custom fonts for this template-->
     <link rel="canonical" href="{{ asset('front/css/bootstrap.min.css') }}">
     <!-- Bootstrap core CSS -->
@@ -276,7 +276,7 @@
                                         @if (Auth::user()->profile_image && Storage::exists('public/' . Auth::user()->profile_image))
                                             <img src="{{ asset('storage/' . Auth::user()->profile_image) }}" alt="Profile Image" width="50" class="pr-3">
                                         @else
-                                            <img src="{{ asset('front/assets/perfil.png') }}" alt="Default Profile Image" width="50" class="pr-3">
+                                            <img src="{{ asset('front/image/perfil.png') }}" alt="Default Profile Image" width="50" class="pr-3">
                                         @endif
                                         <div>{{ Auth::user()->name }}</div>
                                         <div class="ml-1">
