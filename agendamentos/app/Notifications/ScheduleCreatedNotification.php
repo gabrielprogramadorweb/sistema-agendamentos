@@ -25,14 +25,13 @@ class ScheduleCreatedNotification extends Notification implements ShouldQueue
 
     public function toMail($notifiable)
     {
-        \Log::info("Sending email to: {$notifiable->email}");
         return (new MailMessage)
-            ->subject('Confirmation of Your Schedule')
-            ->greeting('Hello, ' . $notifiable->name)
-            ->line('Your schedule for ' . $this->schedule->chosen_date->format('M d, Y H:i') . ' has been successfully created.')
-            ->line('Thank you for using our application!');
+            ->subject('Confirmação de agendamento.')
+            ->view('emails.schedule_created', [
+                'schedule' => $this->schedule,
+                'notifiable' => $notifiable
+            ]);
     }
-
 
     public function toArray($notifiable)
     {
