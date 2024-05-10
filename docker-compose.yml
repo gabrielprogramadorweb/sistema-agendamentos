@@ -13,7 +13,14 @@ services:
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       - setup-network
-
+  mailhog:
+    container_name: setup-mailhog
+    image: mailhog/mailhog
+    ports:
+      - '8025:8025'  # Interface web do MailHog
+      - '1025:1025'  # SMTP server
+    networks:
+      - setup-network
   nginx:
     container_name: setup-nginx
     build:

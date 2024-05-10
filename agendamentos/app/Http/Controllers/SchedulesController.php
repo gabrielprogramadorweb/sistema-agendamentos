@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Schedule;
+use App\Notifications\ScheduleCreatedNotification;
 use App\Services\CalendarService;
 use App\Services\SchedulesService;
 use App\Services\UnitAvaiableHoursService;
@@ -146,6 +147,11 @@ class SchedulesController extends Controller
                 'errors' => $validator->errors()
             ], 400);
         }
+        \Mail::raw('Hello, this is a test email.', function ($message) {
+            $message->from(config('mail.from.address'), config('mail.from.name'));
+            $message->to('test@example.com', 'Recipient Name')->subject('Test Email');
+        });
+
 
         try {
             DB::beginTransaction();
@@ -158,6 +164,7 @@ class SchedulesController extends Controller
                 throw new \Exception('Já existe uma programação com a data e hora especificadas.');
             }
 
+
             $schedule = new Schedule();
             $schedule->unit_id = $request->unit_id;
             $schedule->service_id = $request->service_id;
@@ -167,6 +174,8 @@ class SchedulesController extends Controller
             $schedule->chosen_date = $chosenDate;
             $schedule->user_id = auth()->user()->id;
             $schedule->save();
+            $user = auth()->user();
+            $user->notify(new \App\Notifications\ScheduleCreatedNotification($schedule));
 
             DB::commit();
             return response()->json(['success' => true, 'message' => 'Agendamento criado com sucesso!'], 200);

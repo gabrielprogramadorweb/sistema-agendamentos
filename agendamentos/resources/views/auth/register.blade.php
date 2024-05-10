@@ -1,3 +1,5 @@
+<link rel="icon" sizes="180x180" href="{{ asset('front/assets/favicon.png') }}">
+
 <x-guest-layout>
     <form method="POST" action="{{ route('register') }}">
         @csrf

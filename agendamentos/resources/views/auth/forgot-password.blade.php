@@ -1,6 +1,9 @@
+<link rel="icon" sizes="180x180" href="{{ asset('front/assets/favicon.png') }}">
 <x-guest-layout>
+    <img src="{{ asset('front/image/dental+.png') }}" alt="Descrição da Imagem" width="600" class="p-5" >
+
     <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+        {{ __('Esqueceu sua senha? Sem problemas. Basta nos informar seu endereço de e-mail e enviaremos por e-mail um link de redefinição de senha que permitirá que você escolha uma nova.') }}
     </div>
 
     <!-- Session Status -->
@@ -18,7 +21,7 @@
 
         <div class="flex items-center justify-end mt-4">
             <x-primary-button>
-                {{ __('Email Password Reset Link') }}
+                {{ __('Link de redefinição de senha de e-mail') }}
             </x-primary-button>
         </div>
     </form>

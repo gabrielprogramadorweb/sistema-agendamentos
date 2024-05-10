@@ -9,7 +9,7 @@
 @endsection
 @section('content')
     <div class="container pt-5 text-center">
-        <h1 class="mt-5">Veja como é fácil criar o seu agendamento</h1>
+        <h1 id="titulo" class="mt-5 ">Veja como é fácil criar o seu agendamento</h1>
         <div class="row mt-4">
             <div class="col">
                 <div class="card">

@@ -83,5 +83,11 @@ Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit')
 Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-
+Route::get('/test-email', function () {
+    \Mail::raw('This is a test email', function ($message) {
+        $message->to('gabriel.developerxxx@gmail.com')
+            ->subject('Test Email');
+    });
+    return 'Email has been sent.';
+});
 require __DIR__.'/auth.php';

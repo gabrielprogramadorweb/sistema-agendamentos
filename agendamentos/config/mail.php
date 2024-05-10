@@ -34,6 +34,10 @@ return [
     */
 
     'mailers' => [
+        'sendgrid' => [
+            'transport' => 'sendgrid',
+            'key' => env('SENDGRID_API_KEY'),
+        ],
         'smtp' => [
             'transport' => 'smtp',
             'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
@@ -44,6 +48,7 @@ return [
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
+
 
         'ses' => [
             'transport' => 'ses',
