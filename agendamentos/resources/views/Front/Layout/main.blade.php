@@ -14,6 +14,7 @@
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('front/css/bootstrap.min.css') }}" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="{{ asset('front/css/schedules.css') }}" rel="stylesheet" crossorigin="anonymous">
+    <link href="{{ asset('front/css/my_schedules.css') }}" rel="stylesheet" crossorigin="anonymous">
     <!-- Favicons -->
     <link rel="apple-touch-icon" href="/docs/5.0/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
     <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
@@ -104,6 +105,9 @@
                         @if (Auth::check())
                             <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Editar Perfil') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('meus-agendamentos')">
+                                {{ __('Meus agendamentos') }}
                             </x-dropdown-link>
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}">

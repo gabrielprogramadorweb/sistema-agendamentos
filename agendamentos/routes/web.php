@@ -48,6 +48,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/hours', [SchedulesController::class, 'getHours'])->name('get.hours');
         Route::post('/create', [SchedulesController::class, 'createSchedule'])->name('create.schedule');
     });
+    Route::get('/meus-agendamentos', [SchedulesController::class, 'showUserSchedules'])->name('meus-agendamentos')->middleware('auth');
+
 });
 
 Route::prefix('super')->middleware('admin')->group(function () {

@@ -9,6 +9,7 @@ use App\Services\SchedulesService;
 use App\Services\UnitAvaiableHoursService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 use Illuminate\Http\Response;
@@ -189,6 +190,20 @@ class SchedulesController extends Controller
         }
     }
 
+    public function showUserSchedules()
+    {
+        // Pega o ID do usuário logado
+        $userId = Auth::id();
+
+        // Busca todos os agendamentos para esse usuário, pré-carregando as relações com 'service' e 'unit'
+        $schedules = Schedule::with(['service', 'unit'])->where('user_id', $userId)->get();
+
+        // Define um título para a página
+        $title = 'Meus Agendamentos';
+
+        // Retorna a view com os agendamentos e o título
+        return view('Front.Schedules.my_schedules', compact('schedules', 'title'));
+    }
 
     private function monthToNumber($monthName) {
         $months = [

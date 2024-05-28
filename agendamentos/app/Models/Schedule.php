@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Schedule extends Model
 {
     protected $dates = ['created_at', 'updated_at', 'chosen_date']; // Correção do typo em 'update_at' para 'updated_at'
+    protected $fillable = [
+        'user_id', 'service_id', 'unit_id', 'date', 'time',
+    ];
     protected $casts = [
         'finished' => 'boolean',
         'canceled' => 'boolean',
@@ -50,4 +53,17 @@ class Schedule extends Model
     {
         return !$this->finished && !$this->canceled && $this->chosen_date->isFuture();
     }
+
+    // Em app/Models/Schedule.php
+
+    public function unit()
+    {
+        return $this->belongsTo(UnitModel::class);
+    }
+
+    public function service()
+    {
+        return $this->belongsTo(ServiceModel::class);
+    }
+
 }
