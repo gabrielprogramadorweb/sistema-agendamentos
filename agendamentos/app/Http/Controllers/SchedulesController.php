@@ -237,6 +237,13 @@ class SchedulesController extends Controller
             return null;
         }
     }
+    public function destroy(Schedule $schedule)
+    {
+        $schedule->delete();
+
+        return redirect()->route('meus-agendamentos')->with('success', 'Agendamento cancelado com sucesso.');
+    }
+
 }
 
 

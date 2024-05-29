@@ -14,6 +14,7 @@
                     <th class="text-center">Data e Hora</th>
                     <th class="text-center">Serviço</th>
                     <th class="text-center">Unidade</th>
+                    <th class="text-center">Ações</th> <!-- Nova coluna para ações -->
                 </tr>
                 </thead>
                 <tbody>
@@ -21,11 +22,18 @@
                     <tr>
                         <td class="text-center">{{ $schedule->chosen_date->format('d/m/Y H:i') }}</td>
                         <td class="text-center">{{ $schedule->service->name ?? 'Serviço não especificado' }}</td>
-                        <td class="text-center">{{ $schedule->unit->name ?? 'Unidade não especificada' }}</td> <!-- Exibir nome da unidade -->
+                        <td class="text-center">{{ $schedule->unit->name ?? 'Unidade não especificada' }}</td>
+                        <td class="text-center">
+                            <form action="{{ route('schedules.destroy', $schedule->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm">Cancelar</button>
+                            </form>
+                        </td> <!-- Botão de cancelamento -->
                     </tr>
                 @empty
                     <tr>
-                        <td class="text-center" colspan="3">Nenhum agendamento encontrado.</td> <!-- Atualizado o colspan -->
+                        <td class="text-center" colspan="4">Nenhum agendamento encontrado.</td> <!-- Atualizado o colspan -->
                     </tr>
                 @endforelse
                 </tbody>
