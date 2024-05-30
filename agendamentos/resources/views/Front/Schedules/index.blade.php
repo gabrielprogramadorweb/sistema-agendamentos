@@ -24,17 +24,14 @@
                     </div>
                 @endif
                 <div class="row" id='container'>
-                    <!-- Unidades -->
                     <div class="col-md-12 mb-4">
                         <p id='escUnidade' class="lead">Escolha uma Unidade</p>
                         <div id="unitsEsc" >{!! $units !!}</div>
                     </div>
-                    <!-- Serviços da unidade (inicialmente oculto) -->
                     <div id="mainBoxServices" class="col-md-8 mb-4 d-none">
                         <p class="lead">Escolha o Serviço</p>
                         <select class="form-select" id="boxServices"></select>
                     </div>
-                    <!-- Mês (inicialmente oculto) -->
                     <div id="boxMonths" class="col-md-8 mb-4 d-none">
                         <p class="lead">Escolha o Mês</p>
                         <select id="month" class="form-select ">
@@ -44,7 +41,6 @@
                             @endforeach
                         </select>
                     </div>
-                    <!-- Calendar -->
                     <div id="mainBoxCalendar" class="col-md-8 d-none mb-4"></div>
                     <p id='escHorario' class="lead">Escolha o dia e o horário</p>
                     <div class="row">
@@ -67,7 +63,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Preview das escolhas feitas -->
+
             <div class="col-md-4 ms-auto">
                 <div id="divRight" class="preview-details">
                     <p class="lead mt-4">Unidade escolhida: <br><span id="chosenUnitText" class="text-muted small"></span></p>
@@ -298,7 +294,6 @@
             //-----------------------FUNÇÕES------------------------------------//
             const tryCreateSchedule = async () => {
                 boxErrors.innerHTML = '';
-                // o que será enviado no request
                 const body = {
                     unit_id    : unitId,
                     service_id  : serviceId,
@@ -306,7 +301,6 @@
                     day        : chosenDay,
                     hour       : chosenHour
                 };
-
 
                 body[csrfTokenName] = csrfTokenValue;
 
@@ -320,7 +314,6 @@
                     ,
                     body: JSON.stringify(body)
                 });
-
 
                 if (!response.ok) {
                     if (response.status === 400){
@@ -339,7 +332,6 @@
 
             };
 
-            // mês
             const getCalendar = async (month) => {
                 boxErrors.innerHTML = '';
                 chosenDayText.innerText = '';
@@ -384,7 +376,7 @@
                     boxErrors.innerHTML = showErrorMessage('Erro ao conectar ao servidor.');
                 }
             };
-            // calendário
+
             const getHours = async () => {
                 const URL_GET_HOURS = '{{ route('get.hours') }}';
                 boxErrors.innerHTML = '';
@@ -450,18 +442,13 @@
                 }
             };
 
-            // redefine as opções dos meses
             const resetMonthOptions = () => {
                 console.log('Redefini as opções de meses...');
-                // oculta a div dos meses
                 boxMonths.classList.add('d-none');
-                // volta para a opção '--- Escolha ---'
                 document.getElementById('month').selectedIndex = 0;
-                // nulamos esses campos
                 resetMonthDataVariables();
             }
 
-            // Redefini as variaveis pertinentes ao mês, dia, hora...
             const resetMonthDataVariables = () => {
                 console.log('Redefini as variaveis pertinentes ao mês, dia, hora...');
                 chosenMonth = null;
@@ -469,7 +456,6 @@
                 chosenHour = null;
             }
 
-            // Redefine o calendário
             const resetBoxCalendar = () => {
                 console.log('Redefini o calendário...');
                 mainBoxCalendar.classList.add('d-none');
@@ -478,7 +464,6 @@
                 boxHours.innerHTML    = '';
             }
 
-            // Função para remover a classe e resetar a cor de fundo
             const removeClassFromElements = (elements, className) => {
                 elements.forEach(element => {
                     element.classList.remove(className);

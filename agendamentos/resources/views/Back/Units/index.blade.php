@@ -16,15 +16,15 @@
         @endif
         <div class="card shadow mb-4 mt-8">
             <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                <h6 class="m-0 font-weight-bold text-primary">{{ $title }}</h6>
+                <h6 class="m-0 font-weight-bold text-primary titulo" style=" color: #14A1D4 !important;">{{ $title }}</h6>
                 <a href="{{ route('units.create') }}" class="btn btn-success btn-sm">Nova Unidade</a>
             </div>
             <div class="card-body">
                 <form action="{{ route('units.index') }}" method="GET" class="mb-4">
                     <div class="input-group">
-                        <input type="text" name="search" class="form-control" placeholder="Search by name..." value="{{ request('search') }}">
+                        <input type="text" name="search" class="form-control" placeholder="Qual unidade você deseja?" value="{{ request('search') }}">
                         <div class="input-group-append">
-                            <button class="btn btn-primary" type="submit">Search</button>
+                            <button class="btn btn-primary" type="submit">Pesquisar</button>
                         </div>
                     </div>
                 </form>
@@ -68,7 +68,6 @@
         </div>
     </div>
 
-    <!-- Modals de confirmação de exclusão -->
     @foreach($units as $unit)
         <div class="modal fade" id="confirmDeleteModal{{ $unit->id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">

@@ -22,7 +22,7 @@
             <div class="card-body">
                 <form action="{{ route('services.index') }}" method="GET" class="mb-4">
                     <div class="input-group">
-                        <input type="text" name="search" class="form-control" placeholder="Digite o serviço que você deseja." value="{{ request('search') }}">
+                        <input type="text" name="search" class="form-control" placeholder="Qual serviço você deseja?" value="{{ request('search') }}">
                         <div class="input-group-append">
                             <button class="btn btn-primary" type="submit">Pesquisar</button>
                         </div>
@@ -68,7 +68,6 @@
         </div>
     </div>
 
-    <!-- Modals de confirmação de exclusão -->
     @foreach($services as $service)
         <div class="modal fade" id="confirmDeleteModal{{ $service->id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">

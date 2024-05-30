@@ -27,7 +27,7 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $validatedData = $request->validate([
-            'profile_image' => 'nullable|image|max:3072', // 3 MB = 3072 Kilobytes
+            'profile_image' => 'nullable|image|max:3072',
         ]);
 
         if ($request->hasFile('profile_image')) {

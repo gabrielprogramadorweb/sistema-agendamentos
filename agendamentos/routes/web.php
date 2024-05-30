@@ -9,23 +9,6 @@ use App\Http\Controllers\Super\UnitsServicesController;
 use App\Http\Controllers\WebHomeController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
-//Route::get('/', function () {
-//    return view('welcome');
-//});
-
-
-
 Route::get('/', [WebHomeController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/', [WebHomeController::class, 'index'])->name('web-home.index');

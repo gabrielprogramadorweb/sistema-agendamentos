@@ -14,7 +14,7 @@
         @endif
 
         <form action="{{ route('units.store') }}" method="POST">
-            @csrf  {{-- CSRF Token is essential for form security --}}
+            @csrf
             <div class="row">
                 <div class="form-group col-md-3">
                     <label for="name">Nome:</label>

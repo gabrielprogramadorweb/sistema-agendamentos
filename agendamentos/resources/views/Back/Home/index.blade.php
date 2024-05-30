@@ -5,20 +5,13 @@
 @endsection
 
 @section('css')
-    <!-- Adicione aqui os estilos adicionais se necessário -->
-    <style>
-        #schedulesChart {
-            max-height: 400px; /* Ajuste a altura conforme necessário */
-        }
-    </style>
+
 @endsection
 
 @section('content')
-    <!-- Begin Page Content -->
     <div class="container-fluid">
-        <h1 class="h3 mb-4 mt-10 text-gray-800">{{ $title }} </h1>
+        <h1 class="h3 mb-4 mt-4 text-gray-800">{{ $title }} </h1>
 
-        <!-- Container para o gráfico -->
         <div class="card mb-4">
             <div class="card-header">
                 <i class="fas fa-chart-bar"></i>
@@ -36,6 +29,9 @@
                     <th class="text-center">Data e Hora</th>
                     <th class="text-center">Serviço</th>
                     <th class="text-center">Unidade</th>
+                    <th class="text-center">Nome do Cliente</th>
+                    <th class="text-center">Email do Cliente</th>
+                    <th class="text-center">Telefone do Cliente</th>
                     <th class="text-center">Ações</th>
                 </tr>
                 </thead>
@@ -45,6 +41,9 @@
                         <td class="text-center">{{ $schedule->chosen_date->format('d/m/Y H:i') }}</td>
                         <td class="text-center">{{ $schedule->service->name ?? 'Serviço não especificado' }}</td>
                         <td class="text-center">{{ $schedule->unit->name ?? 'Unidade não especificada' }}</td>
+                        <td class="text-center">{{ $schedule->user->name ?? 'Cliente não especificado' }}</td>
+                        <td class="text-center">{{ $schedule->user->email ?? 'Email não especificado' }}</td>
+                        <td class="text-center">{{ $schedule->user->phone ?? 'Telefone não especificado' }}</td> <!-- Exibir telefone do cliente -->
                         <td class="text-center">
                             <form action="{{ route('admin.schedules.destroy', $schedule->id) }}" method="POST">
                                 @csrf
@@ -55,31 +54,44 @@
                     </tr>
                 @empty
                     <tr>
-                        <td class="text-center" colspan="4">Nenhum agendamento encontrado.</td>
+                        <td class="text-center" colspan="7">Nenhum agendamento encontrado.</td>
                     </tr>
                 @endforelse
                 </tbody>
             </table>
         </div>
     </div>
-    <!-- /.container-fluid -->
 @endsection
 
 @section('js')
-    <!-- Adicione aqui os scripts adicionais se necessário -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var ctx = document.getElementById('schedulesChart').getContext('2d');
             var schedulesData = @json($schedulesData);
 
+            var combinedData = schedulesData.labels.map(function(label, index) {
+                return { label: label, value: schedulesData.data[index] };
+            });
+
+            combinedData.sort(function(a, b) {
+                return b.value - a.value;
+            });
+
+            var sortedLabels = combinedData.map(function(item) {
+                return item.label;
+            });
+            var sortedData = combinedData.map(function(item) {
+                return item.value;
+            });
+
             var chart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: schedulesData.labels,
+                    labels: sortedLabels,
                     datasets: [{
                         label: 'Agendamentos',
-                        data: schedulesData.data,
+                        data: sortedData,
                         backgroundColor: 'rgba(54, 162, 235, 0.2)',
                         borderColor: 'rgba(54, 162, 235, 1)',
                         borderWidth: 1
@@ -94,5 +106,6 @@
                 }
             });
         });
+
     </script>
 @endsection

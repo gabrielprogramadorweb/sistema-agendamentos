@@ -16,8 +16,6 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
-// Adjust namespace according to your Laravel app structure
-
 class SchedulesController extends Controller
 {
     private SchedulesService $schedulesService;
@@ -65,7 +63,6 @@ class SchedulesController extends Controller
         }
     }
 
-    //recupera o calendario
     public function getCalendar(Request $request)
     {
         if (!$request->ajax()) {
@@ -73,14 +70,12 @@ class SchedulesController extends Controller
         }
 
         try {
-            // Ensure the 'month' parameter is present
             $month = $request->query('month');
             if (is_null($month)) {
                 return response()->json(['error' => 'Month parameter is required'], 400);
             }
 
             $month = (int) $month;
-            // Retrieve or calculate calendar data based on the month
             $calendarDetails = $this->fetchCalendarDetailsByMonth($month);
 
             if (empty($calendarDetails)) {
@@ -94,7 +89,6 @@ class SchedulesController extends Controller
         }
     }
 
-    //recupera as horas
     public function getHours(Request $request)
     {
         Log::info("Received parameters:", $request->all());
@@ -131,13 +125,10 @@ class SchedulesController extends Controller
         }
     }
 
-
-    //Tenta criar o agendamento
-
     public function createSchedule(Request $request)
     {
         $request->merge([
-            'hour' => substr($request->hour, 0, 5) // Trims off the seconds from 'HH:MM:SS'
+            'hour' => substr($request->hour, 0, 5)
         ]);
 
         $validator = $this->schedulesService->validateSchedule($request);
@@ -185,23 +176,19 @@ class SchedulesController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to create schedule',
-                'details' => $e->getMessage()  // This will include the exception thrown for existing schedules
+                'details' => $e->getMessage()
             ], 500);
         }
     }
 
     public function showUserSchedules()
     {
-        // Pega o ID do usuário logado
         $userId = Auth::id();
 
-        // Busca todos os agendamentos para esse usuário, pré-carregando as relações com 'service' e 'unit'
         $schedules = Schedule::with(['service', 'unit'])->where('user_id', $userId)->get();
 
-        // Define um título para a página
         $title = 'Meus Agendamentos';
 
-        // Retorna a view com os agendamentos e o título
         return view('Front.Schedules.my_schedules', compact('schedules', 'title'));
     }
 

@@ -9,12 +9,8 @@
     <meta name="generator" content="Hugo 0.84.0">
     <title>Meus agendamentos | @yield('title')</title>
     <link rel="icon" sizes="180x180" href="{{ asset('front/image/favicon.png') }}">
-
-    <!-- Bootstrap core CSS -->
     <link href="{{ asset('front/css/bootstrap.min.css') }}" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="{{ asset('front/css/schedules.css') }}" rel="stylesheet" crossorigin="anonymous">
-
-    <!-- Favicons -->
     <link rel="apple-touch-icon" href="/docs/5.0/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
     <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
     <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
@@ -23,11 +19,8 @@
     <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon.ico">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-    <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <meta name="theme-color" content="#7952b3">
-
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -43,14 +36,11 @@
             }
         }
     </style>
-
     @yield('css')
 
 </head>
 <body class="d-flex flex-column h-100">
-
 <header>
-    <!-- Fixed navbar -->
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ route('web-home.index') }}"><img src="{{ asset('front/image/dental+.png') }}" alt="Descrição da Imagem" width="300"></a>
@@ -72,7 +62,6 @@
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
             </div>
-            <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
 
                 <form class="d-flex me-7 ">
@@ -115,21 +104,12 @@
     </nav>
 </header>
 
-<!-- Begin page content -->
 <main class="flex-shrink-0">
     @yield('content')
-
 </main>
-
-{{--<footer class="bg-white text-center mt-auto py-3">--}}
-{{--    <div class="container">--}}
-{{--        <span>Copyright &copy; Agendamentos BR 2024</span>--}}
-{{--    </div>--}}
-{{--</footer>--}}
 
 <script src="{{ asset('front/js/bootstrap.bundle.min.js') }}" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
 @yield('js')
-
 </body>
 </html>

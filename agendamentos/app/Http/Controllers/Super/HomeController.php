@@ -19,19 +19,20 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         try {
-            $schedules = Schedule::all();
-            $title = 'Agendamentos';
+            $schedules = Schedule::with('service', 'unit', 'user')
+                ->orderBy('created_at', 'desc')
+                ->get();
+            $title = 'Todos os Agendamentos';
+
             $schedulesData = $this->getSchedulesData();
 
-            return view('Back.Home.index', compact( 'schedulesData','schedules','title')); // Passando o título para a view
+            return view('Back.Home.index', compact('schedulesData', 'schedules', 'title'));
         } catch (\Exception $e) {
             // Log do erro
             \Log::error("Erro ao carregar a página inicial: " . $e->getMessage());
-            // Redirecionamento opcional para uma página de erro personalizada
             return redirect()->route('error.page')->with('error', 'Erro ao carregar a página');
         }
     }
-
 
     private function getSchedulesData()
     {

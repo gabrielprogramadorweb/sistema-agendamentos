@@ -14,7 +14,7 @@
         @endif
 
         <form action="{{ route('services.store') }}" method="POST">
-            @csrf  {{-- CSRF Token is essential for form security --}}
+            @csrf
             <div class="row">
                 <div class="form-group col-md-3">
                     <label for="name">Nome:</label>
@@ -26,9 +26,7 @@
 
                 <div class="form-group col-md-3">
                     <label for="active">Ativo</label>
-                    <!-- Hidden input to default to 0 if the checkbox is not checked -->
                     <input type="hidden" name="active" value="0">
-                    <!-- Checkbox input, it overrides the hidden field if checked -->
                     <input type="checkbox" id="active" name="active" value="1" {{ old('active', $services->active ?? 0) ? 'checked' : '' }}>
                     @error('active')
                     <div class="alert alert-danger">{{ $message }}</div>

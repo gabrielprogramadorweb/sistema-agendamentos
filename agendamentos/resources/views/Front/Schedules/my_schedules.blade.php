@@ -14,7 +14,7 @@
                     <th class="text-center">Data e Hora</th>
                     <th class="text-center">Serviço</th>
                     <th class="text-center">Unidade</th>
-                    <th class="text-center">Ações</th> <!-- Nova coluna para ações -->
+                    <th class="text-center">Ações</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -29,7 +29,7 @@
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm">Cancelar</button>
                             </form>
-                        </td> <!-- Botão de cancelamento -->
+                        </td>
                     </tr>
                 @empty
                     <tr>

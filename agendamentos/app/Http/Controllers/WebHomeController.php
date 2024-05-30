@@ -15,22 +15,17 @@ class WebHomeController extends Controller
      */
     public function index()
     {
-        $user = Auth::user(); // Correct method to fetch the authenticated user
+        $user = Auth::user();
         $title = 'Home';
 
-        // Set a default image URL
         $imageUrl = asset('front/image/default-profile.png');
 
-        // Update image URL if the user has a profile image that exists
         if ($user && $user->profile_image && Storage::exists('public/' . $user->profile_image)) {
             $imageUrl = asset('storage/' . $user->profile_image);
         }
 
-        // Pass data to the view
         return view('Front.Home.index', compact('user', 'imageUrl', 'title'));
     }
-
-
 
     /**
      * Show the form for creating a new resource.

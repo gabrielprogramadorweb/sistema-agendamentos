@@ -3,10 +3,9 @@
 @section('title')
     {{ $title }}
 @endsection
-@section('css')
 
+@section('css')@endsection
 
-@endsection
 @section('content')
     <div class="container pt-5 text-center">
         <h1 id="titulo" class="mt-5 ">Veja como é fácil criar o seu agendamento</h1>
@@ -78,6 +77,4 @@
 
 @section('js')
 
-
 @endsection
-

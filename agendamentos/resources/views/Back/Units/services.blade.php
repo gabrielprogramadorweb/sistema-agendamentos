@@ -46,10 +46,8 @@
     <script>
         document.getElementById('btnToggleAll').addEventListener('click', function() {
             let checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            // Determine if all checkboxes are currently checked
             let allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
 
-            // If all are checked, uncheck them, otherwise check them
             checkboxes.forEach(checkbox => {
                 checkbox.checked = !allChecked;
             });
