@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
 
 Route::prefix('super')->middleware('admin')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
+    Route::delete('/{schedule}', [HomeController::class, 'destroy'])->name('admin.schedules.destroy');
 
     Route::prefix('units')->group(function () {
         Route::post('/', [UnitsController::class, 'store'])->name('units.store');

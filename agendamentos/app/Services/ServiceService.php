@@ -7,31 +7,22 @@ use Illuminate\Http\Request;
 
 class ServiceService extends MyBaseService
 {
-    public function renderTimesInterval(?string $serviceTime = null): string
+
+    public function handleExceptions($callback)
     {
-        $options = [];
-        foreach (self::$serviceTimes as $key => $time){
-            $options[$key] = $time;
+        try {
+            return $callback();
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            throw $e;
         }
-        return form_dropdown(data: 'servicetime', options: $options, selected: old('servicetime', $serviceTime), extra: ['class' => 'form-control']);
     }
-    public function getAllServicesFormatted($perPage = 10, $search = null)
+
+    public function getAllServicesFormatted($services)
     {
-        return $this->handleExceptions(function() use ($perPage, $search) {
-            $query = ServiceModel::query();
-
-            if ($search) {
-                $query->where(function($q) use ($search) {
-                    $q->where('name', 'like', "%$search%")
-                        ->orWhere('email', 'like', "%$search%")
-                        ->orWhere('phone', 'like', "%$search%");
-                });
-            }
-
-            $services = $query->paginate($perPage);
-
+        return $this->handleExceptions(function() use ($services) {
             $table = new \stdClass();
-            $table->headers = ['Ações', 'Nome','Status', 'Criado'];
+            $table->headers = ['Ações', 'Nome', 'Status', 'Criado'];
             $table->rows = [];
             $table->isEmpty = true;
 
@@ -41,15 +32,23 @@ class ServiceService extends MyBaseService
                     return [
                         'actions'    => $this->renderBtnActions($service),
                         'name'       => $service->name,
-                        'status'     => $statusLabel, // Modificação aqui
+                        'status'     => $statusLabel,
                         'created_at' => MyBaseService::formatDateTime($service->created_at),
                     ];
-                });
+                })->toArray();
                 $table->isEmpty = false;
             }
 
             return $table;
         });
+    }
+    public function renderTimesInterval(?string $serviceTime = null): string
+    {
+        $options = [];
+        foreach (self::$serviceTimes as $key => $time){
+            $options[$key] = $time;
+        }
+        return form_dropdown(data: 'servicetime', options: $options, selected: old('servicetime', $serviceTime), extra: ['class' => 'form-control']);
     }
 
     public function sanitizeInput(array $input)

@@ -28,9 +28,16 @@ class ServiceController extends Controller
     public function index(Request $request)
     {
         try {
-            $services = ServiceModel::query()->paginate(5)->withQueryString();
-            $table = $this->serviceService->getAllServicesFormatted(5);
-            $title = 'Services';
+            $query = ServiceModel::query();
+
+            if ($request->has('search')) {
+                $query->where('name', 'LIKE', '%' . $request->input('search') . '%');
+            }
+
+            $services = $query->paginate(5)->withQueryString();
+            $table = $this->serviceService->getAllServicesFormatted($services);
+            $title = 'Serviços';
+
             return view('Back.Services.index', compact('services', 'title', 'table'));
         } catch (\Exception $e) {
             \Log::error("Error loading services index: " . $e->getMessage());

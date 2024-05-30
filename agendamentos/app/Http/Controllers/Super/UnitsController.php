@@ -30,9 +30,17 @@ class UnitsController extends Controller
     public function index(Request $request)
     {
         try {
-            $units = UnitModel::query()->paginate(5)->withQueryString();
-            $table = $this->unitService->getAllUnitsFormatted(5);
+            $query = UnitModel::query();
+
+            if ($request->has('search')) {
+                $search = $request->input('search');
+                $query->where('name', 'LIKE', '%' . $search . '%');
+            }
+
+            $units = $query->paginate(5)->withQueryString();
+            $table = $this->unitService->getAllUnitsFormatted($units);
             $title = 'Unidades';
+
             return view('Back.Units.index', compact('units', 'title', 'table'));
         } catch (\Exception $e) {
             \Log::error("Error loading units index: " . $e->getMessage());

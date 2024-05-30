@@ -14,21 +14,19 @@ class UnitService extends MyBaseService
         }
         return form_dropdown(data: 'servicetime', options: $options, selected: old('servicetime', $serviceTime), extra: ['class' => 'form-control']);
     }
-    public function getAllUnitsFormatted($perPage = 10, $search = null)
+    public function handleExceptions($callback)
     {
-        return $this->handleExceptions(function() use ($perPage, $search) {
-            $query = UnitModel::query();
+        try {
+            return $callback();
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            throw $e;
+        }
+    }
 
-            if ($search) {
-                $query->where(function($q) use ($search) {
-                    $q->where('name', 'like', "%$search%")
-                        ->orWhere('email', 'like', "%$search%")
-                        ->orWhere('phone', 'like', "%$search%");
-                });
-            }
-
-            $units = $query->paginate($perPage);
-
+    public function getAllUnitsFormatted($units)
+    {
+        return $this->handleExceptions(function() use ($units) {
             $table = new \stdClass();
             $table->headers = ['Ações', 'Nome', 'E-mail', 'Telefone', 'Serviços', 'Status', 'Criado'];
             $table->rows = [];
@@ -39,7 +37,9 @@ class UnitService extends MyBaseService
                     $servicesList = $unit->services->map(function($service) {
                         $activeStatus = $service->active ? '<span class="badge badge-success">Ativado</span>' : '<span class="badge badge-danger">Desativado</span>';
                         return "<li>{$service->name} - {$activeStatus}</li>";
-                    })->implode('');                    $statusLabel = $unit->active ? '<span class="badge badge-success">Ativado</span>' : '<span class="badge badge-danger">Desativado</span>';
+                    })->implode('');
+
+                    $statusLabel = $unit->active ? '<span class="badge badge-success">Ativado</span>' : '<span class="badge badge-danger">Desativado</span>';
                     return [
                         'actions'    => $this->renderBtnActions($unit),
                         'name'       => $unit->name,
@@ -47,9 +47,9 @@ class UnitService extends MyBaseService
                         'phone'      => $unit->phone,
                         'services'   => "<ul>{$servicesList}</ul>",
                         'status'     => $statusLabel,
-                        'created_at' => MyBaseService::formatDateTime($unit->created_at),
+                        'created_at' => $unit->created_at->format('d/m/Y H:i'),
                     ];
-                });
+                })->toArray();
                 $table->isEmpty = false;
             }
 

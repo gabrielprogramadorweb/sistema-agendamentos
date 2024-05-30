@@ -14,7 +14,7 @@
                 {{ session('info') }}
             </div>
         @endif
-        <div class="card shadow mb-4">
+        <div class="card shadow mb-4 mt-8">
             <div class="card-header py-3 d-flex justify-content-between align-items-center">
                 <h6 class="m-0 font-weight-bold text-primary">{{ $title }}</h6>
                 <a href="{{ route('units.create') }}" class="btn btn-success btn-sm">Nova Unidade</a>
@@ -30,7 +30,7 @@
                 </form>
 
                 <div class="table-responsive">
-                    @if($table->isEmpty)
+                    @if($units->isEmpty())
                         <div class="alert alert-info">Não existem dados.</div>
                     @else
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -42,7 +42,6 @@
                             </tr>
                             </thead>
                             <tbody>
-
                             @foreach($table->rows as $row)
                                 <tr>
                                     @foreach($row as $key => $cell)
@@ -51,7 +50,6 @@
                                                 {!! $cell !!}
                                             @else
                                                 {!! $cell !!}
-
                                             @endif
                                         </td>
                                     @endforeach
@@ -69,6 +67,7 @@
             </div>
         </div>
     </div>
+
     <!-- Modals de confirmação de exclusão -->
     @foreach($units as $unit)
         <div class="modal fade" id="confirmDeleteModal{{ $unit->id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
