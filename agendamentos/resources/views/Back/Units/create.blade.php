@@ -5,20 +5,16 @@
 @section('content')
     <div class="container">
         <h1>Criar novo registro</h1>
-
-        {{-- Display errors if there are any form validation messages --}}
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
+                        <li>{{ 'Erro ao criar registro!'}}</li>
                 </ul>
             </div>
         @endif
 
         <form action="{{ route('units.store') }}" method="POST">
-            @csrf  {{-- CSRF Token is essential for form security --}}
+            @csrf
             <div class="row">
                 <div class="form-group col-md-3">
                     <label for="name">Nome:</label>
@@ -46,7 +42,7 @@
 
                 <div class="form-group col-md-3">
                     <label for="phone">Telefone:</label>
-                    <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone') }}" required>
+                    <input type="text" class="form-control" id="phone" name="phone" placeholder="(00)00000-0000" value="{{ old('phone') }}" required>
                     @error('phone')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -67,7 +63,6 @@
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
-
 
                 <div class="form-group col-md-3">
                     <label for="starttime">Início de expediente:</label>
@@ -97,12 +92,9 @@
                     </select>
                 </div>
 
-
                 <div class="form-group col-md-3">
                     <label for="active">Registro ativo</label>
-                    <!-- Hidden input to default to 0 if the checkbox is not checked -->
                     <input type="hidden" name="active" value="0">
-                    <!-- Checkbox input, it overrides the hidden field if checked -->
                     <input type="checkbox" id="active" name="active" value="1" {{ old('active', $unit->active ?? 0) ? 'checked' : '' }}>
                     @error('active')
                     <div class="alert alert-danger">{{ $message }}</div>
@@ -111,9 +103,16 @@
 
                 <div class="form-group col-md-10">
                     <button type="submit" class="btn btn-primary">Criar</button>
+                    <a href="{{ route('units.index') }}" class="btn btn-secondary">Voltar</a>
                 </div>
             </div>
-
         </form>
     </div>
+@endsection
+@section('scripts')
+<script>
+    $(document).ready(function(){
+        $('#phone').mask('(00) 00000-0000');
+    });
+</script>
 @endsection

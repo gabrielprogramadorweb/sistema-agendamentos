@@ -4,14 +4,16 @@ namespace App\Http\Controllers\Super;
 
 use App\Http\Controllers\Controller;
 use App\Models\UnitModel;
+use App\Services\MessageService;
 use App\Services\UnitService;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreUnitRequest; // Assumed correct request class for storing units
-use App\Http\Requests\UpdateUnitRequest; // Assumed correct request class for updating units
+use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\UpdateUnitRequest;
 
 class UnitsController extends Controller
 {
     protected $unitService;
+    protected $messageService;
     protected $serviceTimes = [
         '10 minutes' => '10 minutos',
         '15 minutes' => '15 minutos',
@@ -19,17 +21,26 @@ class UnitsController extends Controller
         '1 hour'     => '1 hora',
         '2 hours'    => '2 horas',
     ];
-    public function __construct(UnitService $unitService)
+
+    public function __construct(UnitService $unitService, MessageService $messageService)
     {
         $this->unitService = $unitService;
+        $this->messageService = $messageService;
     }
-
     public function index(Request $request)
     {
         try {
-            $units = UnitModel::query()->paginate(5)->withQueryString();
-            $table = $this->unitService->getAllUnitsFormatted(5);
+            $query = UnitModel::query();
+
+            if ($request->has('search')) {
+                $search = $request->input('search');
+                $query->where('name', 'LIKE', '%' . $search . '%');
+            }
+
+            $units = $query->paginate(5)->withQueryString();
+            $table = $this->unitService->getAllUnitsFormatted($units);
             $title = 'Unidades';
+
             return view('Back.Units.index', compact('units', 'title', 'table'));
         } catch (\Exception $e) {
             \Log::error("Error loading units index: " . $e->getMessage());
@@ -37,27 +48,10 @@ class UnitsController extends Controller
         }
     }
 
-    private function validateUnit(Request $request)
-    {
-        return $request->validate([
-            'name' => 'required|max:255',
-            'email' => 'required|email',
-            'password' => 'required',
-            'phone' => 'nullable|max:30',
-            'coordinator' => 'nullable|max:255',
-            'address' => 'nullable|max:255',
-            'starttime' => 'nullable|date_format:H:i',
-            'endtime' => 'nullable|date_format:H:i',
-            'servicetime' => 'nullable|string',
-            'active' => 'nullable|boolean'
-        ]);
-    }
-
     public function create()
     {
         try {
-
-            $title = 'Create New Unit';
+            $title = 'Criar unidade nova';
             $serviceTimes = $this->serviceTimes;
             return view('Back.Units.create', compact('title', 'serviceTimes'));
         } catch (\Exception $e) {
@@ -66,19 +60,24 @@ class UnitsController extends Controller
         }
     }
 
-
     public function store(Request $request)
     {
-        $validatedData = $this->validateUnit($request);
-        $validatedData['active'] = $request->has('active') ? 1 : 0;
+        try {
+            $inputData = $this->unitService->sanitizeInput($request->all());
+            $validatedData = $this->unitService->validateUnit(new Request($inputData));
+            $validatedData['active'] = $request->has('active') ? 1 : 0;
+            if (isset($validatedData['password'])) {
+                $validatedData['password'] = Hash::make($validatedData['password']);
+            }
 
-        UnitModel::create($validatedData);
-        return redirect()->route('units.index')->with('success', 'Unit created successfully.');
+            $unit = UnitModel::create($validatedData);
+            $message = $this->messageService->prepareCreateMessages();
+            return redirect()->route('units.index')->with($message['type'], $message['message']);
+        } catch (\Exception $e) {
+            $message = $this->messageService->prepareCreateMessages($e);
+            return redirect()->back()->with($message['type'], $message['message']);
+        }
     }
-
-
-// In your Controller
-
 
     public function edit($id)
     {
@@ -96,18 +95,42 @@ class UnitsController extends Controller
         }
     }
 
-
-
     public function update(Request $request, $id)
+    {
+        $unit = UnitModel::findOrFail($id);
+        $currentData = $unit->toArray();
+        $inputData = $request->only(array_keys($currentData));
+        $changes = array_diff_assoc($inputData, $currentData);
+
+        if (empty($changes) && !$request->has('forceUpdate')) {
+            $message = $this->messageService->prepareUpdateMessages($changes);
+            return redirect()->back()->with($message['type'], $message['message']);
+        }
+
+        try {
+            $validatedData = $this->unitService->validateUnit($request);
+            $validatedData['active'] = $request->has('active') ? 1 : 0;
+            $validatedData = $this->unitService->sanitizeInput($request->all());
+            $unit->update($validatedData);
+            $message = $this->messageService->prepareUpdateMessages($changes);
+            return redirect()->back()->with($message['type'], $message['message']);
+        } catch (\Exception $e) {
+            $message = $this->messageService->prepareUpdateMessages($changes, $e);
+            return redirect()->back()->with($message['type'], $message['message']);
+        }
+    }
+
+    public function toggleStatus($id)
     {
         try {
             $unit = UnitModel::findOrFail($id);
-            $validatedData = $this->validateUnit($request);
-            $unit->update($validatedData);
-            return redirect()->route('units.index')->with('success', 'Unit updated successfully.');
+            $unit->active = !$unit->active;
+            $unit->save();
+            $message = $this->messageService->prepareActiveMessages($unit->active);
+            return redirect()->route('units.index')->with($message['type'], $message['message']);
         } catch (\Exception $e) {
-            \Log::error("Error updating unit: " . $e->getMessage());
-            return redirect()->back()->withErrors('Failed to update the unit:' . $e->getMessage());
+            $message = $this->messageService->prepareActiveMessages($unit->active ?? false, $e);
+            return redirect()->back()->with($message['type'], $message['message']);
         }
     }
 
@@ -116,11 +139,11 @@ class UnitsController extends Controller
         try {
             $unit = UnitModel::findOrFail($id);
             $unit->delete();
-            return redirect()->route('units.index')->with('success', 'Unit deleted successfully.');
+            $message = $this->messageService->prepareExcluirMessages();
+            return redirect()->route('units.index')->with($message['type'], $message['message']);
         } catch (\Exception $e) {
-            \Log::error("Error deleting unit: " . $e->getMessage());
-            return redirect()->back()->withErrors('Failed to delete the unit.');
+            $message = $this->messageService->prepareExcluirMessages($e);
+            return redirect()->back()->with($message['type'], $message['message']);
         }
     }
-
 }

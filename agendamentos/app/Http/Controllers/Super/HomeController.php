@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreHomeRequest;
 use App\Http\Requests\UpdateHomeRequest;
 use App\Models\Home;
+use App\Models\Schedule;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -14,19 +16,41 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $data = ['title' => 'Home'];
-            return view('Back.Home.index', $data);
+            $schedules = Schedule::with('service', 'unit', 'user')
+                ->orderBy('created_at', 'desc')
+                ->get();
+            $title = 'Todos os Agendamentos';
+
+            $schedulesData = $this->getSchedulesData();
+
+            return view('Back.Home.index', compact('schedulesData', 'schedules', 'title'));
         } catch (\Exception $e) {
-            // Log the error
-            \Log::error("Error loading the home index view: " . $e->getMessage());
-            // Optionally, redirect to a custom error page
-            return redirect()->route('error.page')->with('error', 'Error loading the page');
+            // Log do erro
+            \Log::error("Erro ao carregar a página inicial: " . $e->getMessage());
+            return redirect()->route('error.page')->with('error', 'Erro ao carregar a página');
         }
     }
 
+    private function getSchedulesData()
+    {
+        $schedules = Schedule::with('service')->get();
+        $data = [];
+        foreach ($schedules as $schedule) {
+            $serviceName = $schedule->service->name ?? 'Serviço não especificado';
+            if (!isset($data[$serviceName])) {
+                $data[$serviceName] = 0;
+            }
+            $data[$serviceName]++;
+        }
+
+        return [
+            'labels' => array_keys($data),
+            'data' => array_values($data),
+        ];
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -89,8 +113,10 @@ class HomeController extends Controller
      * @param  \App\Models\Home  $home
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Home $home)
+    public function destroy(Schedule $schedule)
     {
-        //
+        $schedule->delete();
+
+        return redirect()->route('admin.schedules.index')->with('success', 'Agendamento cancelado com sucesso.');
     }
 }

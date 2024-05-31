@@ -10,53 +10,64 @@ class UnitModel extends Model
 {
     use HasFactory, SoftDeletes;
 
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
     protected $table = 'units';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<string>
-     */
+    // Define all attributes you expect to be mass assignable
     protected $fillable = [
         'name',
         'email',
-        'email_verified_at',
-        'password',
         'phone',
+        'password',
         'coordinator',
         'address',
-        'services',
         'starttime',
         'endtime',
         'servicetime',
-        'active'
+        'active',
+        'services'
     ];
 
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'active'   => 'boolean',
         'services' => 'array',
-        'active' => 'boolean'
     ];
 
+    protected $dates = ['deleted_at'];
+
     /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array<string>
+     * Custom accessor to get the services associated with the unit.
+     * This assumes 'services' is stored as an array of IDs.
      */
-    protected $dates = [
-        'deleted_at', // For soft deletes
-    ];
+    public function getServicesAttribute()
+    {
+        // Ensure the services attribute is decoded properly from JSON
+        $servicesIds = json_decode($this->attributes['services'], true);
+
+        // Check if $servicesIds is an array before querying
+        if (is_array($servicesIds)) {
+            return ServiceModel::whereIn('id', $servicesIds)->get();
+        }
+
+        // If $servicesIds is not an array, return an empty collection
+        return collect();
+    }
+
+    public function setServicesAttribute($value)
+    {
+        if (is_array($value)) {
+            $this->attributes['services'] = json_encode($value);
+        } else {
+            $this->attributes['services'] = '[]'; // Default to an empty array as JSON
+        }
+    }
+
+    public function services()
+    {
+        return $this->belongsToMany(ServiceModel::class, 'unit_service_table', 'unit_id', 'service_id');
+    }
+
+
+
 
 
 }

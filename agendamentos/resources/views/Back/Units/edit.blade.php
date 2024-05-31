@@ -3,19 +3,10 @@
 @section('title', $title)
 
 @section('content')
-    <div class="container">
+    <div class="container" id="app">
+        <success-modal :visible="showSuccessModal" :message="'Unidade atualizada com sucesso!'" @close="showSuccessModal = false"></success-modal>
         <h1>Editar Unidade</h1>
-
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
+        @include('components.messages')
         <form action="{{ route('units.update', $unit->id) }}" method="POST">
             @csrf
             @method('PUT')
@@ -76,10 +67,20 @@
                 </div>
                 <div class="form-group col-md-10">
                     <button type="submit" class="btn btn-primary">Salvar</button>
+                    <a href="{{ route('units.index') }}" class="btn btn-secondary">Voltar</a>
                 </div>
-
             </div>
-
         </form>
     </div>
 @endsection
+
+<script>
+    const app = createApp({
+        data() {
+            return {
+                showSuccessModal: @json(session('success') !== null)
+            }
+        }
+    });
+</script>
+
