@@ -5,14 +5,12 @@
 @endsection
 
 @section('css')
-
+    <!-- Adicione estilos CSS, se necessário -->
 @endsection
 
 @section('content')
     <div class="container-fluid">
-        <h1 class="h3 mb-4 mt-4 text-gray-800">{{ $title }} </h1>
-
-        <div class="card mb-4">
+        <div class="card mb-4 mt-4 ">
             <div class="card-header">
                 <i class="fas fa-chart-bar"></i>
                 Agendamentos por Serviço
@@ -21,10 +19,10 @@
                 <canvas id="schedulesChart"></canvas>
             </div>
         </div>
-
+        <h1 class="h3 mb-4 mt-4 text-gray-800">{{ $title }}</h1>
         <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover">
-                <thead class="thead-dark">
+            <table class="table table-bordered table-hover" id="table">
+                <thead class="thead" id="thead">
                 <tr>
                     <th class="text-center">Data e Hora</th>
                     <th class="text-center">Serviço</th>
@@ -43,7 +41,7 @@
                         <td class="text-center">{{ $schedule->unit->name ?? 'Unidade não especificada' }}</td>
                         <td class="text-center">{{ $schedule->user->name ?? 'Cliente não especificado' }}</td>
                         <td class="text-center">{{ $schedule->user->email ?? 'Email não especificado' }}</td>
-                        <td class="text-center">{{ $schedule->user->phone ?? 'Telefone não especificado' }}</td> <!-- Exibir telefone do cliente -->
+                        <td class="text-center">{{ $schedule->user->phone ?? 'Telefone não especificado' }}</td>
                         <td class="text-center">
                             <form action="{{ route('admin.schedules.destroy', $schedule->id) }}" method="POST">
                                 @csrf
@@ -59,6 +57,13 @@
                 @endforelse
                 </tbody>
             </table>
+            <!-- Adicionando os links de paginação -->
+            <div class="d-flex justify-content-between align-items-center" id="pagination">
+                <small>Mostrando de {{ $schedules->firstItem() }} a {{ $schedules->lastItem() }} de {{ $schedules->total() }} resultados</small>
+
+                {{ $schedules->links('vendor.pagination.bootstrap-4') }}
+            </div>
+{{--            Mostrando de 1 a 5 de 10 resultados--}}
         </div>
     </div>
 @endsection
@@ -106,6 +111,5 @@
                 }
             });
         });
-
     </script>
 @endsection
