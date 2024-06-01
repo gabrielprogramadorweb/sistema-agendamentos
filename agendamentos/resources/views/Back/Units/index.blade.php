@@ -21,10 +21,10 @@
             </div>
             <div class="card-body">
                 <form action="{{ route('units.index') }}" method="GET" class="mb-4">
-                    <div class="input-group">
-                        <input type="text" name="search" class="form-control" placeholder="Qual unidade você deseja?" value="{{ request('search') }}">
+                    <div class="input-group custom-input-group">
+                        <input type="text" name="search" class="form-control custom-input" placeholder="Qual unidade você deseja?" value="{{ request('search') }}">
                         <div class="input-group-append">
-                            <button class="btn btn-primary" type="submit">Pesquisar</button>
+                            <button class="btn btn-primary custom-button" type="submit">Pesquisar</button>
                         </div>
                     </div>
                 </form>

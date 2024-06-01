@@ -13,6 +13,8 @@
     <link href="{{ asset('front/css/bootstrap.min.css') }}" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="{{ asset('front/css/schedules.css') }}" rel="stylesheet" crossorigin="anonymous">
     <link href="{{ asset('back/css/home.index.css') }}" rel="stylesheet" crossorigin="anonymous">
+    <link href="{{ asset('back/css/units.index.css') }}" rel="stylesheet" crossorigin="anonymous">
+    <link href="{{ asset('back/css/layout.main.css') }}" rel="stylesheet" crossorigin="anonymous">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="apple-touch-icon" href="/docs/5.0/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
     <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
@@ -111,7 +113,7 @@
                     <div class="input-group">
                         <input type="text" class="form-control bg-light border-0 small" placeholder="Pesquisar"
                                aria-label="Search" aria-describedby="basic-addon2">
-                        <div class="input-group-append">
+                        <div class="input-group-append" id="">
                             <button class="btn btn-primary" type="button">
                                 <i class="fas fa-search fa-sm"></i>
                             </button>
