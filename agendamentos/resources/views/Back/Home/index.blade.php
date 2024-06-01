@@ -15,7 +15,7 @@
                 <i class="fas fa-chart-bar"></i>
                 Agendamentos por Serviço
             </div>
-            <div class="card-body">
+            <div class="card-body" id="card-body">
                 <canvas id="schedulesChart"></canvas>
             </div>
         </div>

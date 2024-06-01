@@ -14,3 +14,8 @@
     background-color: white !important;
     color: #2599BF !important;
 }
+
+#card-body {
+    width: 950px !important;
+    height: auto;
+}
