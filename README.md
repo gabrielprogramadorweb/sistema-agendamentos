@@ -1,10 +1,8 @@
 # Docker Laravel
 
-#### . Clone project  
-`git clone https://github.com/gabrielprogramadorweb/laravel9-docker.git`
-
+#### . Clone project
 #### . Navigate in project directory  
-`cd laravel9-docker`
+`cd agendamentos`
 
 #### . Create .env file
 `cp .env.example .env`  
@@ -24,9 +22,9 @@
 
 .env:
 ```
-APP_NAME=Laravel
+APP_NAME=EstéticaDental
 APP_ENV=local
-APP_KEY=
+APP_KEY=base64:iH41/QOu0S9A8krpI/YGTmd9vnFq1KplJd5hOr4006g=
 APP_DEBUG=true
 APP_URL=http://localhost
 
@@ -55,13 +53,15 @@ REDIS_PASSWORD=null
 REDIS_PORT=6379
 
 MAIL_MAILER=smtp
-MAIL_HOST=mailpit
-MAIL_PORT=1025
-MAIL_USERNAME=null
-MAIL_PASSWORD=null
-MAIL_ENCRYPTION=null
-MAIL_FROM_ADDRESS="hello@example.com"
-MAIL_FROM_NAME="${APP_NAME}"
+MAIL_HOST=smtp.sendgrid.net
+MAIL_PORT=587
+MAIL_USERNAME=apikey
+MAIL_PASSWORD=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
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=atendimento.esteticadental@gmail.com
+MAIL_FROM_NAME="Estética Dental"
+
+SENDGRID_API_KEY=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
 
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
