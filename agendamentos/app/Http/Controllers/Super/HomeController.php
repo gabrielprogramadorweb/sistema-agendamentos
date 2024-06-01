@@ -21,7 +21,7 @@ class HomeController extends Controller
         try {
             $schedules = Schedule::with('service', 'unit', 'user')
                 ->orderBy('created_at', 'desc')
-                ->get();
+                ->paginate(5);
             $title = 'Todos os Agendamentos';
 
             $schedulesData = $this->getSchedulesData();

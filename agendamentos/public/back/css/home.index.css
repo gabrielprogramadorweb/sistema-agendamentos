@@ -1,0 +1,21 @@
+#thead {
+    border-radius: 15px !important;
+    background-color: #2599BF !important;
+    color: white;
+}
+
+#table {
+    border-radius: 15px !important;
+    background-color: white !important;
+    color: gray;
+}
+
+.page-link {
+    background-color: white !important;
+    color: #2599BF !important;
+}
+
+#card-body {
+    width: 950px !important;
+    height: auto;
+}

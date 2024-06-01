@@ -1,7 +1,11 @@
 # Docker Laravel
 
-#### Entre na pasta agendamentos: 
-`cd agendamentos`
+#### . Clone project  
+`git clone https://github.com/gabrielprogramadorweb/laravel9-docker.git`
+
+#### . Navigate in project directory  
+`cd laravel9-docker`
+
 #### . Create .env file
 `cp .env.example .env`  
 
