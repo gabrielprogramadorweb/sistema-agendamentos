@@ -80,6 +80,11 @@
                     </x-slot>
                     <x-slot name="content">
                         @if (Auth::check())
+                            @if (Auth::user()->isAdmin())
+                            <x-dropdown-link :href="route('home.index')">
+                                {{ __('Dashboard Admin') }}
+                            </x-dropdown-link>
+                            @endif
                             <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Editar Perfil') }}
                             </x-dropdown-link>
@@ -90,7 +95,7 @@
                                 @csrf
                                 <x-dropdown-link :href="route('logout')"
                                                  onclick="event.preventDefault();
-                                                  this.closest('form').submit();">
+                                      this.closest('form').submit();">
                                     {{ __('Sair') }}
                                 </x-dropdown-link>
                             </form>
@@ -118,7 +123,9 @@
 </footer>
 
 <script src="{{ asset('front/js/bootstrap.bundle.min.js') }}" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 @yield('js')
 
 </body>
