@@ -1,24 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     <title>Agendamentos | Admin | @yield('title')</title>
     <link rel="icon" sizes="180x180" href="{{ asset('front/image/favicon.png') }}">
-    <!-- Custom fonts for this template-->
     <link rel="canonical" href="{{ asset('front/css/bootstrap.min.css') }}">
-    <!-- Bootstrap core CSS -->
     <link href="{{ asset('front/css/bootstrap.min.css') }}" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="{{ asset('front/css/schedules.css') }}" rel="stylesheet" crossorigin="anonymous">
     <link href="{{ asset('back/css/home.index.css') }}" rel="stylesheet" crossorigin="anonymous">
-    <!-- Favicons -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="apple-touch-icon" href="/docs/5.0/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
     <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
     <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
@@ -29,7 +24,6 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <link href="{{ asset('back/css/sb-admin-2.css') }}" rel="stylesheet">
     <link href="{{ asset('back/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
-    <!-- Espaço reservado para apresentar css especifico do template -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @yield('css')
     <style>
@@ -350,8 +344,10 @@
 @yield('scripts')
 @push('scripts')
     <script src="{{ asset('front/js/bootstrap.bundle.min.js') }}" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="{{ asset('back/vendor/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="{{ asset('back/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('back/js/agendamentos/datatables-agendamentos.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

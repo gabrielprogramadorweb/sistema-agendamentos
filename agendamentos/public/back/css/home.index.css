@@ -19,3 +19,12 @@
     width: 950px !important;
     height: auto;
 }
+.modal-header {
+    border-bottom: none;
+}
+.modal-body {
+    font-size: 1.1em;
+}
+.modal-footer {
+    border-top: none;
+}

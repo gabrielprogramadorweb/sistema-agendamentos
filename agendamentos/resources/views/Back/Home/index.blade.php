@@ -5,7 +5,6 @@
 @endsection
 
 @section('css')
-    <!-- Adicione estilos CSS, se necessário -->
 @endsection
 
 @section('content')
@@ -43,10 +42,10 @@
                         <td class="text-center">{{ $schedule->user->email ?? 'Email não especificado' }}</td>
                         <td class="text-center">{{ $schedule->user->phone ?? 'Telefone não especificado' }}</td>
                         <td class="text-center">
-                            <form action="{{ route('admin.schedules.destroy', $schedule->id) }}" method="POST">
+                            <form action="{{ route('admin.schedules.destroy', $schedule->id) }}" method="POST" class="cancel-form">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm">Cancelar</button>
+                                <button type="button" class="btn btn-danger btn-sm cancel-button" data-schedule-id="{{ $schedule->id }}">Cancelar</button>
                             </form>
                         </td>
                     </tr>
@@ -57,13 +56,40 @@
                 @endforelse
                 </tbody>
             </table>
-            <!-- Adicionando os links de paginação -->
+
+            <!-- Modal de Confirmação -->
+            <div class="modal fade" id="confirmCancelModal" tabindex="-1" role="dialog" aria-labelledby="confirmCancelModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title" id="confirmCancelModalLabel">Confirmar Cancelamento</h5>
+                            <button type="button" class="close" id="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="d-flex align-items-center">
+                                <div class="mr-3">
+                                    <i class="fas fa-exclamation-circle fa-3x text-danger"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-0">Tem certeza que deseja cancelar este agendamento?</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="naoCancelButton" data-dismiss="modal">Não</button>
+                            <button type="button" class="btn btn-danger" id="confirmCancelButton">Sim, Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="d-flex justify-content-between align-items-center" id="pagination">
                 <small>Mostrando de {{ $schedules->firstItem() }} a {{ $schedules->lastItem() }} de {{ $schedules->total() }} resultados</small>
 
                 {{ $schedules->links('vendor.pagination.bootstrap-4') }}
             </div>
-{{--            Mostrando de 1 a 5 de 10 resultados--}}
         </div>
     </div>
 @endsection
@@ -109,6 +135,32 @@
                         }
                     }
                 }
+            });
+
+            var cancelButtons = document.querySelectorAll('.cancel-button');
+            var confirmCancelButton = document.getElementById('confirmCancelButton');
+            var confirmCancelModal = new bootstrap.Modal(document.getElementById('confirmCancelModal'));
+            var currentForm;
+
+            cancelButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var scheduleId = this.getAttribute('data-schedule-id');
+                    currentForm = this.closest('form');
+                    confirmCancelModal.show();
+                });
+            });
+
+            confirmCancelButton.addEventListener('click', function() {
+                if (currentForm) {
+                    currentForm.submit();
+                }
+            });
+
+            document.getElementById('naoCancelButton').addEventListener('click', function() {
+                confirmCancelModal.hide();
+            });
+            document.getElementById('close').addEventListener('click', function() {
+                confirmCancelModal.hide();
             });
         });
     </script>

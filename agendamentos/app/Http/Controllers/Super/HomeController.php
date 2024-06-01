@@ -117,6 +117,6 @@ class HomeController extends Controller
     {
         $schedule->delete();
 
-        return redirect()->route('admin.schedules.index')->with('success', 'Agendamento cancelado com sucesso.');
+        return redirect()->route('home.index')->with('success', 'Agendamento cancelado com sucesso.');
     }
 }
