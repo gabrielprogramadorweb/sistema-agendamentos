@@ -8,6 +8,9 @@ use App\Http\Controllers\Super\UnitsController;
 use App\Http\Controllers\Super\UnitsServicesController;
 use App\Http\Controllers\WebHomeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\NotificationController;
+
+Route::get('/notifications', [NotificationController::class, 'fetchNotifications'])->name('notifications.fetch');
 
 Route::get('/', [WebHomeController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 

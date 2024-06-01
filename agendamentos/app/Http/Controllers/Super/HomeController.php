@@ -8,27 +8,30 @@ use App\Http\Requests\UpdateHomeRequest;
 use App\Models\Home;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
+use App\Models\Notification;
 
 class HomeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
         try {
+            if (!auth()->check()) {
+                return redirect()->route('login');
+            }
+
             $schedules = Schedule::with('service', 'unit', 'user')
                 ->orderBy('created_at', 'desc')
                 ->paginate(5);
             $title = 'Todos os Agendamentos';
 
             $schedulesData = $this->getSchedulesData();
+            $notifications = Notification::orderBy('created_at', 'desc')->get(); // Ordenar por data de criação
 
-            return view('Back.Home.index', compact('schedulesData', 'schedules', 'title'));
+            \Log::info('Usuário autenticado:', ['user_id' => auth()->user()->id]);
+            \Log::info('Todas as notificações:', $notifications->toArray());
+
+            return view('Back.Home.index', compact('schedulesData', 'schedules', 'title', 'notifications'));
         } catch (\Exception $e) {
-            // Log do erro
             \Log::error("Erro ao carregar a página inicial: " . $e->getMessage());
             return redirect()->route('error.page')->with('error', 'Erro ao carregar a página');
         }
@@ -51,7 +54,6 @@ class HomeController extends Controller
             'data' => array_values($data),
         ];
     }
-
     /**
      * Show the form for creating a new resource.
      *
