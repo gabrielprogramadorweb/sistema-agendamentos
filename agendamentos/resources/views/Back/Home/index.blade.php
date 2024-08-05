@@ -5,19 +5,75 @@
 @endsection
 
 @section('css')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <style>
+        .toast-success {
+            background-color: #28a745 !important;
+            color: #fff !important;
+        }
+    </style>
 @endsection
 
 @section('content')
     <div class="container-fluid">
-        <div class="card mb-4 mt-4 ">
+        <div class="row mb-4 mt-4">
+            <div class="col-md-4">
+                <div class="card text-white bg-primary">
+                    <div class="card-body">
+                        <h5 class="card-title">Procedimento N° 1</h5>
+                        <p class="card-text">{{ $mostRequestedProcedureName }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-secondary">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Procedimentos</h5>
+                        <p class="card-text">{{ $totalProcedures }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-success">
+                    <div class="card-body">
+                        <h5 class="card-title">Confirmados</h5>
+                        <p class="card-text" id="confirmed-schedules">{{ $confirmedSchedules }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <form method="GET" action="{{ route('home.index') }}">
+                    <div class="form-row align-items-end">
+                        <div class="col">
+                            <label for="start_date">Data de Início</label>
+                            <input type="date" class="form-control" name="start_date" id="start_date" value="{{ $startDate }}">
+                        </div>
+                        <div class="col">
+                            <label for="end_date">Data de Fim</label>
+                            <input type="date" class="form-control" name="end_date" id="end_date" value="{{ $endDate }}">
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary">Filtrar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mb-4 mt-4">
             <div class="card-header">
                 <i class="fas fa-chart-bar"></i>
                 Agendamentos por Serviço
             </div>
             <div class="card-body" id="card-body">
-                <canvas id="schedulesChart"></canvas>
+                <div id="schedulesBarChart"></div>
+                <div id="schedulesPieChart" class="mt-4"></div>
             </div>
         </div>
+
         <h1 class="h3 mb-4 mt-4 text-gray-800">{{ $title }}</h1>
         <div class="table-responsive">
             <table class="table table-bordered table-hover" id="table">
@@ -29,10 +85,11 @@
                     <th class="text-center">Nome do Cliente</th>
                     <th class="text-center">Email do Cliente</th>
                     <th class="text-center">Telefone do Cliente</th>
+                    <th class="text-center">Status</th>
                     <th class="text-center">Ações</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody id="tbody">
                 @forelse ($schedules as $schedule)
                     <tr>
                         <td class="text-center">{{ $schedule->chosen_date->format('d/m/Y H:i') }}</td>
@@ -42,16 +99,29 @@
                         <td class="text-center">{{ $schedule->user->email ?? 'Email não especificado' }}</td>
                         <td class="text-center">{{ $schedule->user->phone ?? 'Telefone não especificado' }}</td>
                         <td class="text-center">
+                            <form class="update-status-form" data-schedule-id="{{ $schedule->id }}">
+                                @csrf
+                                @method('PATCH')
+                                <select name="status_id" class="status-select" data-schedule-id="{{ $schedule->id }}">
+                                    @foreach ($statuses as $status)
+                                        <option value="{{ $status->id }}" {{ $schedule->status_id == $status->id ? 'selected' : '' }}>
+                                            {{ $status->status }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </form>
+                        </td>
+                        <td class="text-center">
                             <form action="{{ route('admin.schedules.destroy', $schedule->id) }}" method="POST" class="cancel-form">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" class="btn btn-danger btn-sm cancel-button" data-schedule-id="{{ $schedule->id }}">Cancelar</button>
+                                <button type="button" class="btn btn-danger btn-sm cancel-button" data-schedule-id="{{ $schedule->id }}">Excluir</button>
                             </form>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td class="text-center" colspan="7">Nenhum agendamento encontrado.</td>
+                        <td class="text-center" colspan="8">Nenhum agendamento encontrado.</td>
                     </tr>
                 @endforelse
                 </tbody>
@@ -73,13 +143,13 @@
                                     <i class="fas fa-exclamation-circle fa-3x text-danger"></i>
                                 </div>
                                 <div>
-                                    <p class="mb-0">Tem certeza que deseja cancelar este agendamento?</p>
+                                    <p class="mb-0">Tem certeza que deseja excluir este agendamento?</p>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" id="naoCancelButton" data-dismiss="modal">Não</button>
-                            <button type="button" class="btn btn-danger" id="confirmCancelButton">Sim, Cancelar</button>
+                            <button type="button" class="btn btn-danger" id="confirmCancelButton">Sim, Excluir</button>
                         </div>
                     </div>
                 </div>
@@ -95,10 +165,11 @@
 @endsection
 
 @section('js')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var ctx = document.getElementById('schedulesChart').getContext('2d');
             var schedulesData = @json($schedulesData);
 
             var combinedData = schedulesData.labels.map(function(label, index) {
@@ -116,25 +187,105 @@
                 return item.value;
             });
 
-            var chart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: sortedLabels,
-                    datasets: [{
-                        label: 'Agendamentos',
-                        data: sortedData,
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    }]
+            var barOptions = {
+                series: [{
+                    name: 'Agendamentos',
+                    data: sortedData
+                }],
+                chart: {
+                    type: 'bar',
+                    height: 350
                 },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '55%',
+                        endingShape: 'rounded'
+                    },
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    show: true,
+                    width: 2,
+                    colors: ['transparent']
+                },
+                xaxis: {
+                    categories: sortedLabels,
+                },
+                yaxis: {
+                    title: {
+                        text: 'Número de Agendamentos'
+                    }
+                },
+                fill: {
+                    opacity: 1
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (val) {
+                            return val + " agendamentos"
                         }
                     }
                 }
+            };
+
+            var barChart = new ApexCharts(document.querySelector("#schedulesBarChart"), barOptions);
+            barChart.render();
+
+            var pieOptions = {
+                series: sortedData,
+                chart: {
+                    type: 'pie',
+                    height: 350
+                },
+                labels: sortedLabels,
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                        chart: {
+                            width: 200
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }]
+            };
+
+            var pieChart = new ApexCharts(document.querySelector("#schedulesPieChart"), pieOptions);
+            pieChart.render();
+
+            // AJAX para atualizar status e atualizar confirmedSchedules
+            $('.status-select').on('change', function() {
+                var scheduleId = $(this).data('schedule-id');
+                var statusId = $(this).val();
+                var token = $('meta[name="csrf-token"]').attr('content');
+                var startDate = $('#start_date').val();
+                var endDate = $('#end_date').val();
+
+                $.ajax({
+                    url: '/schedules/' + scheduleId + '/update-status',
+                    type: 'PATCH',
+                    data: {
+                        _token: token,
+                        status_id: statusId,
+                        start_date: startDate,
+                        end_date: endDate
+                    },
+                    success: function(response) {
+                        if(response.success) {
+                            toastr.success(response.success);
+                            $('#confirmed-schedules').text(response.confirmedSchedules);
+                        } else {
+                            toastr.error('Erro ao atualizar o status.');
+                        }
+                    },
+                    error: function(response) {
+                        toastr.error('Erro ao atualizar o status.');
+                    }
+                });
             });
 
             var cancelButtons = document.querySelectorAll('.cancel-button');

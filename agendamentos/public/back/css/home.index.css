@@ -19,3 +19,18 @@
     width: 950px !important;
     height: auto;
 }
+
+
+
+#thead {
+    font-size: 0.9rem !important;
+
+}
+#tbody {
+    font-size: 0.9rem !important;
+
+}
+#status-text {
+    font-size: 0.9rem !important;
+
+}
