@@ -7,6 +7,7 @@ use App\Http\Requests\StoreHomeRequest;
 use App\Http\Requests\UpdateHomeRequest;
 use App\Models\Home;
 use App\Models\Schedule;
+use App\Models\StatusAgendamento;
 use Illuminate\Http\Request;
 use App\Models\Notification;
 
@@ -19,23 +20,39 @@ class HomeController extends Controller
                 return redirect()->route('login');
             }
 
-            $schedules = Schedule::with('service', 'unit', 'user')
+            $schedules = Schedule::with('service', 'unit', 'user', 'status')
                 ->orderBy('created_at', 'desc')
                 ->paginate(5);
+            $statuses = StatusAgendamento::all(); // Adiciona essa linha
             $title = 'Todos os Agendamentos';
 
             $schedulesData = $this->getSchedulesData();
-            $notifications = Notification::orderBy('created_at', 'desc')->get(); // Ordenar por data de criação
+            $notifications = Notification::orderBy('created_at', 'desc')->get();
 
             \Log::info('Usuário autenticado:', ['user_id' => auth()->user()->id]);
             \Log::info('Todas as notificações:', $notifications->toArray());
 
-            return view('Back.Home.index', compact('schedulesData', 'schedules', 'title', 'notifications'));
+            return view('Back.Home.index', compact('schedulesData', 'schedules', 'statuses', 'title', 'notifications'));
         } catch (\Exception $e) {
             \Log::error("Erro ao carregar a página inicial: " . $e->getMessage());
             return redirect()->route('error.page')->with('error', 'Erro ao carregar a página');
         }
     }
+
+    public function updateStatus(Request $request, $id)
+    {
+        try {
+            $schedule = Schedule::findOrFail($id);
+            $schedule->status_id = $request->status_id;
+            $schedule->save();
+
+            return response()->json(['success' => 'Status do agendamento atualizado com sucesso.']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Erro ao atualizar o status do agendamento.'], 500);
+        }
+    }
+
+
 
     private function getSchedulesData()
     {

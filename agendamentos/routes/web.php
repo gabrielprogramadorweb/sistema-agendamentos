@@ -33,6 +33,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/calendar', [SchedulesController::class, 'getCalendar'])->name('get.calendar');
         Route::get('/hours', [SchedulesController::class, 'getHours'])->name('get.hours');
         Route::post('/create', [SchedulesController::class, 'createSchedule'])->name('create.schedule');
+        Route::patch('/{id}/update-status', [HomeController::class, 'updateStatus'])->name('admin.schedules.updateStatus');
+
     });
     Route::get('/meus-agendamentos', [SchedulesController::class, 'showUserSchedules'])->name('meus-agendamentos')->middleware('auth');
 

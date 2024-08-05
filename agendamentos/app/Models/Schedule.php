@@ -68,4 +68,10 @@ class Schedule extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function status()
+    {
+        return $this->belongsTo(StatusAgendamento::class, 'status_id');
+    }
+
+
 }

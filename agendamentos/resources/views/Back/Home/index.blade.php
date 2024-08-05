@@ -5,11 +5,12 @@
 @endsection
 
 @section('css')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 @endsection
 
 @section('content')
     <div class="container-fluid">
-        <div class="card mb-4 mt-4 ">
+        <div class="card mb-4 mt-4">
             <div class="card-header">
                 <i class="fas fa-chart-bar"></i>
                 Agendamentos por Serviço
@@ -29,10 +30,11 @@
                     <th class="text-center">Nome do Cliente</th>
                     <th class="text-center">Email do Cliente</th>
                     <th class="text-center">Telefone do Cliente</th>
+                    <th class="text-center">Status</th>
                     <th class="text-center">Ações</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody id="tbody">
                 @forelse ($schedules as $schedule)
                     <tr>
                         <td class="text-center">{{ $schedule->chosen_date->format('d/m/Y H:i') }}</td>
@@ -42,16 +44,29 @@
                         <td class="text-center">{{ $schedule->user->email ?? 'Email não especificado' }}</td>
                         <td class="text-center">{{ $schedule->user->phone ?? 'Telefone não especificado' }}</td>
                         <td class="text-center">
+                            <form class="update-status-form" data-schedule-id="{{ $schedule->id }}">
+                                @csrf
+                                @method('PATCH')
+                                <select name="status_id" class="status-select" data-schedule-id="{{ $schedule->id }}">
+                                    @foreach ($statuses as $status)
+                                        <option value="{{ $status->id }}" {{ $schedule->status_id == $status->id ? 'selected' : '' }}>
+                                            {{ $status->status }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </form>
+                        </td>
+                        <td class="text-center">
                             <form action="{{ route('admin.schedules.destroy', $schedule->id) }}" method="POST" class="cancel-form">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" class="btn btn-danger btn-sm cancel-button" data-schedule-id="{{ $schedule->id }}">Cancelar</button>
+                                <button type="button" class="btn btn-danger btn-sm cancel-button" data-schedule-id="{{ $schedule->id }}">Excluir</button>
                             </form>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td class="text-center" colspan="7">Nenhum agendamento encontrado.</td>
+                        <td class="text-center" colspan="8">Nenhum agendamento encontrado.</td>
                     </tr>
                 @endforelse
                 </tbody>
@@ -73,13 +88,13 @@
                                     <i class="fas fa-exclamation-circle fa-3x text-danger"></i>
                                 </div>
                                 <div>
-                                    <p class="mb-0">Tem certeza que deseja cancelar este agendamento?</p>
+                                    <p class="mb-0">Tem certeza que deseja excluir este agendamento?</p>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" id="naoCancelButton" data-dismiss="modal">Não</button>
-                            <button type="button" class="btn btn-danger" id="confirmCancelButton">Sim, Cancelar</button>
+                            <button type="button" class="btn btn-danger" id="confirmCancelButton">Sim, Excluir</button>
                         </div>
                     </div>
                 </div>
@@ -95,6 +110,8 @@
 @endsection
 
 @section('js')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -135,6 +152,28 @@
                         }
                     }
                 }
+            });
+
+            // AJAX para atualizar status
+            $('.status-select').on('change', function() {
+                var scheduleId = $(this).data('schedule-id');
+                var statusId = $(this).val();
+                var token = $('meta[name="csrf-token"]').attr('content');
+
+                $.ajax({
+                    url: '/schedules/' + scheduleId + '/update-status',
+                    type: 'PATCH',
+                    data: {
+                        _token: token,
+                        status_id: statusId
+                    },
+                    success: function(response) {
+                        toastr.success(response.success);
+                    },
+                    error: function(response) {
+                        toastr.error('Erro ao atualizar o status.');
+                    }
+                });
             });
 
             var cancelButtons = document.querySelectorAll('.cancel-button');
