@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Super;
 
 use App\Http\Controllers\Controller;
+use App\Models\Notification;
 use App\Models\UnitModel;
 use App\Services\MessageService;
 use App\Services\UnitService;
@@ -36,12 +37,13 @@ class UnitsController extends Controller
                 $search = $request->input('search');
                 $query->where('name', 'LIKE', '%' . $search . '%');
             }
+            $notifications = Notification::orderBy('created_at', 'desc')->get(); // Ordenar por data de criação
 
             $units = $query->paginate(5)->withQueryString();
             $table = $this->unitService->getAllUnitsFormatted($units);
             $title = 'Unidades';
 
-            return view('Back.Units.index', compact('units', 'title', 'table'));
+            return view('Back.Units.index', compact('notifications','units', 'title', 'table'));
         } catch (\Exception $e) {
             \Log::error("Error loading units index: " . $e->getMessage());
             return redirect()->back()->withErrors('Unable to load units.');

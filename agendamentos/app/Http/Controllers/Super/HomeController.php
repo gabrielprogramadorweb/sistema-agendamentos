@@ -7,32 +7,52 @@ use App\Http\Requests\StoreHomeRequest;
 use App\Http\Requests\UpdateHomeRequest;
 use App\Models\Home;
 use App\Models\Schedule;
+use App\Models\StatusAgendamento;
 use Illuminate\Http\Request;
+use App\Models\Notification;
 
 class HomeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
         try {
-            $schedules = Schedule::with('service', 'unit', 'user')
+            if (!auth()->check()) {
+                return redirect()->route('login');
+            }
+
+            $schedules = Schedule::with('service', 'unit', 'user', 'status')
                 ->orderBy('created_at', 'desc')
                 ->paginate(5);
+            $statuses = StatusAgendamento::all(); // Adiciona essa linha
             $title = 'Todos os Agendamentos';
 
             $schedulesData = $this->getSchedulesData();
+            $notifications = Notification::orderBy('created_at', 'desc')->get();
 
-            return view('Back.Home.index', compact('schedulesData', 'schedules', 'title'));
+            \Log::info('Usuário autenticado:', ['user_id' => auth()->user()->id]);
+            \Log::info('Todas as notificações:', $notifications->toArray());
+
+            return view('Back.Home.index', compact('schedulesData', 'schedules', 'statuses', 'title', 'notifications'));
         } catch (\Exception $e) {
-            // Log do erro
             \Log::error("Erro ao carregar a página inicial: " . $e->getMessage());
             return redirect()->route('error.page')->with('error', 'Erro ao carregar a página');
         }
     }
+
+    public function updateStatus(Request $request, $id)
+    {
+        try {
+            $schedule = Schedule::findOrFail($id);
+            $schedule->status_id = $request->status_id;
+            $schedule->save();
+
+            return response()->json(['success' => 'Status do agendamento atualizado com sucesso.']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Erro ao atualizar o status do agendamento.'], 500);
+        }
+    }
+
+
 
     private function getSchedulesData()
     {
@@ -51,7 +71,6 @@ class HomeController extends Controller
             'data' => array_values($data),
         ];
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -117,6 +136,6 @@ class HomeController extends Controller
     {
         $schedule->delete();
 
-        return redirect()->route('admin.schedules.index')->with('success', 'Agendamento cancelado com sucesso.');
+        return redirect()->route('home.index')->with('success', 'Agendamento cancelado com sucesso.');
     }
 }

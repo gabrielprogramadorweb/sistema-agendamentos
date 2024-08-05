@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Notification;
 use App\Models\Schedule;
 use App\Notifications\ScheduleCreatedNotification;
 use App\Services\CalendarService;
@@ -139,11 +140,6 @@ class SchedulesController extends Controller
                 'errors' => $validator->errors()
             ], 400);
         }
-//        \Mail::raw('Hello, this is a test email.', function ($message) {
-//            $message->from(config('mail.from.address'), config('mail.from.name'));
-//            $message->to('test@example.com', 'Recipient Name')->subject('Test Email');
-//        });
-
 
         try {
             DB::beginTransaction();
@@ -156,7 +152,6 @@ class SchedulesController extends Controller
                 throw new \Exception('Já existe uma programação com a data e hora especificadas.');
             }
 
-
             $schedule = new Schedule();
             $schedule->unit_id = $request->unit_id;
             $schedule->service_id = $request->service_id;
@@ -167,7 +162,10 @@ class SchedulesController extends Controller
             $schedule->user_id = auth()->user()->id;
             $schedule->save();
             $user = auth()->user();
-//            $user->notify(new \App\Notifications\ScheduleCreatedNotification($schedule));
+
+            \Log::info('Antes de notificar o usuário:', ['user_id' => $user->id, 'schedule_id' => $schedule->id]);
+            $user->notify(new \App\Notifications\ScheduleCreatedNotification($schedule));
+            \Log::info('Notificação enviada para o usuário:', ['user_id' => $user->id]);
 
             DB::commit();
             return response()->json(['success' => true, 'message' => 'Agendamento criado com sucesso!'], 200);
@@ -229,6 +227,30 @@ class SchedulesController extends Controller
         $schedule->delete();
 
         return redirect()->route('meus-agendamentos')->with('success', 'Agendamento cancelado com sucesso.');
+    }
+
+    public function store(Request $request)
+    {
+        // Validação e criação do agendamento
+        $validatedData = $request->validate([
+            'unit_id' => 'required|integer',
+            'service_id' => 'required|integer',
+            'month' => 'required|string',
+            'day' => 'required|string',
+            'hour' => 'required|string',
+            'chosen_date' => 'required|date',
+            'user_id' => 'required|integer',
+        ]);
+
+        $schedule = Schedule::create($validatedData);
+
+        // Carregar relações necessárias para a notificação
+        $schedule->load('user', 'service');
+
+        // Enviar a notificação para o usuário
+        Notification::send($schedule->user, new ScheduleCreatedNotification($schedule));
+
+        return redirect()->route('schedules.index')->with('success', 'Agendamento criado e notificação enviada!');
     }
 
 }

@@ -8,6 +8,9 @@ use App\Http\Controllers\Super\UnitsController;
 use App\Http\Controllers\Super\UnitsServicesController;
 use App\Http\Controllers\WebHomeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\NotificationController;
+
+Route::get('/notifications', [NotificationController::class, 'fetchNotifications'])->name('notifications.fetch');
 
 Route::get('/', [WebHomeController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -30,6 +33,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/calendar', [SchedulesController::class, 'getCalendar'])->name('get.calendar');
         Route::get('/hours', [SchedulesController::class, 'getHours'])->name('get.hours');
         Route::post('/create', [SchedulesController::class, 'createSchedule'])->name('create.schedule');
+        Route::patch('/{id}/update-status', [HomeController::class, 'updateStatus'])->name('admin.schedules.updateStatus');
+
     });
     Route::get('/meus-agendamentos', [SchedulesController::class, 'showUserSchedules'])->name('meus-agendamentos')->middleware('auth');
 

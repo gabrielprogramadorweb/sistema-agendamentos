@@ -1,0 +1,28 @@
+.custom-input-group .custom-input {
+    border: none;
+    border-radius: 5px 0 0 5px;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.custom-input-group .custom-input:focus {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    outline: none;
+}
+
+.custom-input-group .custom-button {
+    border-radius: 0 5px 5px 0;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
+    border: none;
+
+}
+
+.custom-input-group .custom-button:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}
+
+.custom-input-group .custom-button:focus {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    outline: none;
+}

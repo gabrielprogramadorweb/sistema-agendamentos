@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Super;
 
 use App\Http\Controllers\Controller;
+use App\Models\Notification;
 use App\Models\ServiceModel;
 use App\Services\MessageService;
 use App\Services\ServiceService;
@@ -33,12 +34,13 @@ class ServiceController extends Controller
             if ($request->has('search')) {
                 $query->where('name', 'LIKE', '%' . $request->input('search') . '%');
             }
+            $notifications = Notification::orderBy('created_at', 'desc')->get(); // Ordenar por data de criação
 
             $services = $query->paginate(5)->withQueryString();
             $table = $this->serviceService->getAllServicesFormatted($services);
             $title = 'Serviços';
 
-            return view('Back.Services.index', compact('services', 'title', 'table'));
+            return view('Back.Services.index', compact('notifications','services', 'title', 'table'));
         } catch (\Exception $e) {
             \Log::error("Error loading services index: " . $e->getMessage());
             return redirect()->back()->withErrors('Unable to load services.');
