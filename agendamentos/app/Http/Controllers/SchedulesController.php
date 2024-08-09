@@ -9,6 +9,7 @@ use App\Services\CalendarService;
 use App\Services\SchedulesService;
 use App\Services\UnitAvaiableHoursService;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -167,6 +168,12 @@ class SchedulesController extends Controller
             $user->notify(new \App\Notifications\ScheduleCreatedNotification($schedule));
             \Log::info('Notificação enviada para o usuário:', ['user_id' => $user->id]);
 
+            // Envia a notificação via WhatsApp
+            $this->sendWhatsAppNotification(
+                $user->phone,
+                "Olá, {$user->name}! Seu agendamento para {$schedule->service->name} na {$schedule->unit->name} foi criado com sucesso para o dia {$schedule->day}/{$schedule->month} às {$schedule->hour}."
+            );
+
             DB::commit();
             return response()->json(['success' => true, 'message' => 'Agendamento criado com sucesso!'], 200);
         } catch (\Exception $e) {
@@ -178,6 +185,25 @@ class SchedulesController extends Controller
             ], 500);
         }
     }
+
+    private function sendWhatsAppNotification(string $phoneNumber, string $message): void
+    {
+        $params = [
+            'token' => 'tyhuc8p6thfr3uqr',
+            'to' => $phoneNumber,
+            'body' => $message
+        ];
+
+        $client = new Client();
+        $headers = [
+            'Content-Type' => 'application/x-www-form-urlencoded'
+        ];
+        $options = ['form_params' => $params];
+        $request = new \GuzzleHttp\Psr7\Request('POST', 'https://api.ultramsg.com/instance91860/messages/chat', $headers);
+        $res = $client->sendAsync($request, $options)->wait();
+        \Log::info('Resposta da API do WhatsApp:', ['response' => $res->getBody()]);
+    }
+
 
     public function showUserSchedules()
     {

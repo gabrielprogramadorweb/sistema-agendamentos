@@ -37,7 +37,7 @@ class UnitsController extends Controller
                 $search = $request->input('search');
                 $query->where('name', 'LIKE', '%' . $search . '%');
             }
-            $notifications = Notification::orderBy('created_at', 'desc')->get(); // Ordenar por data de criação
+            $notifications = Notification::orderBy('created_at', 'desc')->get();
 
             $units = $query->paginate(5)->withQueryString();
             $table = $this->unitService->getAllUnitsFormatted($units);
@@ -55,7 +55,9 @@ class UnitsController extends Controller
         try {
             $title = 'Criar unidade nova';
             $serviceTimes = $this->serviceTimes;
-            return view('Back.Units.create', compact('title', 'serviceTimes'));
+            $notifications = Notification::orderBy('created_at', 'desc')->get();
+
+            return view('Back.Units.create', compact('title', 'serviceTimes' ,'notifications'));
         } catch (\Exception $e) {
             \Log::error("Error accessing create unit page: " . $e->getMessage());
             return redirect()->back()->withErrors('Failed to access the create unit page.');
@@ -87,7 +89,9 @@ class UnitsController extends Controller
             $unit = UnitModel::findOrFail($id);
             $title = "Edit Unit";
             $serviceTimes = $this->serviceTimes;
-            return view('Back.Units.edit', compact('unit', 'title', 'serviceTimes'));
+            $notifications = Notification::orderBy('created_at', 'desc')->get();
+
+            return view('Back.Units.edit', compact('unit', 'title', 'serviceTimes', 'notifications'));
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             \Log::error("Unit not found: " . $e->getMessage());
             return redirect()->route('units.index')->with('error', "Unit not found.");

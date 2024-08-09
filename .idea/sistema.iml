@@ -6,7 +6,6 @@
       <sourceFolder url="file://$MODULE_DIR$/agendamentos/database/factories" isTestSource="false" packagePrefix="Database\Factories\" />
       <sourceFolder url="file://$MODULE_DIR$/agendamentos/database/seeders" isTestSource="false" packagePrefix="Database\Seeders\" />
       <sourceFolder url="file://$MODULE_DIR$/agendamentos/tests" isTestSource="true" packagePrefix="Tests\" />
-      <sourceFolder url="file://$MODULE_DIR$/agendamentos/spec" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/demo/spec" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/demo/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
@@ -130,6 +129,7 @@
       <excludeFolder url="file://$MODULE_DIR$/agendamentos/vendor/sendgrid/php-http-client" />
       <excludeFolder url="file://$MODULE_DIR$/agendamentos/vendor/sendgrid/sendgrid" />
       <excludeFolder url="file://$MODULE_DIR$/agendamentos/vendor/starkbank/ecdsa" />
+      <excludeFolder url="file://$MODULE_DIR$/agendamentos/vendor/ultramsg/whatsapp-php-sdk" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

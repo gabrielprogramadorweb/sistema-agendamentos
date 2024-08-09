@@ -34,8 +34,8 @@ class ServiceController extends Controller
             if ($request->has('search')) {
                 $query->where('name', 'LIKE', '%' . $request->input('search') . '%');
             }
-            $notifications = Notification::orderBy('created_at', 'desc')->get(); // Ordenar por data de criação
 
+            $notifications = Notification::orderBy('created_at', 'desc')->get();
             $services = $query->paginate(5)->withQueryString();
             $table = $this->serviceService->getAllServicesFormatted($services);
             $title = 'Serviços';
@@ -52,7 +52,9 @@ class ServiceController extends Controller
         try {
             $title = 'Criar serviço novo';
             $serviceTimes = $this->serviceTimes;
-            return view('Back.Services.create', compact('title', 'serviceTimes'));
+            $notifications = Notification::orderBy('created_at', 'desc')->get();
+
+            return view('Back.Services.create', compact('title', 'serviceTimes', 'notifications'));
         } catch (\Exception $e) {
             \Log::error("Error accessing create unit page: " . $e->getMessage());
             return redirect()->back()->withErrors('Failed to access the create unit page.');
@@ -81,7 +83,9 @@ class ServiceController extends Controller
             $services = ServiceModel::findOrFail($id);
             $title = "Editar Serviços";
             $serviceTimes = $this->serviceTimes;
-            return view('Back.Services.edit', compact('services', 'title', 'serviceTimes'));
+            $notifications = Notification::orderBy('created_at', 'desc')->get();
+
+            return view('Back.Services.edit', compact('services', 'title', 'serviceTimes', 'notifications'));
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             \Log::error("Unit not found: " . $e->getMessage());
             return redirect()->route('services.index')->with('error', "Services not found.");

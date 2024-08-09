@@ -3,15 +3,14 @@
 namespace App\Http\Controllers\Super;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreHomeRequest;
-use App\Http\Requests\UpdateHomeRequest;
-use App\Models\Home;
 use App\Models\Schedule;
 use App\Models\ServiceModel;
 use App\Models\StatusAgendamento;
 use Illuminate\Http\Request;
 use App\Models\Notification;
 use Illuminate\Support\Carbon;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 
 class HomeController extends Controller
 {
@@ -47,17 +46,27 @@ class HomeController extends Controller
 
             $statuses = StatusAgendamento::all();
             $title = 'Todos os Agendamentos';
-
             $schedulesData = $this->getSchedulesData($startDate, $endDate);
             $notifications = Notification::orderBy('created_at', 'desc')->get();
 
             \Log::info('Usuário autenticado:', ['user_id' => auth()->user()->id]);
             \Log::info('Todas as notificações:', $notifications->toArray());
 
-            return view('Back.Home.index', compact('schedulesData', 'schedules', 'statuses', 'title', 'notifications', 'mostRequestedProcedureName', 'totalProcedures', 'confirmedSchedules', 'startDate', 'endDate'));
+            return view('Back.Home.index', compact(
+                'schedulesData',
+                'schedules',
+                'statuses',
+                'title',
+                'notifications',
+                'mostRequestedProcedureName',
+                'totalProcedures',
+                'confirmedSchedules',
+                'startDate',
+                'endDate'
+            ));
         } catch (\Exception $e) {
             \Log::error("Erro ao carregar a página inicial: " . $e->getMessage());
-            return redirect()->route('error.page')->with('error', 'Erro ao carregar a página');
+            return redirect()->route('login')->with('error', 'Erro ao carregar a página');
         }
     }
 
@@ -100,60 +109,6 @@ class HomeController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Erro ao atualizar o status do agendamento.'], 500);
         }
-    }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreHomeRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreHomeRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Home  $home
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Home $home)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Home  $home
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Home $home)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateHomeRequest  $request
-     * @param  \App\Models\Home  $home
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateHomeRequest $request, Home $home)
-    {
-        //
     }
 
     /**
