@@ -3,7 +3,7 @@
 @section('title', $title)
 
 @section('content')
-    <div class="container">
+    <div class="container mt-3">
         <h1>Criar novo serviço</h1>
         @if ($errors->any())
             <div class="alert alert-danger">
