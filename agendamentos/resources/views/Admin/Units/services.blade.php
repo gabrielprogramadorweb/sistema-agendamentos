@@ -1,9 +1,9 @@
-@extends('Back.Layout.main')
+@extends('Admin.Layout.main')
 
 @section('title', $title)
 
 @section('content')
-    <div class="container-fluid">
+    <div class="container-fluid mt-4">
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>

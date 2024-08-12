@@ -1,11 +1,10 @@
-@extends('Back.Layout.main')
+@extends('Admin.Layout.main')
 
 @section('title')
     {{ $title }}
 @endsection
 
 @section('css')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <style>
         .toast-success {
             background-color: #28a745 !important;

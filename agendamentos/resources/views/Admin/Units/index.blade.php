@@ -1,4 +1,4 @@
-@extends('Back.Layout.main')
+@extends('Admin.Layout.main')
 
 @section('title', $title)
 
@@ -14,7 +14,7 @@
                 {{ session('info') }}
             </div>
         @endif
-        <div class="card shadow mb-4 mt-8">
+        <div class="card shadow mb-4 mt-4">
             <div class="card-header py-3 d-flex justify-content-between align-items-center">
                 <h6 class="m-0 font-weight-bold text-primary titulo" style=" color: #14A1D4 !important;">{{ $title }}</h6>
                 <a href="{{ route('units.create') }}" class="btn btn-success btn-sm">Nova Unidade</a>
@@ -28,7 +28,6 @@
                         </div>
                     </div>
                 </form>
-
                 <div class="table-responsive">
                     @if($units->isEmpty())
                         <div class="alert alert-info">Não existem dados.</div>

@@ -1,4 +1,4 @@
-@extends('Back.Layout.main')
+@extends('Admin.Layout.main')
 
 @section('title', $title)
 

@@ -24,7 +24,7 @@ class WebHomeController extends Controller
             $imageUrl = asset('storage/' . $user->profile_image);
         }
 
-        return view('Front.Home.index', compact('user', 'imageUrl', 'title'));
+        return view('Cliente.Home.index', compact('user', 'imageUrl', 'title'));
     }
 
     /**

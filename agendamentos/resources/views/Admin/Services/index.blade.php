@@ -1,4 +1,4 @@
-@extends('Back.Layout.main')
+@extends('Admin.Layout.main')
 
 @section('title', $title)
 
@@ -14,7 +14,7 @@
                 {{ session('info') }}
             </div>
         @endif
-        <div class="card shadow mb-4 mt-8">
+        <div class="card shadow mb-4 mt-4">
             <div class="card-header py-3 d-flex justify-content-between align-items-center">
                 <h6 class="m-0 font-weight-bold" style="color: #14A1D4;">{{ $title }}</h6>
                 <a href="{{ route('services.create') }}" class="btn btn-success btn-sm">Novo serviço</a>

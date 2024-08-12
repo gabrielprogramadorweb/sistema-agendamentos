@@ -37,7 +37,7 @@ class UnitsServicesController extends Controller
                 'notifications' => Notification::orderBy('created_at', 'desc')->get()
             ];
 
-            return view('Back/Units/services', $data);
+            return view('Admin/Units/services', $data);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             Log::error("Unit not found: {$unitId}");
             return redirect()->route('units.index')->with('error', 'Unidade não encontrada.');

@@ -43,7 +43,7 @@ class UnitsController extends Controller
             $table = $this->unitService->getAllUnitsFormatted($units);
             $title = 'Unidades';
 
-            return view('Back.Units.index', compact('notifications','units', 'title', 'table'));
+            return view('Admin.Units.index', compact('notifications','units', 'title', 'table'));
         } catch (\Exception $e) {
             \Log::error("Error loading units index: " . $e->getMessage());
             return redirect()->back()->withErrors('Unable to load units.');
@@ -57,7 +57,7 @@ class UnitsController extends Controller
             $serviceTimes = $this->serviceTimes;
             $notifications = Notification::orderBy('created_at', 'desc')->get();
 
-            return view('Back.Units.create', compact('title', 'serviceTimes' ,'notifications'));
+            return view('Admin.Units.create', compact('title', 'serviceTimes' ,'notifications'));
         } catch (\Exception $e) {
             \Log::error("Error accessing create unit page: " . $e->getMessage());
             return redirect()->back()->withErrors('Failed to access the create unit page.');
@@ -91,7 +91,7 @@ class UnitsController extends Controller
             $serviceTimes = $this->serviceTimes;
             $notifications = Notification::orderBy('created_at', 'desc')->get();
 
-            return view('Back.Units.edit', compact('unit', 'title', 'serviceTimes', 'notifications'));
+            return view('Admin.Units.edit', compact('unit', 'title', 'serviceTimes', 'notifications'));
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             \Log::error("Unit not found: " . $e->getMessage());
             return redirect()->route('units.index')->with('error', "Unit not found.");

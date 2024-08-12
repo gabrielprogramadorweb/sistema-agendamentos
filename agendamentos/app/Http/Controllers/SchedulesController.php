@@ -35,7 +35,7 @@ class SchedulesController extends Controller
             $title = 'Criar agendamento';
             $units = $this->schedulesService->renderUnits();
             $months = $this->calendarService->renderMonths();
-            return view('Front.Schedules.index', compact('title', 'units', 'months'));
+            return view('Cliente.Schedules.index', compact('title', 'units', 'months'));
         } catch (\Exception $e) {
             Log::error("Error in index method of SchedulesController: {$e}");
             return response()->json(['error' => 'An error occurred while retrieving schedule units.', 'details' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -213,7 +213,7 @@ class SchedulesController extends Controller
 
         $title = 'Meus Agendamentos';
 
-        return view('Front.Schedules.my_schedules', compact('schedules', 'title'));
+        return view('Cliente.Schedules.my_schedules', compact('schedules', 'title'));
     }
 
     private function monthToNumber($monthName) {
