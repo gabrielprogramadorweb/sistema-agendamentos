@@ -168,11 +168,11 @@ class SchedulesController extends Controller
             $user->notify(new \App\Notifications\ScheduleCreatedNotification($schedule));
             \Log::info('Notificação enviada para o usuário:', ['user_id' => $user->id]);
 
-            // Envia a notificação via WhatsApp
-            $this->sendWhatsAppNotification(
-                $user->phone,
-                "Olá, {$user->name}! Seu agendamento para {$schedule->service->name} na {$schedule->unit->name} foi criado com sucesso para o dia {$schedule->day}/{$schedule->month} às {$schedule->hour}."
-            );
+//            // Envia a notificação via WhatsApp
+//            $this->sendWhatsAppNotification(
+//                $user->phone,
+//                "Olá, {$user->name}! Seu agendamento para {$schedule->service->name} na {$schedule->unit->name} foi criado com sucesso para o dia {$schedule->day}/{$schedule->month} às {$schedule->hour}."
+//            );
 
             DB::commit();
             return response()->json(['success' => true, 'message' => 'Agendamento criado com sucesso!'], 200);

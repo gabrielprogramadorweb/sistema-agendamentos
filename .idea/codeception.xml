@@ -9,9 +9,6 @@
         <Configuration>
           <option name="path" value="$PROJECT_DIR$/demo/tests" />
         </Configuration>
-        <Configuration>
-          <option name="path" value="$PROJECT_DIR$/agendamentos/tests" />
-        </Configuration>
       </list>
     </option>
   </component>

@@ -9,24 +9,6 @@
         <option name="myPath" value="$PROJECT_DIR$/demo" />
       </PhpSpecSuiteConfiguration>
       <PhpSpecSuiteConfiguration>
-        <option name="myPath" value="$PROJECT_DIR$/demo" />
-      </PhpSpecSuiteConfiguration>
-      <PhpSpecSuiteConfiguration>
-        <option name="myPath" value="$PROJECT_DIR$/demo" />
-      </PhpSpecSuiteConfiguration>
-      <PhpSpecSuiteConfiguration>
-        <option name="myPath" value="$PROJECT_DIR$/agendamentos" />
-      </PhpSpecSuiteConfiguration>
-      <PhpSpecSuiteConfiguration>
-        <option name="myPath" value="$PROJECT_DIR$/agendamentos" />
-      </PhpSpecSuiteConfiguration>
-      <PhpSpecSuiteConfiguration>
-        <option name="myPath" value="$PROJECT_DIR$/agendamentos" />
-      </PhpSpecSuiteConfiguration>
-      <PhpSpecSuiteConfiguration>
-        <option name="myPath" value="$PROJECT_DIR$/agendamentos" />
-      </PhpSpecSuiteConfiguration>
-      <PhpSpecSuiteConfiguration>
         <option name="myPath" value="$PROJECT_DIR$/agendamentos" />
       </PhpSpecSuiteConfiguration>
     </suites>
