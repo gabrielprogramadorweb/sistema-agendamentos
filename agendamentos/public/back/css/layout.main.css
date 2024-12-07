@@ -1,0 +1,8 @@
+.input-group-append button {
+    border: none;
+}
+
+.input-group {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+}

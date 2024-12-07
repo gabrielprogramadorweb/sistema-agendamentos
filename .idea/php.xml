@@ -250,6 +250,10 @@
       <path value="$PROJECT_DIR$/agendamentos/vendor/carbonphp/carbon-doctrine-types" />
       <path value="$PROJECT_DIR$/agendamentos/vendor/sendgrid/php-http-client" />
       <path value="$PROJECT_DIR$/agendamentos/vendor/starkbank/ecdsa" />
+      <path value="$PROJECT_DIR$/agendamentos/vendor/ultramsg/whatsapp-php-sdk" />
+      <path value="$PROJECT_DIR$/agendamentos/vendor/paragonie/random_compat" />
+      <path value="$PROJECT_DIR$/agendamentos/vendor/paragonie/sodium_compat" />
+      <path value="$PROJECT_DIR$/agendamentos/vendor/pusher/pusher-php-server" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.0">

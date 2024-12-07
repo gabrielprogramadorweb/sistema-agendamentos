@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Super;
 
 use App\Http\Controllers\Controller;
+use App\Models\Notification;
 use App\Models\UnitModel;
 use App\Services\MessageService;
 use App\Services\ServiceService;
@@ -26,16 +27,17 @@ class UnitsServicesController extends Controller
     {
         try {
             $unit = $this->unitModel->findOrFail($unitId);
-            $services = $unit->services; // Using the custom accessor
+            $services = $unit->services;
             $existingServiceIds = $services->pluck('id')->toArray();
 
             $data = [
                 'title' => 'Gerenciar serviços da unidade',
                 'unit'  => $unit,
                 'servicesOptions' => $this->unitServiceService->renderServicesOptions($existingServiceIds),
+                'notifications' => Notification::orderBy('created_at', 'desc')->get()
             ];
 
-            return view('Back/Units/services', $data);
+            return view('Admin/Units/services', $data);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             Log::error("Unit not found: {$unitId}");
             return redirect()->route('units.index')->with('error', 'Unidade não encontrada.');
@@ -46,15 +48,11 @@ class UnitsServicesController extends Controller
     {
         try {
             $unit = $this->unitModel->findOrFail($unitId);
-
-            // Validate that services is an array and each element exists in the services table
-            // Remove 'required' to allow for empty arrays to be valid
             $validatedData = $request->validate([
                 'services' => 'sometimes|array',
                 'services.*' => 'exists:services,id',
             ]);
 
-            // Even if services is empty, it will now pass validation and can be set
             $unit->services = $validatedData['services'] ?? [];
             $unit->save();
 
@@ -65,7 +63,4 @@ class UnitsServicesController extends Controller
             return redirect()->back()->with('error', 'Erro ao atualizar serviços: ' . $e->getMessage());
         }
     }
-
-
-
 }

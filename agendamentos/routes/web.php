@@ -3,11 +3,15 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SchedulesController;
 use App\Http\Controllers\Super\HomeController;
+use App\Http\Controllers\Super\SchedulesAdminController;
 use App\Http\Controllers\Super\ServiceController;
 use App\Http\Controllers\Super\UnitsController;
 use App\Http\Controllers\Super\UnitsServicesController;
 use App\Http\Controllers\WebHomeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\NotificationController;
+
+Route::get('/notifications', [NotificationController::class, 'fetchNotifications'])->name('notifications.fetch');
 
 Route::get('/', [WebHomeController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -30,14 +34,17 @@ Route::middleware('auth')->group(function () {
         Route::get('/calendar', [SchedulesController::class, 'getCalendar'])->name('get.calendar');
         Route::get('/hours', [SchedulesController::class, 'getHours'])->name('get.hours');
         Route::post('/create', [SchedulesController::class, 'createSchedule'])->name('create.schedule');
-    });
-    Route::get('/meus-agendamentos', [SchedulesController::class, 'showUserSchedules'])->name('meus-agendamentos')->middleware('auth');
+        Route::patch('/{id}/update-status', [HomeController::class, 'updateStatus'])->name('admin.schedules.updateStatus');
 
+    });
+
+    Route::get('/meus-agendamentos', [SchedulesController::class, 'showUserSchedules'])->name('meus-agendamentos')->middleware('auth');
 });
 
 Route::prefix('super')->middleware('admin')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
     Route::delete('/{schedule}', [HomeController::class, 'destroy'])->name('admin.schedules.destroy');
+    Route::get('/agendamentosadmin', [SchedulesAdminController::class, 'index'])->name('agendamentos.index');
 
     Route::prefix('units')->group(function () {
         Route::post('/', [UnitsController::class, 'store'])->name('units.store');
@@ -61,11 +68,11 @@ Route::prefix('super')->middleware('admin')->group(function () {
         Route::get('/{id}/edit', [ServiceController::class, 'edit'])->where('id', '[0-9]+')->name('services.edit');
         Route::put('/{id}', [ServiceController::class, 'update'])->where('id', '[0-9]+')->name('services.update');
     });
+
+
 });
 
-
 Route::delete('/schedules/{schedule}', [SchedulesController::class, 'destroy'])->name('schedules.destroy');
-
 Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

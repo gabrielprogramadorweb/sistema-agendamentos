@@ -1,4 +1,4 @@
-@extends('Front.Layout.main')
+@extends('Cliente.Layout.main')
 
 @section('title')
     {{ $title }}
@@ -12,7 +12,6 @@
         <div class="row">
             <div class="col-md-8">
                 <div id="boxSuccess" class="mt-4 mb-3"></div>
-
                 @if(session('success'))
                     <div class="alert alert-success">
                         {!! session('success') !!}
@@ -26,7 +25,7 @@
                 <div class="row" id='container'>
                     <div class="col-md-12 mb-4">
                         <p id='escUnidade' class="lead">Escolha uma Unidade</p>
-                        <div id="unitsEsc" >{!! $units !!}</div>
+                        <div id="unitsEsc">{!! $units !!}</div>
                     </div>
                     <div id="mainBoxServices" class="col-md-8 mb-4 d-none">
                         <p class="lead">Escolha o Serviço</p>
@@ -49,28 +48,28 @@
 
                             </div>
                         </div>
-
                         <div class="col-md-6 form-group">
                             <div id="boxHours">
 
                             </div>
                         </div>
                         <div id="boxErrors" class="mt-4 mb-3"></div>
-
                         <div class="col-md-12 border-top pt-4">
                             <button id="btnTryCreate" class="btn btn-primary disabled">Criar meu agendamento</button>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="col-md-4 ms-auto">
                 <div id="divRight" class="preview-details">
-                    <p class="lead mt-4">Unidade escolhida: <br><span id="chosenUnitText" class="text-muted small"></span></p>
-                    <p class="lead">Serviço escolhido: <br><span id="chosenServiceText" class="text-muted small"></span></p>
+                    <p class="lead mt-4">Unidade escolhida: <br><span id="chosenUnitText"
+                                                                      class="text-muted small"></span></p>
+                    <p class="lead">Serviço escolhido: <br><span id="chosenServiceText" class="text-muted small"></span>
+                    </p>
                     <p class="lead">Mês escolhido: <br><span id="chosenMonthText" class="text-muted small"></span></p>
                     <p class="lead">Dia escolhido: <br><span id="chosenDayText" class="text-muted small"></span></p>
-                    <p class="lead">Horário escolhido: <br><span id="chosenHourText" class="text-muted small"></span></p>
+                    <p class="lead">Horário escolhido: <br><span id="chosenHourText" class="text-muted small"></span>
+                    </p>
                 </div>
             </div>
         </div>
@@ -105,6 +104,7 @@
             function showErrorMessage(message) {
                 return `<div class="alert alert-danger">${message}</div>`;
             }
+
             function showSuccessesMessage(message) {
                 return `<div class="alert alert-success">${message}</div>`;
             }
@@ -137,13 +137,13 @@
                 });
             });
 
-            calendarContainer.addEventListener('click', function(event) {
+            calendarContainer.addEventListener('click', function (event) {
                 if (event.target.classList.contains('clickable-day')) {
                     document.querySelectorAll('.clickable-day').forEach(button => {
                         button.style.backgroundColor = '#007bff';
                     });
                     event.target.style.backgroundColor = 'green';
-                    chosenDay = event.target.getAttribute('data-day'); // Assign the chosen day
+                    chosenDay = event.target.getAttribute('data-day');
                 }
             });
 
@@ -168,7 +168,7 @@
                         boxErrors.innerHTML = ''
                         boxServices.innerHTML = data.services;
                         mainBoxServices.classList.remove('d-none');
-                        boxServices.addEventListener('change', function(event) {
+                        boxServices.addEventListener('change', function (event) {
                             let serviceId = boxServices.value;
                             let serviceName = serviceId !== 'null' ? boxServices.options[event.target.selectedIndex].text : null;
                             chosenServiceText.innerText = serviceName === '--- Escolha ---' ? '' : serviceName;
@@ -178,7 +178,7 @@
                         throw new Error("No services data found");
                     }
 
-                } catch ( error) {
+                } catch (error) {
                     console.error('Error fetching services:', error);
                     boxErrors.innerHTML = showErrorMessage(`Não foi possível recuperar os Serviços. Error: ${error.message}`);
                 }
@@ -191,7 +191,7 @@
                 const selectedOption = event.target.options[event.target.selectedIndex];
                 chosenMonthText.innerText = selectedOption.text === '--- Escolha ---' ? '' : selectedOption.text;
                 chosenMonth = formatWithTwoDigits(event.target.value);
-                if(selectedOption.value !== '') {
+                if (selectedOption.value !== '') {
                     getCalendar(selectedOption.value);
                 }
             });
@@ -295,11 +295,11 @@
             const tryCreateSchedule = async () => {
                 boxErrors.innerHTML = '';
                 const body = {
-                    unit_id    : unitId,
-                    service_id  : serviceId,
-                    month      : chosenMonth,
-                    day        : chosenDay,
-                    hour       : chosenHour
+                    unit_id: unitId,
+                    service_id: serviceId,
+                    month: chosenMonth,
+                    day: chosenDay,
+                    hour: chosenHour
                 };
 
                 body[csrfTokenName] = csrfTokenValue;
@@ -316,7 +316,7 @@
                 });
 
                 if (!response.ok) {
-                    if (response.status === 400){
+                    if (response.status === 400) {
 
                         const data = await response.json();
                         const errors = data.errors;
@@ -351,7 +351,7 @@
 
                     });
 
-                    if (!month){
+                    if (!month) {
                         resetMonthDataVariables();
                         resetBoxCalendar();
                         return;
@@ -365,7 +365,7 @@
                     boxCalendar.innerHTML = data.calendar;
 
                     document.querySelectorAll('.btn-calendar-day:not([disabled])').forEach(button => {
-                        button.addEventListener('click', function() {
+                        button.addEventListener('click', function () {
                             boxHours.innerHTML = '<span class="text-info">Carregando as horas...</span>';
                             chosenDayText.innerText = this.getAttribute('data-day');
                             getHours();
@@ -423,13 +423,13 @@
                                     btn.classList.remove('btn-hour-chosen');
                                     btnTryCreate.classList.remove('disabled');
 
-                                    btn.style.backgroundColor = ''; // Remove any special coloring
+                                    btn.style.backgroundColor = '';
                                 });
                                 event.target.classList.add('btn-hour-chosen');
-                                event.target.style.backgroundColor = 'green'; // Highlight selected hour
-                                chosenHour = event.target.dataset.hour; // Store the selected hour
+                                event.target.style.backgroundColor = 'green';
+                                chosenHour = event.target.dataset.hour;
                                 const chosenHourText = document.getElementById('chosenHourText');
-                                chosenHourText.innerText = chosenHour; // Display the selected hour
+                                chosenHourText.innerText = chosenHour;
                             });
                         });
 
@@ -443,25 +443,21 @@
             };
 
             const resetMonthOptions = () => {
-                console.log('Redefini as opções de meses...');
                 boxMonths.classList.add('d-none');
                 document.getElementById('month').selectedIndex = 0;
                 resetMonthDataVariables();
             }
 
             const resetMonthDataVariables = () => {
-                console.log('Redefini as variaveis pertinentes ao mês, dia, hora...');
                 chosenMonth = null;
                 chosenDay = null;
                 chosenHour = null;
             }
 
             const resetBoxCalendar = () => {
-                console.log('Redefini o calendário...');
                 mainBoxCalendar.classList.add('d-none');
-
                 boxCalendar.innerHTML = '';
-                boxHours.innerHTML    = '';
+                boxHours.innerHTML = '';
             }
 
             const removeClassFromElements = (elements, className) => {
@@ -470,7 +466,6 @@
                     element.style.backgroundColor = '';
                 });
             };
-
         });
     </script>
 @endsection

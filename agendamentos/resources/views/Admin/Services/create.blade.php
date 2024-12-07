@@ -1,14 +1,14 @@
-@extends('Back.Layout.main')
+@extends('Admin.Layout.main')
 
 @section('title', $title)
 
 @section('content')
-    <div class="container">
+    <div class="container mt-3">
         <h1>Criar novo serviço</h1>
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
-                        <li>{{ 'Erro ao criar registro!'}}</li>
+                    <li>{{ 'Erro ao criar registro!'}}</li>
                 </ul>
             </div>
         @endif
@@ -27,7 +27,8 @@
                 <div class="form-group col-md-3">
                     <label for="active">Ativo</label>
                     <input type="hidden" name="active" value="0">
-                    <input type="checkbox" id="active" name="active" value="1" {{ old('active', $services->active ?? 0) ? 'checked' : '' }}>
+                    <input type="checkbox" id="active" name="active"
+                           value="1" {{ old('active', $services->active ?? 0) ? 'checked' : '' }}>
                     @error('active')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -44,7 +45,7 @@
 @endsection
 
 <script>
-    $(document).ready(function(){
+    $(document).ready(function () {
         $('#phone').mask('(00) 00000-0000');
     });
 </script>

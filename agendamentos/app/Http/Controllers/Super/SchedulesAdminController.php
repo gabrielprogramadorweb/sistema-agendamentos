@@ -1,18 +1,14 @@
 <?php
-
 namespace App\Http\Controllers\Super;
-
 use App\Http\Controllers\Controller;
+use App\Models\Notification;
 use App\Models\Schedule;
 use App\Models\ServiceModel;
 use App\Models\StatusAgendamento;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Models\Notification;
-use Illuminate\Support\Carbon;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 
-class HomeController extends Controller
+class SchedulesAdminController extends Controller
 {
     public function index(Request $request)
     {
@@ -45,14 +41,14 @@ class HomeController extends Controller
                 ->count();
 
             $statuses = StatusAgendamento::all();
-            $title = 'Todos os Agendamentos';
+            $title = 'Todos os Agendamentos Admin';
             $schedulesData = $this->getSchedulesData($startDate, $endDate);
             $notifications = Notification::orderBy('created_at', 'desc')->get();
 
             \Log::info('Usuário autenticado:', ['user_id' => auth()->user()->id]);
             \Log::info('Todas as notificações:', $notifications->toArray());
 
-            return view('Admin.Home.index', compact(
+            return view('Admin.Schedules.index', compact(
                 'schedulesData',
                 'schedules',
                 'statuses',
@@ -68,59 +64,5 @@ class HomeController extends Controller
             \Log::error("Erro ao carregar a página inicial: " . $e->getMessage());
             return redirect()->route('login')->with('error', 'Erro ao carregar a página');
         }
-    }
-
-    private function getSchedulesData($startDate, $endDate)
-    {
-        $schedules = Schedule::with('service')
-            ->whereBetween('chosen_date', [$startDate, $endDate])
-            ->get();
-        $data = [];
-        foreach ($schedules as $schedule) {
-            $serviceName = $schedule->service->name ?? 'Serviço não especificado';
-            if (!isset($data[$serviceName])) {
-                $data[$serviceName] = 0;
-            }
-            $data[$serviceName]++;
-        }
-
-        return [
-            'labels' => array_keys($data),
-            'data' => array_values($data),
-        ];
-    }
-
-    public function updateStatus(Request $request, $id)
-    {
-        try {
-            $schedule = Schedule::findOrFail($id);
-            $schedule->status_id = $request->status_id;
-            $schedule->save();
-
-            $startDate = $request->input('start_date', Carbon::now()->startOfMonth()->toDateString());
-            $endDate = $request->input('end_date', Carbon::now()->endOfMonth()->toDateString());
-
-            // Recalcula o número de agendamentos confirmados
-            $confirmedSchedules = Schedule::where('status_id', 1)
-                ->whereBetween('chosen_date', [$startDate, $endDate])
-                ->count();
-
-            return response()->json(['success' => 'Status do agendamento atualizado com sucesso.', 'confirmedSchedules' => $confirmedSchedules]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Erro ao atualizar o status do agendamento.'], 500);
-        }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Home  $home
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Schedule $schedule)
-    {
-        $schedule->delete();
-
-        return redirect()->route('home.index')->with('success', 'Agendamento cancelado com sucesso.');
     }
 }

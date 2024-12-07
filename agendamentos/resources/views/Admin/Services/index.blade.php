@@ -1,4 +1,4 @@
-@extends('Back.Layout.main')
+@extends('Admin.Layout.main')
 
 @section('title', $title)
 
@@ -14,23 +14,23 @@
                 {{ session('info') }}
             </div>
         @endif
-        <div class="card shadow mb-4 mt-8">
+        <div class="card shadow mb-4 mt-4">
             <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                <h6 class="m-0 font-weight-bold text-primary titulo" style=" color: #14A1D4 !important;">{{ $title }}</h6>
-                <a href="{{ route('units.create') }}" class="btn btn-success btn-sm">Nova Unidade</a>
+                <h6 class="m-0 font-weight-bold" style="color: #14A1D4;">{{ $title }}</h6>
+                <a href="{{ route('services.create') }}" class="btn btn-success btn-sm">Novo serviço</a>
             </div>
             <div class="card-body">
-                <form action="{{ route('units.index') }}" method="GET" class="mb-4">
-                    <div class="input-group">
-                        <input type="text" name="search" class="form-control" placeholder="Qual unidade você deseja?" value="{{ request('search') }}">
+                <form action="{{ route('services.index') }}" method="GET" class="mb-4">
+                    <div class="input-group custom-input-group">
+                        <input type="text" name="search" class="form-control custom-input" placeholder="Qual serviço você deseja?" value="{{ request('search') }}">
                         <div class="input-group-append">
-                            <button class="btn btn-primary" type="submit">Pesquisar</button>
+                            <button class="btn btn-primary custom-button" type="submit">Pesquisar</button>
                         </div>
                     </div>
                 </form>
 
                 <div class="table-responsive">
-                    @if($units->isEmpty())
+                    @if($services->isEmpty())
                         <div class="alert alert-info">Não existem dados.</div>
                     @else
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -59,8 +59,8 @@
                         </table>
 
                         <div class="d-flex justify-content-between align-items-center">
-                            <small>Showing {{ $units->firstItem() }} to {{ $units->lastItem() }} of {{ $units->total() }} results</small>
-                            {{ $units->links('vendor.pagination.bootstrap-4') }}
+                            <small>Showing {{ $services->firstItem() }} to {{ $services->lastItem() }} of {{ $services->total() }} results</small>
+                            {{ $services->links('vendor.pagination.bootstrap-4') }}
                         </div>
                     @endif
                 </div>
@@ -68,8 +68,8 @@
         </div>
     </div>
 
-    @foreach($units as $unit)
-        <div class="modal fade" id="confirmDeleteModal{{ $unit->id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    @foreach($services as $service)
+        <div class="modal fade" id="confirmDeleteModal{{ $service->id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -79,11 +79,11 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        Tem certeza que deseja excluir esta unidade?
+                        Tem certeza que deseja excluir este serviço?
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <form id="deleteForm{{ $unit->id }}" action="{{ route('units.destroy', ['id' => $unit->id]) }}" method="POST">
+                        <form id="deleteForm{{ $service->id }}" action="{{ route('services.destroy', $service->id) }}" method="POST">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">Excluir</button>
@@ -100,7 +100,7 @@
         function setDeleteUrl(element) {
             var id = element.getAttribute('data-id');
             var form = document.getElementById('deleteForm' + id);
-            form.action = '/super/units/' + id;
+            form.action = '/services/' + id;
         }
     </script>
 @endsection

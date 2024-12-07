@@ -1,4 +1,4 @@
-@extends('Front.Layout.main')
+@extends('Cliente.Layout.main')
 
 @section('title')
     {{ $title }}
