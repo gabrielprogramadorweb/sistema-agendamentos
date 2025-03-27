@@ -11,7 +11,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -139,11 +138,6 @@ class SchedulesController extends Controller
                 'errors' => $validator->errors()
             ], 400);
         }
-//        \Mail::raw('Hello, this is a test email.', function ($message) {
-//            $message->from(config('mail.from.address'), config('mail.from.name'));
-//            $message->to('test@example.com', 'Recipient Name')->subject('Test Email');
-//        });
-
 
         try {
             DB::beginTransaction();
@@ -167,7 +161,6 @@ class SchedulesController extends Controller
             $schedule->user_id = auth()->user()->id;
             $schedule->save();
             $user = auth()->user();
-//            $user->notify(new \App\Notifications\ScheduleCreatedNotification($schedule));
 
             DB::commit();
             return response()->json(['success' => true, 'message' => 'Agendamento criado com sucesso!'], 200);
@@ -211,7 +204,7 @@ class SchedulesController extends Controller
         ];
         $parts = explode(' / ', $input);
         $name = $parts[0];
-        return $months[$name] ?? null; // Return the month number or null if not found
+        return $months[$name] ?? null;
     }
 
 
